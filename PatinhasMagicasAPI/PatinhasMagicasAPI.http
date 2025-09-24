@@ -1,0 +1,6 @@
+@PatinhasMagicasAPI_HostAddress = http://localhost:5260
+
+GET {{PatinhasMagicasAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
