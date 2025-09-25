@@ -1,6 +1,13 @@
-﻿namespace PatinhasMagicasAPI.Interfaces
+﻿using PatinhasMagicasAPI.Models;
+
+namespace PatinhasMagicasAPI.Interfaces
 {
-    public interface IAgendamentoRepository
+    public interface IStatusAgendamentoRepository
     {
+        Task AddAsync(StatusAgendamento statusAgendamento);
+        Task<List<StatusAgendamento>> GetAllAsync();
+        Task<StatusAgendamento> GetByIdAsync(int id);
+        Task UpdateAsync(StatusAgendamento statusAgendamento);
+        Task DeleteAsync(int id);
     }
 }

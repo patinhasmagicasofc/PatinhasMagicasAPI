@@ -5,7 +5,7 @@ namespace PatinhasMagicasAPI.Models
     public class Agendamento
     {
         [Key]
-        public int IdAgendamento { get; set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "A data do agendamento é obrigatória.")]
         public DateTime DataAgendamento { get; set; }

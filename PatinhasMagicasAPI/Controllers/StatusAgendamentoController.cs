@@ -3,101 +3,81 @@ using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
 
-
 namespace PatinhasMagicasAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ItemPedidoController : ControllerBase
+    public class StatusAgendamentoController : ControllerBase
     {
-        private readonly IItemPedidoRepository _itemPedidoRepository;
+        private readonly IStatusAgendamentoRepository _statusAgendamentoRepository;
 
-        public ItemPedidoController(IItemPedidoRepository itemPedidoRepository)
+        public StatusAgendamentoController(IStatusAgendamentoRepository statusAgendamentoRepository)
         {
-            _itemPedidoRepository = itemPedidoRepository;
+            _statusAgendamentoRepository = statusAgendamentoRepository;
         }
 
         [HttpGet]
         public async Task<ActionResult> GetAll()
         {
-            var itensPedido = await _itemPedidoRepository.GetAllAsync();
+            var statusList = await _statusAgendamentoRepository.GetAllAsync();
 
-            if (!itensPedido.Any())
+            if (!statusList.Any())
                 return NotFound();
 
-            var itensPedidoInputDTO = itensPedido.Select(i => new ItemPedidoInputDTO
+            var statusDTOs = statusList.Select(s => new StatusAgendamentoInputDTO
             {
-                PedidoId = i.PedidoId,
-                PrecoUnitario = i.PrecoUnitario,
-                ProdutoId = i.ProdutoId,
-                Quantidade = i.Quantidade,
+                Nome = s.Nome
             }).ToList();
 
-            return Ok(itensPedidoInputDTO);
+            return Ok(statusDTOs);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult> GetById(int id)
         {
-            var itemPedido = await _itemPedidoRepository.GetByIdAsync(id);
+            var status = await _statusAgendamentoRepository.GetByIdAsync(id);
 
-            if (itemPedido == null)
+            if (status == null)
                 return NotFound();
 
-            var itemPedidoDTO = new ItemPedidoInputDTO
+            var statusDTO = new StatusAgendamentoInputDTO
             {
-                PedidoId = itemPedido.PedidoId,
-                PrecoUnitario = itemPedido.PrecoUnitario,
-                ProdutoId = itemPedido.ProdutoId,
-                Quantidade = itemPedido.Quantidade,
+                Nome = status.Nome
             };
 
-            return Ok(itemPedidoDTO);
+            return Ok(statusDTO);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] ItemPedidoInputDTO pedidoInputDTO)
+        public async Task<ActionResult> Post([FromBody] StatusAgendamentoInputDTO statusInputDTO)
         {
-            var pedido = new ItemPedido
+            var status = new StatusAgendamento
             {
-                PedidoId = pedidoInputDTO.PedidoId,
-                PrecoUnitario = pedidoInputDTO.PrecoUnitario,
-                ProdutoId = pedidoInputDTO.ProdutoId,
-                Quantidade = pedidoInputDTO.Quantidade
+                Nome = statusInputDTO.Nome
             };
 
-            await _itemPedidoRepository.AddAsync(pedido);
+            await _statusAgendamentoRepository.AddAsync(status);
 
-            var itemPedidoOutputDTO = new ItemPedidoOutputDTO
+            var statusOutputDTO = new StatusAgendamentoOutputDTO
             {
-                Id = pedido.Id,
-                PedidoId = pedido.PedidoId,
-                ProdutoId = pedido.ProdutoId,
-                Quantidade = pedido.Quantidade,
-                PrecoUnitario = pedido.PrecoUnitario
+                Id = status.Id,
+                Nome = status.Nome
             };
 
-            return CreatedAtAction(nameof(GetById), new { id = itemPedidoOutputDTO.Id }, itemPedidoOutputDTO);
+            return CreatedAtAction(nameof(GetById), new { id = statusOutputDTO.Id }, statusOutputDTO);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, [FromBody] ItemPedidoInputDTO pedidoInputDTO)
+        public async Task<ActionResult> Put(int id, [FromBody] StatusAgendamentoInputDTO statusInputDTO)
         {
-            var itemPedido = await _itemPedidoRepository.GetByIdAsync(id);
+            var status = await _statusAgendamentoRepository.GetByIdAsync(id);
 
-            if (itemPedido == null)
+            if (status == null)
                 return NotFound();
 
-            itemPedido = new ItemPedido
-            {
-                Id = id,
-                PedidoId = pedidoInputDTO.PedidoId,
-                PrecoUnitario = pedidoInputDTO.PrecoUnitario,
-                ProdutoId = pedidoInputDTO.ProdutoId,
-                Quantidade = pedidoInputDTO.Quantidade
-            };
+            status.Nome = statusInputDTO.Nome;
 
-            await _itemPedidoRepository.UpdateAsync(itemPedido);
+            await _statusAgendamentoRepository.UpdateAsync(status);
 
             return NoContent();
         }
@@ -105,11 +85,11 @@ namespace PatinhasMagicasAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var itemPedido = await _itemPedidoRepository.GetByIdAsync(id);
-            if (itemPedido == null)
+            var status = await _statusAgendamentoRepository.GetByIdAsync(id);
+            if (status == null)
                 return NotFound();
 
-            await _itemPedidoRepository.DeleteAsync(id);
+            await _statusAgendamentoRepository.DeleteAsync(id);
             return NoContent();
         }
     }
