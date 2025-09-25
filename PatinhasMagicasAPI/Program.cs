@@ -12,6 +12,8 @@ builder.Services.AddDbContext<PatinhasMagicasDbContext>(options => options.UseSq
 //repositories
 builder.Services.AddScoped<IItemPedidoRepository, ItemPedidoRepository>();
 builder.Services.AddScoped<IPedidoRepository, PedidoRepository>();
+builder.Services.AddScoped<IStatusAgendamentoRepository, StatusAgendamentoRepository>();
+builder.Services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

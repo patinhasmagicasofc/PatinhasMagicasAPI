@@ -9,5 +9,7 @@ namespace PatinhasMagicasAPI.Data
 
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<ItemPedido> ItensPedido { get; set; }
+        public DbSet<Agendamento> Agendamentos { get; set; }
+        public DbSet<StatusAgendamento> StatusAgendamentos { get; set; }
     }
 }
