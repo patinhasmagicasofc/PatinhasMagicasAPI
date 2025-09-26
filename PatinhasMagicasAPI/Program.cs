@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PatinhasMagicasAPI.Data;
+using PatinhasMagicasAPI.Interfaces;
+using PatinhasMagicasAPI.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +13,10 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<PatinhasMagicasDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-//Repositories
+// Repositórios
+builder.Services.AddScoped<IEnderecoRepository, EnderecoRepository>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<ITipoUsuarioRepository, TipoUsuarioRepository>();
 
 //Services
 

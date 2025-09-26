@@ -9,17 +9,17 @@ namespace PatinhasMagicasAPI.Data
 
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
-        public DbSet<TipoUsuario> TiposUsuario { get; set; }
-        public DbSet<Produto> Produto { get; set; }
-        public DbSet<Categoria> Categoria { get; set; }
+        public DbSet<TipoUsuario> TiposUsuarios { get; set; }
+        public DbSet<Produto> Produtos { get; set; }
+        public DbSet<Categoria> Categorias { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            modelBuilder.Entity<Endereco>()
-                .HasOne(e => e.Usuario)
-                .WithMany()
-                .HasForeignKey(e => e.UsuarioId);
+            //modelBuilder.Entity<Endereco>()
+            //    .HasOne(e => e.Usuario)
+            //    .WithMany()
+            //    .HasForeignKey(e => e.UsuarioId);
         }
     }
 

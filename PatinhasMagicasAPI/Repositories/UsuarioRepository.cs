@@ -27,7 +27,7 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task<List<Usuario>> GetAllAsync()
         {
-            return await _context.Usuarios.Include(u => u.TipoUsuario).ToListAsync();
+            return await _context.Usuarios.Include(u => u.TipoUsuario).Include(u=>u.Endereco).ToListAsync();
         }
 
         //public async Task<List<Usuario>> GetAllAtivosAsync()
@@ -37,7 +37,7 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task<Usuario> GetByIdAsync(int id)
         {
-            return await _context.Usuarios.Include(u => u.TipoUsuario).FirstOrDefaultAsync(u => u.IdUsuario == id);
+            return await _context.Usuarios.Include(u => u.TipoUsuarioId).FirstOrDefaultAsync(u => u.IdUsuario == id);
         }
 
         public Task InativarAsync(int id)

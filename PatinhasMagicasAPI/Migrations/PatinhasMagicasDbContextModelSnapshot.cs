@@ -36,7 +36,7 @@ namespace PatinhasMagicasAPI.Migrations
 
                     b.HasKey("IdCategoria");
 
-                    b.ToTable("Categoria");
+                    b.ToTable("Categorias");
                 });
 
             modelBuilder.Entity("PatinhasMagicasAPI.Models.Endereco", b =>
@@ -123,7 +123,7 @@ namespace PatinhasMagicasAPI.Migrations
 
                     b.HasIndex("CategoriaId");
 
-                    b.ToTable("Produto");
+                    b.ToTable("Produtos");
                 });
 
             modelBuilder.Entity("PatinhasMagicasAPI.Models.TipoUsuario", b =>
@@ -141,7 +141,7 @@ namespace PatinhasMagicasAPI.Migrations
 
                     b.HasKey("IdTipoUsuario");
 
-                    b.ToTable("TiposUsuario");
+                    b.ToTable("TiposUsuarios");
                 });
 
             modelBuilder.Entity("PatinhasMagicasAPI.Models.Usuario", b =>

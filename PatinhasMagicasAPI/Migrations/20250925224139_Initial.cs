@@ -12,7 +12,7 @@ namespace PatinhasMagicasAPI.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Categoria",
+                name: "Categorias",
                 columns: table => new
                 {
                     IdCategoria = table.Column<int>(type: "int", nullable: false)
@@ -21,11 +21,11 @@ namespace PatinhasMagicasAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categoria", x => x.IdCategoria);
+                    table.PrimaryKey("PK_Categorias", x => x.IdCategoria);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TiposUsuario",
+                name: "TiposUsuarios",
                 columns: table => new
                 {
                     IdTipoUsuario = table.Column<int>(type: "int", nullable: false)
@@ -34,11 +34,11 @@ namespace PatinhasMagicasAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TiposUsuario", x => x.IdTipoUsuario);
+                    table.PrimaryKey("PK_TiposUsuarios", x => x.IdTipoUsuario);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Produto",
+                name: "Produtos",
                 columns: table => new
                 {
                     IdProduto = table.Column<int>(type: "int", nullable: false)
@@ -52,11 +52,11 @@ namespace PatinhasMagicasAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Produto", x => x.IdProduto);
+                    table.PrimaryKey("PK_Produtos", x => x.IdProduto);
                     table.ForeignKey(
-                        name: "FK_Produto_Categoria_CategoriaId",
+                        name: "FK_Produtos_Categorias_CategoriaId",
                         column: x => x.CategoriaId,
-                        principalTable: "Categoria",
+                        principalTable: "Categorias",
                         principalColumn: "IdCategoria",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -78,9 +78,9 @@ namespace PatinhasMagicasAPI.Migrations
                 {
                     table.PrimaryKey("PK_Usuarios", x => x.IdUsuario);
                     table.ForeignKey(
-                        name: "FK_Usuarios_TiposUsuario_TipoUsuarioId",
+                        name: "FK_Usuarios_TiposUsuarios_TipoUsuarioId",
                         column: x => x.TipoUsuarioId,
-                        principalTable: "TiposUsuario",
+                        principalTable: "TiposUsuarios",
                         principalColumn: "IdTipoUsuario",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -117,8 +117,8 @@ namespace PatinhasMagicasAPI.Migrations
                 column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Produto_CategoriaId",
-                table: "Produto",
+                name: "IX_Produtos_CategoriaId",
+                table: "Produtos",
                 column: "CategoriaId");
 
             migrationBuilder.CreateIndex(
@@ -134,16 +134,16 @@ namespace PatinhasMagicasAPI.Migrations
                 name: "Enderecos");
 
             migrationBuilder.DropTable(
-                name: "Produto");
+                name: "Produtos");
 
             migrationBuilder.DropTable(
                 name: "Usuarios");
 
             migrationBuilder.DropTable(
-                name: "Categoria");
+                name: "Categorias");
 
             migrationBuilder.DropTable(
-                name: "TiposUsuario");
+                name: "TiposUsuarios");
         }
     }
 }

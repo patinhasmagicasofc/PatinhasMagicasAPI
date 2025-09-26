@@ -11,6 +11,7 @@ namespace PatinhasMagicasAPI.Models
         [Display(Name = "Nome")]
         [StringLength(150)]
         public string Nome { get; set; }
+
         [Required(ErrorMessage = "O CPF é obrigatório.")]
         [RegularExpression(@"^\d{3}\.\d{3}\.\d{3}-\d{2}$", ErrorMessage = "Formato de CPF inválido. Use 999.999.999-99.")]
         public string CPF { get; set; }
@@ -28,10 +29,14 @@ namespace PatinhasMagicasAPI.Models
         [StringLength(10, MinimumLength = 8, ErrorMessage = "O telefone deve ter entre 8 e 10 dígitos.")]
         public string Telefone { get; set; }
 
+        // Chave estrangeira para o relacionamento com TipoUsuario
         [Required(ErrorMessage = "Campo obrigatório!")]
         [Display(Name = "Tipo de Usuário")]
         public int TipoUsuarioId { get; set; }
-        public virtual TipoUsuario? TipoUsuario { get; set; }
 
+        // Propriedade de navegação
+        // Ela é essencial para o .Include() funcionar.
+        public virtual TipoUsuario? TipoUsuario { get; set; }
+        public virtual Endereco? Endereco { get; set; }
     }
 }

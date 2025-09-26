@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PatinhasMagicasAPI.Models
+namespace PatinhasMagicasAPI.Models.DTOs
 {
-    public class Endereco
+    public class EnderecoDTO
     {
-        [Key]
         public int IdEndereco { get; set; }
 
         [Required(ErrorMessage = "O logradouro é obrigatório.")]
@@ -12,7 +11,7 @@ namespace PatinhasMagicasAPI.Models
         public string Logradouro { get; set; }
 
         [Required(ErrorMessage = "O número é obrigatório.")]
-        [StringLength(7, ErrorMessage = "O logradouro deve ter no máximo 7 caracteres.")]
+        [Range(1, 9999999, ErrorMessage = "O número deve estar entre 1 e 9999999.")]
         public int Numero { get; set; }
 
         [Required(ErrorMessage = "O bairro é obrigatório.")]
@@ -36,9 +35,6 @@ namespace PatinhasMagicasAPI.Models
         public string? Complemento { get; set; }
 
         [Required(ErrorMessage = "O ID do usuário é obrigatório.")]
-        //propriedades de relacionamento
-
         public int UsuarioId { get; set; }
-        //public virtual Usuario? Usuario { get; set; }
     }
 }

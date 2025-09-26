@@ -4,10 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PatinhasMagicasAPI.Controllers
 {
-    [Route("api/[controller]")]
     [Route("api/[controller]")]
     [EnableCors("MyPolicy")]
     [ApiController]
@@ -28,15 +29,6 @@ namespace PatinhasMagicasAPI.Controllers
             var usuarios = await _usuarioRepository.GetAllAsync();
             return Ok(usuarios);
         }
-
-        // GET: api/Usuario/ativos
-        // Retorna todos os usuários ativos
-        //[HttpGet("ativos")]
-        //public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuariosAtivos()
-        //{
-        //    var usuariosAtivos = await _usuarioRepository.GetAllAtivosAsync();
-        //    return Ok(usuariosAtivos);
-        //}
 
         // GET: api/Usuario/5
         // Retorna um usuário específico pelo ID
@@ -59,18 +51,23 @@ namespace PatinhasMagicasAPI.Controllers
         public async Task<ActionResult<Usuario>> Post(Usuario usuario)
         {
             await _usuarioRepository.AddAsync(usuario);
-
             return CreatedAtAction(nameof(GetUsuario), new { id = usuario.IdUsuario }, usuario);
         }
 
         // PUT: api/Usuario/5
         // Atualiza um usuário existente
         [HttpPut("{id}")]
-        public async Task<IActionResult> PostUsuario(int id, Usuario usuario)
+        public async Task<IActionResult> UpdateUsuario(int id, Usuario usuario)
         {
             if (id != usuario.IdUsuario)
             {
                 return BadRequest("O ID na URL não corresponde ao ID do objeto.");
+            }
+
+            var existingUsuario = await _usuarioRepository.GetByIdAsync(id);
+            if (existingUsuario == null)
+            {
+                return NotFound();
             }
 
             await _usuarioRepository.UpdateAsync(usuario);
@@ -82,6 +79,12 @@ namespace PatinhasMagicasAPI.Controllers
         [HttpPut("inativar/{id}")]
         public async Task<IActionResult> InativarUsuario(int id)
         {
+            var existingUsuario = await _usuarioRepository.GetByIdAsync(id);
+            if (existingUsuario == null)
+            {
+                return NotFound();
+            }
+
             await _usuarioRepository.InativarAsync(id);
             return NoContent();
         }
@@ -91,6 +94,12 @@ namespace PatinhasMagicasAPI.Controllers
         [HttpPut("reativar/{id}")]
         public async Task<IActionResult> ReativarUsuario(int id)
         {
+            var existingUsuario = await _usuarioRepository.GetByIdAsync(id);
+            if (existingUsuario == null)
+            {
+                return NotFound();
+            }
+
             await _usuarioRepository.ReativarAsync(id);
             return NoContent();
         }

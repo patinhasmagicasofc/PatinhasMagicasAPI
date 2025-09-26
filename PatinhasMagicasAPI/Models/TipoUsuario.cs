@@ -12,6 +12,6 @@ namespace PatinhasMagicasAPI.Models
         public string DescricaoTipoUsuario { get; set; }
 
         // Propriedade de navegação
-        public List<Usuario> Usuarios { get; set; } = new List<Usuario>();
+        //public List<Usuario> Usuarios { get; set; } = new List<Usuario>();
     }
 }
