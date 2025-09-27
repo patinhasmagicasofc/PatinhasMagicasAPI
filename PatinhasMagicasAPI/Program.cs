@@ -6,6 +6,14 @@ using PatinhasMagicasAPI.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+//base de dados
+builder.Services.AddDbContext<PatinhasMagicasDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//repositories
+builder.Services.AddScoped<IItemPedidoRepository, ItemPedidoRepository>();
+builder.Services.AddScoped<IPedidoRepository, PedidoRepository>();
+builder.Services.AddScoped<IStatusAgendamentoRepository, StatusAgendamentoRepository>();
+builder.Services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();
 
 
 // Adicionar a conexão com o banco de dados SQL Server
