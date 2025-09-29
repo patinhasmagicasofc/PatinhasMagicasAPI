@@ -15,9 +15,29 @@ builder.Services.AddScoped<IPedidoRepository, PedidoRepository>();
 builder.Services.AddScoped<IStatusAgendamentoRepository, StatusAgendamentoRepository>();
 builder.Services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();
 
+
+// Adicionar a conexão com o banco de dados SQL Server
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<PatinhasMagicasDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Repositórios
+builder.Services.AddScoped<IEnderecoRepository, EnderecoRepository>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<ITipoUsuarioRepository, TipoUsuarioRepository>();
+
+//Services
+
+//configuração do Cors
+//não esquecer de colocar enabledCors nas controllers
+builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+{
+    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+}));
+
+
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
+// Troca do openAPI pelo swagger
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
@@ -28,6 +48,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+//ativar o CORS
+app.UseCors();
 
 app.UseAuthorization();
 
