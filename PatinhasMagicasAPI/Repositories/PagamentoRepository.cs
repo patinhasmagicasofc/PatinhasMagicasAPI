@@ -1,4 +1,5 @@
-﻿using PatinhasMagicasAPI.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using PatinhasMagicasAPI.Data;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
 
@@ -12,29 +13,36 @@ namespace PatinhasMagicasAPI.Repositories
             _context = context;
         }
 
-        public Task AddAsync(Pagamento pagamento)
+        public async Task AddAsync(Pagamento pagamento)
         {
-            throw new NotImplementedException();
+            _context.Pagamentos.AddAsync(pagamento);
+            await _context.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(int id)
+        public async Task<List<Pagamento>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Pagamentos.ToListAsync();
         }
 
-        public Task<List<Pagamento>> GetAllAsync()
+        public async Task<Pagamento> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Pagamentos.FindAsync(id);
         }
 
-        public Task<Pagamento> GetByIdAsync(int id)
+        public async Task UpdateAsync(Pagamento pagamento)
         {
-            throw new NotImplementedException();
+            _context.Pagamentos.Update(pagamento);
+            await _context.SaveChangesAsync();
         }
 
-        public Task UpdateAsync(Pagamento pagamento)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var pagamento = await _context.Pagamentos.FindAsync(id);
+            if (pagamento != null)
+            {
+                _context.Remove(pagamento);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

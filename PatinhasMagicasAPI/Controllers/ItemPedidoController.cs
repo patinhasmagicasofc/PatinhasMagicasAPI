@@ -25,15 +25,16 @@ namespace PatinhasMagicasAPI.Controllers
             if (!itensPedido.Any())
                 return NotFound();
 
-            var itensPedidoInputDTO = itensPedido.Select(i => new ItemPedidoInputDTO
+            var itensPedidoOutputDTO = itensPedido.Select(i => new ItemPedidoOutputDTO
             {
+                Id = i.Id,
                 PedidoId = i.PedidoId,
                 PrecoUnitario = i.PrecoUnitario,
                 ProdutoId = i.ProdutoId,
                 Quantidade = i.Quantidade,
             }).ToList();
 
-            return Ok(itensPedidoInputDTO);
+            return Ok(itensPedidoOutputDTO);
         }
 
         [HttpGet("{id}")]
@@ -44,15 +45,16 @@ namespace PatinhasMagicasAPI.Controllers
             if (itemPedido == null)
                 return NotFound();
 
-            var itemPedidoDTO = new ItemPedidoInputDTO
+            var itemPedidoOutputDTO = new ItemPedidoOutputDTO
             {
+                Id = itemPedido.Id,
                 PedidoId = itemPedido.PedidoId,
                 PrecoUnitario = itemPedido.PrecoUnitario,
                 ProdutoId = itemPedido.ProdutoId,
                 Quantidade = itemPedido.Quantidade,
             };
 
-            return Ok(itemPedidoDTO);
+            return Ok(itemPedidoOutputDTO);
         }
 
         [HttpPost]

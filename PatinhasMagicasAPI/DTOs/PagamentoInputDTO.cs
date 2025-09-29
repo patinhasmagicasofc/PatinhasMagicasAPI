@@ -1,25 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PatinhasMagicasAPI.Models
+namespace PatinhasMagicasAPI.DTOs
 {
-    public class Pagamento
+    public class PagamentoInputDTO
     {
-        [Key]
-        public int Id { get; set; }
-
         [Required(ErrorMessage = "O status do pagamento é obrigatório")]
         [StringLength(30, ErrorMessage = "O status deve ter no máximo 30 caracteres")]
         public string Status { get; set; }
+        public DateTime Data { get; set; }
 
-        [Required]
-        public DateTime Data { get; set; } = DateTime.Now;
-
-
+        [Required(ErrorMessage = "O tipo de pagamento é obrigatório")]
         public int TipoPagamentoId { get; set; }
-        public TipoPagamento? TipoPagamento { get; set; }
 
-
+        [Required(ErrorMessage = "O pedido é obrigatório")]
         public int PedidoId { get; set; }
-        public Pedido? Pedido { get; set; }
     }
 }

@@ -25,8 +25,9 @@ namespace PatinhasMagicasAPI.Controllers
             if (!pedidos.Any())
                 return NotFound();
 
-            var pedidosDTO = pedidos.Select(p => new PedidoInputDTO
+            var pedidosDTO = pedidos.Select(p => new PedidoOutputDTO
             {
+                Id = p.Id,
                 UsuarioId = p.UsuarioId,
                 ClienteId = p.ClienteId,
                 DataPedido = p.DataPedido,
@@ -44,8 +45,9 @@ namespace PatinhasMagicasAPI.Controllers
             if (pedido == null)
                 return NotFound();
 
-            var pedidoDTO = new PedidoInputDTO
+            var pedidoDTO = new PedidoOutputDTO
             {
+                Id = pedido.Id,
                 DataPedido = pedido.DataPedido,
                 ClienteId = pedido.ClienteId,
                 StatusPedidoId = pedido.StatusPedidoId,
