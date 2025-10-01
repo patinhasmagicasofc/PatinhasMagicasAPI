@@ -18,6 +18,22 @@ namespace PatinhasMagicasAPI.Data
         public DbSet<ItemPedido> ItensPedido { get; set; }
         public DbSet<Pagamento> Pagamentos { get; set; }
         public DbSet<TipoPagamento> TipoPagamentos{ get; set; }
+        public DbSet<Servico> Servicos { get; set; }
+        public DbSet<TipoServico> TiposServico { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<TipoServico>()
+                .HasKey(t => t.TipoServicoId);
+
+            modelBuilder.Entity<Servico>()
+                .HasKey(s => s.IdServico);
+
+            modelBuilder.Entity<Servico>()
+                .HasOne(s => s.TipoServico)
+                .WithMany(t => t.Servicos)
+                .HasForeignKey(s => s.TipoServicoId);
+        }
 
     }
 

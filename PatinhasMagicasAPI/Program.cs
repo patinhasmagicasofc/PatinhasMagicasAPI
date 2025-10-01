@@ -19,6 +19,8 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<ITipoUsuarioRepository, TipoUsuarioRepository>();
 builder.Services.AddScoped<ITipoPagamentoRepository, TipoPagamentoRepository>();
 builder.Services.AddScoped<IPagamentoRepository, PagamentoRepository>();
+builder.Services.AddScoped<ITipoServicoRepository, TipoServicoRepository>();
+builder.Services.AddScoped<IServicoRepository, ServicoRepository>();
 
 //Services
 
