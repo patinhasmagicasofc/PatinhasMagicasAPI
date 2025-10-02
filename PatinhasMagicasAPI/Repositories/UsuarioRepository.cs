@@ -54,5 +54,10 @@ namespace PatinhasMagicasAPI.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public async Task<Usuario>? ValidarLoginAsync(string email, string senha)
+        {
+            return await _context.Usuarios.Include(u => u.TipoUsuario).FirstOrDefaultAsync(u => u.Email == email && u.Senha == senha);
+        }
     }
 }

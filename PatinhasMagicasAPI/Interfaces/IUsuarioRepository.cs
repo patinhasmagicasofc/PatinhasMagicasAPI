@@ -11,6 +11,6 @@ namespace PatinhasMagicasAPI.Interfaces
         Task UpdateAsync(Usuario usuario);
         Task InativarAsync(int id);
         Task ReativarAsync(int id);
-        //Task<Usuario>? ValidarLoginAsync(string email, string senha);
+        Task<Usuario>? ValidarLoginAsync(string email, string senha);
     }
 }

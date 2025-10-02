@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
 using PatinhasMagicasAPI.Models.DTOs;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 namespace PatinhasMagicasAPI.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors("MyPolicy")]
     [ApiController]
     public class EnderecoController : ControllerBase
     {

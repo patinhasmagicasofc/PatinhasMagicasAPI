@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ namespace PatinhasMagicasAPI.Controllers
 {
     // Define a rota e marca a classe como um controlador de API
     [Route("api/[controller]")]
+    [EnableCors("MyPolicy")]
     [ApiController]
     public class TipoUsuarioController : ControllerBase
     {

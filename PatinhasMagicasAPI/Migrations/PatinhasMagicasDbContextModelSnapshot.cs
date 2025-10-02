@@ -22,6 +22,38 @@ namespace PatinhasMagicasAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("PatinhasMagicasAPI.Models.Agendamento", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DataAgendamento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataCadastro")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("IdStatusAgendamento")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PedidoId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StatusAgendamentoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PedidoId");
+
+                    b.HasIndex("StatusAgendamentoId");
+
+                    b.ToTable("Agendamentos");
+                });
+
             modelBuilder.Entity("PatinhasMagicasAPI.Models.Categoria", b =>
                 {
                     b.Property<int>("IdCategoria")
@@ -85,9 +117,62 @@ namespace PatinhasMagicasAPI.Migrations
 
                     b.HasKey("IdEndereco");
 
-                    b.HasIndex("UsuarioId");
+                    b.HasIndex("UsuarioId")
+                        .IsUnique();
 
                     b.ToTable("Enderecos");
+                });
+
+            modelBuilder.Entity("PatinhasMagicasAPI.Models.ItemPedido", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PedidoId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("PrecoUnitario")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ProdutoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PedidoId");
+
+                    b.ToTable("ItensPedido");
+                });
+
+            modelBuilder.Entity("PatinhasMagicasAPI.Models.Pedido", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClienteId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DataPedido")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("StatusPedidoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Pedidos");
                 });
 
             modelBuilder.Entity("PatinhasMagicasAPI.Models.Produto", b =>
@@ -124,6 +209,24 @@ namespace PatinhasMagicasAPI.Migrations
                     b.HasIndex("CategoriaId");
 
                     b.ToTable("Produtos");
+                });
+
+            modelBuilder.Entity("PatinhasMagicasAPI.Models.StatusAgendamento", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StatusAgendamentos");
                 });
 
             modelBuilder.Entity("PatinhasMagicasAPI.Models.TipoUsuario", b =>
@@ -169,6 +272,11 @@ namespace PatinhasMagicasAPI.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<string>("Senha")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
                     b.Property<string>("Telefone")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -184,15 +292,41 @@ namespace PatinhasMagicasAPI.Migrations
                     b.ToTable("Usuarios");
                 });
 
-            modelBuilder.Entity("PatinhasMagicasAPI.Models.Endereco", b =>
+            modelBuilder.Entity("PatinhasMagicasAPI.Models.Agendamento", b =>
                 {
-                    b.HasOne("PatinhasMagicasAPI.Models.Usuario", "Usuario")
+                    b.HasOne("PatinhasMagicasAPI.Models.Pedido", "Pedido")
                         .WithMany()
-                        .HasForeignKey("UsuarioId")
+                        .HasForeignKey("PedidoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Usuario");
+                    b.HasOne("PatinhasMagicasAPI.Models.StatusAgendamento", "StatusAgendamento")
+                        .WithMany("Agendamentos")
+                        .HasForeignKey("StatusAgendamentoId");
+
+                    b.Navigation("Pedido");
+
+                    b.Navigation("StatusAgendamento");
+                });
+
+            modelBuilder.Entity("PatinhasMagicasAPI.Models.Endereco", b =>
+                {
+                    b.HasOne("PatinhasMagicasAPI.Models.Usuario", null)
+                        .WithOne("Endereco")
+                        .HasForeignKey("PatinhasMagicasAPI.Models.Endereco", "UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PatinhasMagicasAPI.Models.ItemPedido", b =>
+                {
+                    b.HasOne("PatinhasMagicasAPI.Models.Pedido", "Pedido")
+                        .WithMany("ItensPedido")
+                        .HasForeignKey("PedidoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pedido");
                 });
 
             modelBuilder.Entity("PatinhasMagicasAPI.Models.Produto", b =>
@@ -209,7 +343,7 @@ namespace PatinhasMagicasAPI.Migrations
             modelBuilder.Entity("PatinhasMagicasAPI.Models.Usuario", b =>
                 {
                     b.HasOne("PatinhasMagicasAPI.Models.TipoUsuario", "TipoUsuario")
-                        .WithMany("Usuarios")
+                        .WithMany()
                         .HasForeignKey("TipoUsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -222,9 +356,19 @@ namespace PatinhasMagicasAPI.Migrations
                     b.Navigation("Produtos");
                 });
 
-            modelBuilder.Entity("PatinhasMagicasAPI.Models.TipoUsuario", b =>
+            modelBuilder.Entity("PatinhasMagicasAPI.Models.Pedido", b =>
                 {
-                    b.Navigation("Usuarios");
+                    b.Navigation("ItensPedido");
+                });
+
+            modelBuilder.Entity("PatinhasMagicasAPI.Models.StatusAgendamento", b =>
+                {
+                    b.Navigation("Agendamentos");
+                });
+
+            modelBuilder.Entity("PatinhasMagicasAPI.Models.Usuario", b =>
+                {
+                    b.Navigation("Endereco");
                 });
 #pragma warning restore 612, 618
         }
