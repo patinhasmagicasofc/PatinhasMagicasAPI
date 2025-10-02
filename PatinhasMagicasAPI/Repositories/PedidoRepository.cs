@@ -22,7 +22,7 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task<List<Pedido>> GetAllAsync()
         {
-           return await _context.Pedidos.ToListAsync();
+            return await _context.Pedidos.Include(p => p.Cliente).ToListAsync();
         }
 
         public async Task<Pedido> GetByIdAsync(int id)

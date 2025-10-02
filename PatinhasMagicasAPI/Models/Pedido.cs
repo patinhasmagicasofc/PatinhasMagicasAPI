@@ -13,7 +13,7 @@ namespace PatinhasMagicasAPI.Models
         [Required(ErrorMessage = "O ClienteId é obrigatório.")]
         [Range(1, int.MaxValue, ErrorMessage = "ClienteId deve ser um valor válido.")]
         public int ClienteId { get; set; }
-        // public Cliente Cliente { get; set; }
+        public Usuario? Cliente { get; set; }
 
         [Required(ErrorMessage = "O UsuarioId é obrigatório.")]
         [Range(1, int.MaxValue, ErrorMessage = "UsuarioId deve ser um valor válido.")]
