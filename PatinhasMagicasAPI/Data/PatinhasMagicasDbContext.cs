@@ -21,20 +21,6 @@ namespace PatinhasMagicasAPI.Data
         public DbSet<Servico> Servicos { get; set; }
         public DbSet<TipoServico> TiposServico { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<TipoServico>()
-                .HasKey(t => t.TipoServicoId);
-
-            modelBuilder.Entity<Servico>()
-                .HasKey(s => s.IdServico);
-
-            modelBuilder.Entity<Servico>()
-                .HasOne(s => s.TipoServico)
-                .WithMany(t => t.Servicos)
-                .HasForeignKey(s => s.TipoServicoId);
-        }
-
     }
 
 }
