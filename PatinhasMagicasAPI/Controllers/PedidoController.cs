@@ -55,6 +55,29 @@ namespace PatinhasMagicasAPI.Controllers
                 ClienteId = pedido.ClienteId,
                 StatusPedidoId = pedido.StatusPedidoId,
                 UsuarioId = pedido.UsuarioId,
+ 
+                UsuarioOutputDTO = new UsuarioOutputDTO
+                {
+                    Nome = pedido.Cliente.Nome,
+                    Email = pedido.Cliente.Email,
+                    Telefone = pedido.Cliente.Telefone
+
+                }, 
+                ItemPedidoOutputDTOs = pedido.ItensPedido.Select(ip => new ItemPedidoOutputDTO
+                {
+                    Id = ip.Id,
+                    PedidoId = ip.PedidoId,
+                    ProdutoId = ip.ProdutoId,
+                    Quantidade = ip.Quantidade,
+                    PrecoUnitario = ip.PrecoUnitario,
+                    ProdutoOutputDTO = new ProdutoOutputDTO
+                    {
+                        Nome = ip.Produto.Nome,
+                        Codigo = ip.Produto.Codigo,
+                        Preco = ip.Produto.Preco
+                    }
+
+                }).ToList(),
             };
 
             return Ok(pedidoDTO);

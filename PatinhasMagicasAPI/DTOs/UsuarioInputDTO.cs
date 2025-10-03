@@ -30,6 +30,5 @@ namespace PatinhasMagicasAPI.DTOs
         [Required(ErrorMessage = "Campo obrigatório!")]
         [Display(Name = "Tipo de Usuário")]
         public int TipoUsuarioId { get; set; }
-
     }
 }

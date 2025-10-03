@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PatinhasMagicasAPI.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace PatinhasMagicasAPI.DTOs
 {
@@ -12,5 +13,8 @@ namespace PatinhasMagicasAPI.DTOs
         public string NomeUsuario { get; set; }
         public int StatusPedidoId { get; set; }
         public string StatusPedidoDescricao { get; set; }
+
+        public UsuarioOutputDTO? UsuarioOutputDTO { get; set; }
+        public List<ItemPedidoOutputDTO>? ItemPedidoOutputDTOs { get; set; }
     }
 }
