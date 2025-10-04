@@ -21,7 +21,7 @@ namespace PatinhasMagicasAPI.Controllers
 
         // GET: api/Endereco
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EnderecoDTO>>> GetEnderecos()
+        public async Task<ActionResult<IEnumerable<EnderecoInputDTO>>> GetEnderecos()
         {
             var enderecos = await _enderecoRepository.GetAsync();
             return Ok(enderecos);
@@ -43,7 +43,7 @@ namespace PatinhasMagicasAPI.Controllers
 
         // Post
         [HttpPost]
-        public async Task<ActionResult<Endereco>> PostEndereco([FromBody] EnderecoDTO enderecoDto) 
+        public async Task<ActionResult<Endereco>> PostEndereco([FromBody] EnderecoInputDTO enderecoDto) 
         {
             // 2. Mapear DTO para a Entidade Endereco antes de salvar
             var endereco = new Endereco

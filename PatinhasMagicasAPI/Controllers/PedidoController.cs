@@ -55,14 +55,22 @@ namespace PatinhasMagicasAPI.Controllers
                 ClienteId = pedido.ClienteId,
                 StatusPedidoId = pedido.StatusPedidoId,
                 UsuarioId = pedido.UsuarioId,
- 
+
                 UsuarioOutputDTO = new UsuarioOutputDTO
                 {
                     Nome = pedido.Cliente.Nome,
                     Email = pedido.Cliente.Email,
-                    Telefone = pedido.Cliente.Telefone
+                    Telefone = pedido.Cliente.Telefone,
+                    EnderecoOutputDTO = new EnderecoOutputDTO
+                    {
+                        Logradouro = pedido.Cliente.Endereco.Logradouro,
+                        Numero = pedido.Cliente.Endereco.Numero,
+                        Cidade = pedido.Cliente.Endereco.Cidade,
+                        Estado = pedido.Cliente.Endereco.Estado,
+                        CEP = pedido.Cliente.Endereco.CEP
+                    }
 
-                }, 
+                },
                 ItemPedidoOutputDTOs = pedido.ItensPedido.Select(ip => new ItemPedidoOutputDTO
                 {
                     Id = ip.Id,
@@ -74,7 +82,8 @@ namespace PatinhasMagicasAPI.Controllers
                     {
                         Nome = ip.Produto.Nome,
                         Codigo = ip.Produto.Codigo,
-                        Preco = ip.Produto.Preco
+                        Preco = ip.Produto.Preco,
+                        Foto = ip.Produto.Foto
                     }
 
                 }).ToList(),

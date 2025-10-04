@@ -10,5 +10,6 @@ namespace PatinhasMagicasAPI.DTOs
         public int Ddd { get; set; }
         public string Telefone { get; set; }
         public int TipoUsuarioId { get; set; }
+        public EnderecoOutputDTO? EnderecoOutputDTO { get; set; }
     }
 }

@@ -27,7 +27,7 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task<Pedido> GetByIdAsync(int id)
         {
-            return await _context.Pedidos.Include(p => p.Cliente).Include(p => p.ItensPedido).ThenInclude(p => p.Produto).FirstOrDefaultAsync(p => id == id);
+            return await _context.Pedidos.Include(p => p.Cliente).ThenInclude(p => p.Endereco).Include(p => p.ItensPedido).ThenInclude(p => p.Produto).FirstOrDefaultAsync(p => id == id);
         }
 
         public async Task UpdateAsync(Pedido pedido)
