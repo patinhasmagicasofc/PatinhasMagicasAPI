@@ -29,6 +29,11 @@ namespace PatinhasMagicasAPI.Repositories
             return await _context.Pagamentos.FindAsync(id);
         }
 
+        public async Task<bool> ExistsByPedidoId(int id)
+        {
+            return await _context.Pagamentos.AnyAsync(p => p.PedidoId == id);
+        }
+
         public async Task UpdateAsync(Pagamento pagamento)
         {
             _context.Pagamentos.Update(pagamento);

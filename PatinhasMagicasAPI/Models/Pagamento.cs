@@ -7,12 +7,13 @@ namespace PatinhasMagicasAPI.Models
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "O status do pagamento é obrigatório")]
-        [StringLength(30, ErrorMessage = "O status deve ter no máximo 30 caracteres")]
-        public string Status { get; set; }
-
         [Required]
         public DateTime Data { get; set; } = DateTime.Now;
+        public decimal Valor { get; set; }
+
+
+        public int StatusPagamentoId { get; set; }
+        public StatusPagamento? StatusPagamento { get; set; }
 
 
         public int TipoPagamentoId { get; set; }

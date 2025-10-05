@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
+using PatinhasMagicasAPI.Services;
 
 
 namespace PatinhasMagicasAPI.Controllers
@@ -13,10 +14,12 @@ namespace PatinhasMagicasAPI.Controllers
     public class PedidoController : ControllerBase
     {
         private readonly IPedidoRepository _pedidoRepository;
+        private readonly PedidoService _pedidoService;
 
-        public PedidoController(IPedidoRepository pedidoRepository)
+        public PedidoController(IPedidoRepository pedidoRepository, PedidoService pedidoService)
         {
             _pedidoRepository = pedidoRepository;
+            _pedidoService = pedidoService;
         }
 
         [HttpGet]
@@ -34,7 +37,11 @@ namespace PatinhasMagicasAPI.Controllers
                 ClienteId = p.ClienteId,
                 DataPedido = p.DataPedido,
                 StatusPedidoId = p.StatusPedidoId,
+                StatusPedido = p.StatusPedido.Nome,
                 NomeCliente = p.Cliente?.Nome,
+                FormaPagamento = _pedidoService.GetFormaPagamento(p),
+                ValorTotal = _pedidoService.GetValorTotalPedido(p),
+                StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault()
             }).ToList();
 
             return Ok(pedidosDTO);
@@ -55,6 +62,8 @@ namespace PatinhasMagicasAPI.Controllers
                 ClienteId = pedido.ClienteId,
                 StatusPedidoId = pedido.StatusPedidoId,
                 UsuarioId = pedido.UsuarioId,
+                StatusPedido = pedido.StatusPedido.Nome,
+                StatusPagamento = pedido.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault(),
 
                 UsuarioOutputDTO = new UsuarioOutputDTO
                 {
@@ -103,7 +112,7 @@ namespace PatinhasMagicasAPI.Controllers
                 UsuarioId = pedidoInputDTO.UsuarioId
             };
 
-            await _pedidoRepository.AddAsync(pedido);
+            await _pedidoService.CreatePedidoAsync(pedido);
 
             var pedidoOutputDTO = new PedidoOutputDTO
             {

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using PatinhasMagicasAPI.Data;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Repositories;
+using PatinhasMagicasAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,7 @@ builder.Services.AddScoped<ITipoServicoRepository, TipoServicoRepository>();
 builder.Services.AddScoped<IServicoRepository, ServicoRepository>();
 
 //Services
+builder.Services.AddScoped<PedidoService, PedidoService>();
 
 //configuração do Cors
 //não esquecer de colocar enabledCors nas controllers

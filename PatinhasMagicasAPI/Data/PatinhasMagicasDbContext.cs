@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PatinhasMagicasAPI.Models;
+using PatinhasMagicasAPI.DTOs;
 
 namespace PatinhasMagicasAPI.Data
 {
@@ -20,6 +21,9 @@ namespace PatinhasMagicasAPI.Data
         public DbSet<TipoPagamento> TipoPagamentos{ get; set; }
         public DbSet<Servico> Servicos { get; set; }
         public DbSet<TipoServico> TiposServico { get; set; }
+        public DbSet<StatusPedido> StatusPedidos { get; set; }
+        public DbSet<StatusPagamento> StatusPagamentos { get; set; }
+        public DbSet<PatinhasMagicasAPI.DTOs.StatusPedidoOutputDTO> StatusPedidoOutputDTO { get; set; } = default!;
 
     }
 

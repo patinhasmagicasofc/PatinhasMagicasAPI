@@ -15,12 +15,29 @@ INSERT INTO TipoPagamentos (Metodo) VALUES
 ('Dinheiro'),
 ('PIX');
 
+-- Status do Pedido
+INSERT INTO StatusPedidos (Nome) VALUES
+('Pendente'),
+('Confirmado'),
+('Cancelado'),
+('Concluído');
+
 -- Status de Agendamento
 INSERT INTO StatusAgendamentos (Nome) VALUES
 ('Pendente'),
 ('Confirmado'),
 ('Cancelado'),
 ('Concluído');
+
+-- Status de Pagamento
+INSERT INTO StatusPagamentos (Status) VALUES
+('Pendente'),
+('Em Processamento'),
+('Aprovado'),
+('Recusado'),
+('Cancelado'),
+('Estornado'),
+('Expirado');
 
 -- Categorias
 INSERT INTO Categorias (Nome) VALUES
@@ -66,8 +83,8 @@ INSERT INTO ItensPedido (Quantidade, PrecoUnitario, ProdutoId, PedidoId) VALUES
 (1, 20.00, 2, 1);
 
 -- Pagamento
-INSERT INTO Pagamentos (Status, Data, TipoPagamentoId, PedidoId) VALUES
-('Pago', GETDATE(), 4, 1);
+INSERT INTO Pagamentos (Data, valor, StatusPagamentoId, TipoPagamentoId, PedidoId) VALUES
+(GETDATE(), 100, 3, 4, 1);
 
 -- Agendamento
 INSERT INTO Agendamentos (DataAgendamento, DataCadastro, PedidoId, IdStatusAgendamento) VALUES

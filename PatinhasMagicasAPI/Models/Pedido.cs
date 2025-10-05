@@ -23,7 +23,9 @@ namespace PatinhasMagicasAPI.Models
         [Required(ErrorMessage = "O StatusPedidoId é obrigatório.")]
         [Range(1, int.MaxValue, ErrorMessage = "StatusPedidoId deve ser um valor válido.")]
         public int StatusPedidoId { get; set; }
-        // public StatusPedido StatusPedido { get; set; }
+        public StatusPedido StatusPedido { get; set; }
+
+        public ICollection<Pagamento> Pagamentos { get; set; } = new List<Pagamento>();
 
         public ICollection<ItemPedido> ItensPedido { get; set; } = new List<ItemPedido>();
 
