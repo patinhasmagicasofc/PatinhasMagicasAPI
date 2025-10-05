@@ -23,7 +23,6 @@ namespace PatinhasMagicasAPI.Data
         public DbSet<TipoServico> TiposServico { get; set; }
         public DbSet<StatusPedido> StatusPedidos { get; set; }
         public DbSet<StatusPagamento> StatusPagamentos { get; set; }
-        public DbSet<PatinhasMagicasAPI.DTOs.StatusPedidoOutputDTO> StatusPedidoOutputDTO { get; set; } = default!;
 
     }
 

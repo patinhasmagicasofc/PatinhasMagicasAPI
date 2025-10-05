@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.WebEncoders.Testing;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.WebEncoders.Testing;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
+using System.Threading.Tasks;
 
 namespace PatinhasMagicasAPI.Services
 {
@@ -75,6 +77,16 @@ namespace PatinhasMagicasAPI.Services
         {
             var formaPagamento = pedido.Pagamentos.Select(p => p.TipoPagamento?.Metodo).FirstOrDefault();
             return formaPagamento ?? "Pendente";
+        }
+
+        public int GetTotalPedidosHoje(Pedido pedido)
+        {
+            return _pedidoRepository.GetTotalPedidosHoje(pedido);
+        }
+
+        public decimal GetTotalVendasHoje(Pedido pedido)
+        {
+           return _pedidoRepository.GetTotalVendasHoje(pedido);
         }
 
         public async Task<Pedido> GetPedidoByIdAsync(int id)

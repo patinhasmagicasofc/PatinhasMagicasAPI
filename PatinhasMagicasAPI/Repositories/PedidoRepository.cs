@@ -20,6 +20,25 @@ namespace PatinhasMagicasAPI.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public int GetTotalPedidosHoje(Pedido pedido)
+        {
+            var hoje = DateTime.Today;
+            var totalPedidosHoje =  _context.Pedidos
+                .Count(p => p.DataPedido.Date == hoje);
+
+            return totalPedidosHoje;
+        }
+
+        public decimal GetTotalVendasHoje(Pedido pedido)
+        {
+            var hoje = DateTime.Today;
+            var totalVendasHoje = _context.Pedidos
+                                                .Where(p => p.DataPedido.Date == hoje && p.StatusPedido.Nome == "Pago")
+                                                .Sum(p => p.ItensPedido.Sum(i => i.PrecoUnitario * i.Quantidade));
+
+            return totalVendasHoje;
+        }
+
         public async Task<List<Pedido>> GetAllAsync()
         {
             return await _context.Pedidos.Include(p => p.Cliente).ThenInclude(c => c.Endereco)
@@ -27,6 +46,20 @@ namespace PatinhasMagicasAPI.Repositories
                                          .Include(p => p.Pagamentos).ThenInclude(pg => pg.StatusPagamento)
                                          .Include(p => p.Pagamentos).ThenInclude(pg => pg.TipoPagamento)
                                          .Include(p => p.StatusPedido).ToListAsync();
+        }
+
+        public async Task<(List<Pedido>, int Total)> GetAllAsync(int page, int pageSize)
+        {
+            var total = await _context.Pedidos.CountAsync();
+            var skip = (page - 1) * pageSize;
+            var pedidos = await _context.Pedidos.Skip(skip).Take(pageSize)
+                                         .Include(p => p.Cliente).ThenInclude(c => c.Endereco)
+                                         .Include(p => p.ItensPedido).ThenInclude(i => i.Produto)
+                                         .Include(p => p.Pagamentos).ThenInclude(pg => pg.StatusPagamento)
+                                         .Include(p => p.Pagamentos).ThenInclude(pg => pg.TipoPagamento)
+                                         .Include(p => p.StatusPedido).OrderBy(i => i.Id).ToListAsync();
+
+            return (pedidos, total);
         }
 
         public async Task<Pedido> GetByIdAsync(int id)

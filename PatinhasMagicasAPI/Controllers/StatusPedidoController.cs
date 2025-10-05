@@ -69,9 +69,9 @@ namespace PatinhasMagicasAPI.Controllers
 
         // POST: api/StatusPedido
         [HttpPost]
-        public async Task<ActionResult<StatusPedidoOutputDTO>> PostStatusPedidoOutputDTO(StatusPedidoOutputDTO statusPedidoOutputDTO)
+        public async Task<ActionResult<StatusPedidoOutputDTO>> PostStatusPedidoOutputDTO(StatusPedido statusPedidoOutputDTO)
         {
-            _context.StatusPedidoOutputDTO.Add(statusPedidoOutputDTO);
+            _context.StatusPedidos.Add(statusPedidoOutputDTO);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetStatusPedidoOutputDTO", new { id = statusPedidoOutputDTO.Id }, statusPedidoOutputDTO);
@@ -81,13 +81,13 @@ namespace PatinhasMagicasAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStatusPedidoOutputDTO(int id)
         {
-            var statusPedidoOutputDTO = await _context.StatusPedidoOutputDTO.FindAsync(id);
+            var statusPedidoOutputDTO = await _context.StatusPedidos.FindAsync(id);
             if (statusPedidoOutputDTO == null)
             {
                 return NotFound();
             }
 
-            _context.StatusPedidoOutputDTO.Remove(statusPedidoOutputDTO);
+            _context.StatusPedidos.Remove(statusPedidoOutputDTO);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -95,7 +95,7 @@ namespace PatinhasMagicasAPI.Controllers
 
         private bool StatusPedidoOutputDTOExists(int id)
         {
-            return _context.StatusPedidoOutputDTO.Any(e => e.Id == id);
+            return _context.StatusPedidos.Any(e => e.Id == id);
         }
     }
 }

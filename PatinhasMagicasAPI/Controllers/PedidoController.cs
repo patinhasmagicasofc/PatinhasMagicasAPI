@@ -47,6 +47,36 @@ namespace PatinhasMagicasAPI.Controllers
             return Ok(pedidosDTO);
         }
 
+        [HttpGet("paged")]
+        public async Task<ActionResult<IEnumerable<PedidoOutputDTO>>> GetAll(int page, int pageSize)
+        {
+            var (pedidos, total) = await _pedidoRepository.GetAllAsync(page, pageSize);
+
+            if (!pedidos.Any())
+                return NotFound();
+
+            var pedidosDTO = pedidos.Select(p => new PedidoOutputDTO
+            {
+                Id = p.Id,
+                UsuarioId = p.UsuarioId,
+                ClienteId = p.ClienteId,
+                DataPedido = p.DataPedido,
+                StatusPedidoId = p.StatusPedidoId,
+                StatusPedido = p.StatusPedido.Nome,
+                NomeCliente = p.Cliente?.Nome,
+                TotalVendasHoje = _pedidoService.GetTotalPedidosHoje(p),
+                FormaPagamento = _pedidoService.GetFormaPagamento(p),
+                ValorTotal = _pedidoService.GetTotalVendasHoje(p),
+                StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault()
+            }).ToList();
+
+            return Ok(new
+            {
+                pedidosDTO,
+                total
+            });
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult> GetById(int id)
         {
