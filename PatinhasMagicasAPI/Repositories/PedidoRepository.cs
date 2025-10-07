@@ -33,7 +33,7 @@ namespace PatinhasMagicasAPI.Repositories
         {
             var hoje = DateTime.Today;
             var totalVendasHoje = _context.Pedidos
-                                                .Where(p => p.DataPedido.Date == hoje && p.StatusPedido.Nome == "Pago")
+                                                .Where(p => p.DataPedido.Date == hoje)
                                                 .Sum(p => p.ItensPedido.Sum(i => i.PrecoUnitario * i.Quantidade));
 
             return totalVendasHoje;
@@ -48,7 +48,7 @@ namespace PatinhasMagicasAPI.Repositories
                                          .Include(p => p.StatusPedido).ToListAsync();
         }
 
-        public async Task<(List<Pedido>, int Total)> GetAllAsync(int page, int pageSize, DateTime dataInicio, DateTime dataFim)
+        public async Task<(List<Pedido>, int Total)> GetAllAsync(int page, int pageSize, DateTime? dataInicio, DateTime? dataFim)
         {
             var skip = (page - 1) * pageSize;
             var query = _context.Pedidos
@@ -64,6 +64,17 @@ namespace PatinhasMagicasAPI.Repositories
 
 
             return (pedidos, total);
+        }
+
+        public IQueryable<Pedido> GetAllPedidos()
+        {
+            return _context.Pedidos
+                           .Include(p => p.Cliente).ThenInclude(c => c.Endereco)
+                           .Include(p => p.ItensPedido).ThenInclude(i => i.Produto)
+                           .Include(p => p.Pagamentos).ThenInclude(pg => pg.StatusPagamento)
+                           .Include(p => p.Pagamentos).ThenInclude(pg => pg.TipoPagamento)
+                           .Include(p => p.StatusPedido)
+                           .AsQueryable();
         }
 
         public async Task<Pedido> GetByIdAsync(int id)

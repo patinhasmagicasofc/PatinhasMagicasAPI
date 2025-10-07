@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.WebEncoders.Testing;
+using NuGet.Protocol.Core.Types;
+using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
-using System.Threading.Tasks;
 
 namespace PatinhasMagicasAPI.Services
 {
@@ -38,6 +38,55 @@ namespace PatinhasMagicasAPI.Services
         //    await _pedidoRepository.UpdateAsync(pedido);
         //}
 
+        public async Task<(List<Pedido>, int Total)> GetPedidosPaginados(PedidoFiltroDTO filtro)
+        {
+            if (filtro.DataInicio == null || filtro.DataFim == null)
+            {
+                var hoje = DateTime.Today;
+                filtro.DataInicio = hoje;
+                filtro.DataFim = hoje;
+            }
+
+            var query = _pedidoRepository.GetAllPedidos();
+
+            // Aplicando filtros apenas se existirem
+            query = FiltrarPorData(query, filtro.DataInicio, filtro.DataFim);
+
+            if (!string.IsNullOrEmpty(filtro.Nome))
+                query = FiltrarPorNome(query, filtro.Nome);
+
+            if (!string.IsNullOrEmpty(filtro.Status))
+                query = FiltrarPorStatus(query, filtro.Status);
+
+            // Total antes da paginação
+            var total = await query.CountAsync();
+
+            var pedidos = await query
+                .OrderByDescending(p => p.DataPedido)
+                .Skip((filtro.Page - 1) * filtro.PageSize)
+                .Take(filtro.PageSize)
+                .ToListAsync();
+
+            return (pedidos, total);
+        }
+        private IQueryable<Pedido> FiltrarPorData(IQueryable<Pedido> query, DateTime? inicio, DateTime? fim)
+        {
+            if (inicio == null || fim == null) return query;
+
+            var fimMaisUmDia = fim.Value.Date.AddDays(1);
+            return query.Where(p => p.DataPedido >= inicio.Value.Date && p.DataPedido < fimMaisUmDia);
+        }
+
+        private IQueryable<Pedido> FiltrarPorNome(IQueryable<Pedido> query, string nome)
+        {
+            return query.Where(p => p.Cliente.Nome.Contains(nome)); // use Contains para busca parcial
+        }
+
+        private IQueryable<Pedido> FiltrarPorStatus(IQueryable<Pedido> query, string status)
+        {
+            return query.Where(p => p.StatusPedido.Nome == status);
+        }
+
         public async Task<Pedido> CreatePedidoAsync(Pedido pedido)
         {
             // Adiciona o pedido ao repositório
@@ -46,7 +95,7 @@ namespace PatinhasMagicasAPI.Services
 
             var teste = _pagamentoRepository.ExistsByPedidoId(pedido.Id);
 
-            if(teste == null)
+            if (teste == null)
                 pedido.StatusPedidoId = 1; // Define o status inicial do pedido (ex: AguardandoPagamento)
 
             if (!pedido.Pagamentos.Any())
@@ -68,7 +117,7 @@ namespace PatinhasMagicasAPI.Services
             return pedido;
         }
 
-        public decimal GetValorTotalPedido(Pedido pedido)
+        public decimal GetValorPedido(Pedido pedido)
         {
             return pedido.ItensPedido.Sum(i => i.PrecoUnitario * i.Quantidade);
         }
@@ -86,14 +135,14 @@ namespace PatinhasMagicasAPI.Services
 
         public decimal GetTotalVendasHoje(Pedido pedido)
         {
-           return _pedidoRepository.GetTotalVendasHoje(pedido);
+            return _pedidoRepository.GetTotalVendasHoje(pedido);
         }
 
         public async Task<Pedido> GetPedidoByIdAsync(int id)
         {
             return await _pedidoRepository.GetByIdAsync(id);
         }
-        
+
         public async Task<List<Pedido>> GetAllPedidosAsync()
         {
             return await _pedidoRepository.GetAllAsync();

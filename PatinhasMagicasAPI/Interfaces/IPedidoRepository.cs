@@ -6,7 +6,7 @@ namespace PatinhasMagicasAPI.Interfaces
     {
         Task AddAsync(Pedido pedido);
         Task<List<Pedido>> GetAllAsync();
-        Task<(List<Pedido>, int Total)> GetAllAsync(int page, int pageSize, DateTime dataInicio, DateTime dataFim);
+        public IQueryable<Pedido> GetAllPedidos();
         decimal GetTotalVendasHoje(Pedido pedido);
         int GetTotalPedidosHoje(Pedido pedido);
         Task<Pedido> GetByIdAsync(int id);

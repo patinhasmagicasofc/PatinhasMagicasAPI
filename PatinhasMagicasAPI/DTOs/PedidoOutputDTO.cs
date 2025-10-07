@@ -12,8 +12,9 @@
         public string StatusPedido { get; set; }
         public string StatusPagamento { get; set; }
         public string FormaPagamento { get; set; }
-        public decimal ValorTotal { get; set; }
-        public int  TotalVendasHoje { get; set; }
+        public decimal ValorPedido { get; set; }
+        public decimal ValorTotalVendas { get; set; }
+        public int  TotalVendas { get; set; }
         public UsuarioOutputDTO? UsuarioOutputDTO { get; set; }
         public List<ItemPedidoOutputDTO>? ItemPedidoOutputDTOs { get; set; }
     }

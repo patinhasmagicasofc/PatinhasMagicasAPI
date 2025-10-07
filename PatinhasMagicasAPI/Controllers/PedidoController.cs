@@ -39,8 +39,10 @@ namespace PatinhasMagicasAPI.Controllers
                 StatusPedidoId = p.StatusPedidoId,
                 StatusPedido = p.StatusPedido.Nome,
                 NomeCliente = p.Cliente?.Nome,
+                ValorPedido = _pedidoService.GetValorPedido(p),
                 FormaPagamento = _pedidoService.GetFormaPagamento(p),
-                ValorTotal = _pedidoService.GetValorTotalPedido(p),
+                TotalVendas = _pedidoService.GetTotalPedidosHoje(p),
+                ValorTotalVendas = _pedidoService.GetTotalVendasHoje(p),
                 StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault()
             }).ToList();
 
@@ -48,9 +50,9 @@ namespace PatinhasMagicasAPI.Controllers
         }
 
         [HttpGet("paged")]
-        public async Task<ActionResult<IEnumerable<PedidoOutputDTO>>> GetAll(int page, int pageSize, DateTime dataInicio, DateTime dataFim)
+        public async Task<ActionResult<IEnumerable<PedidoOutputDTO>>> GetAll([FromQuery] PedidoFiltroDTO filtro)
         {
-            var (pedidos, total) = await _pedidoRepository.GetAllAsync(page, pageSize, dataInicio, dataFim);
+            var (pedidos, total) = await _pedidoService.GetPedidosPaginados(filtro);
 
             if (!pedidos.Any())
                 return NotFound();
@@ -64,9 +66,10 @@ namespace PatinhasMagicasAPI.Controllers
                 StatusPedidoId = p.StatusPedidoId,
                 StatusPedido = p.StatusPedido.Nome,
                 NomeCliente = p.Cliente?.Nome,
-                TotalVendasHoje = _pedidoService.GetTotalPedidosHoje(p),
+                ValorPedido = _pedidoService.GetValorPedido(p),
                 FormaPagamento = _pedidoService.GetFormaPagamento(p),
-                ValorTotal = _pedidoService.GetTotalVendasHoje(p),
+                TotalVendas = _pedidoService.GetTotalPedidosHoje(p),
+                ValorTotalVendas = _pedidoService.GetTotalVendasHoje(p),
                 StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault()
             }).ToList();
 
