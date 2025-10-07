@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
-
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PatinhasMagicasAPI.Controllers
 {
@@ -47,8 +47,18 @@ namespace PatinhasMagicasAPI.Controllers
         // POST: api/Usuario
         // Adiciona um novo usuário
         [HttpPost]
-        public async Task<ActionResult<Usuario>> Post(Usuario usuario)
+        public async Task<ActionResult<Usuario>> Post(UsuarioInputDTO usuarioInputDTO)
         {
+            var usuario = new Usuario
+            {
+                Nome = usuarioInputDTO.Nome,
+                Email = usuarioInputDTO.Email,
+                CPF = usuarioInputDTO.CPF,
+                Ddd = usuarioInputDTO.Ddd,
+                Telefone = usuarioInputDTO.Telefone,
+                TipoUsuarioId = usuarioInputDTO.TipoUsuarioId
+            };
+
             await _usuarioRepository.AddAsync(usuario);
             return CreatedAtAction(nameof(GetUsuario), new { id = usuario.IdUsuario }, usuario);
         }
@@ -56,12 +66,23 @@ namespace PatinhasMagicasAPI.Controllers
         // PUT: api/Usuario/5
         // Atualiza um usuário existente
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUsuario(int id, Usuario usuario)
+        public async Task<IActionResult> UpdateUsuario(int id, UsuarioInputDTO usuarioInputDTO)
         {
-            if (id != usuario.IdUsuario)
+            var usuario = new Usuario
             {
-                return BadRequest("O ID na URL não corresponde ao ID do objeto.");
-            }
+                IdUsuario = id,
+                Nome = usuarioInputDTO.Nome,
+                Email = usuarioInputDTO.Email,
+                CPF = usuarioInputDTO.CPF,
+                Ddd = usuarioInputDTO.Ddd,
+                Telefone = usuarioInputDTO.Telefone,
+                TipoUsuarioId = usuarioInputDTO.TipoUsuarioId
+            };
+
+            //if (id != usuario.IdUsuario)
+            //{
+            //    return BadRequest("O ID na URL não corresponde ao ID do objeto.");
+            //}
 
             var existingUsuario = await _usuarioRepository.GetByIdAsync(id);
             if (existingUsuario == null)

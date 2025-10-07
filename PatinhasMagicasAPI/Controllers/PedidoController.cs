@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
+using PatinhasMagicasAPI.Services;
 
 
 namespace PatinhasMagicasAPI.Controllers
@@ -13,29 +14,67 @@ namespace PatinhasMagicasAPI.Controllers
     public class PedidoController : ControllerBase
     {
         private readonly IPedidoRepository _pedidoRepository;
+        private readonly PedidoService _pedidoService;
 
-        public PedidoController(IPedidoRepository pedidoRepository)
+        public PedidoController(IPedidoRepository pedidoRepository, PedidoService pedidoService)
         {
             _pedidoRepository = pedidoRepository;
+            _pedidoService = pedidoService;
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAll()
+        public async Task<ActionResult<IEnumerable<PedidoOutputDTO>>> GetAll()
         {
             var pedidos = await _pedidoRepository.GetAllAsync();
 
             if (!pedidos.Any())
                 return NotFound();
 
-            var pedidosDTO = pedidos.Select(p => new PedidoInputDTO
+            var pedidosDTO = pedidos.Select(p => new PedidoOutputDTO
             {
+                Id = p.Id,
                 UsuarioId = p.UsuarioId,
                 ClienteId = p.ClienteId,
                 DataPedido = p.DataPedido,
                 StatusPedidoId = p.StatusPedidoId,
+                StatusPedido = p.StatusPedido.Nome,
+                NomeCliente = p.Cliente?.Nome,
+                FormaPagamento = _pedidoService.GetFormaPagamento(p),
+                ValorTotal = _pedidoService.GetValorTotalPedido(p),
+                StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault()
             }).ToList();
 
             return Ok(pedidosDTO);
+        }
+
+        [HttpGet("paged")]
+        public async Task<ActionResult<IEnumerable<PedidoOutputDTO>>> GetAll(int page, int pageSize, DateTime dataInicio, DateTime dataFim)
+        {
+            var (pedidos, total) = await _pedidoRepository.GetAllAsync(page, pageSize, dataInicio, dataFim);
+
+            if (!pedidos.Any())
+                return NotFound();
+
+            var pedidosDTO = pedidos.Select(p => new PedidoOutputDTO
+            {
+                Id = p.Id,
+                UsuarioId = p.UsuarioId,
+                ClienteId = p.ClienteId,
+                DataPedido = p.DataPedido,
+                StatusPedidoId = p.StatusPedidoId,
+                StatusPedido = p.StatusPedido.Nome,
+                NomeCliente = p.Cliente?.Nome,
+                TotalVendasHoje = _pedidoService.GetTotalPedidosHoje(p),
+                FormaPagamento = _pedidoService.GetFormaPagamento(p),
+                ValorTotal = _pedidoService.GetTotalVendasHoje(p),
+                StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault()
+            }).ToList();
+
+            return Ok(new
+            {
+                pedidosDTO,
+                total
+            });
         }
 
         [HttpGet("{id}")]
@@ -46,12 +85,47 @@ namespace PatinhasMagicasAPI.Controllers
             if (pedido == null)
                 return NotFound();
 
-            var pedidoDTO = new PedidoInputDTO
+            var pedidoDTO = new PedidoOutputDTO
             {
+                Id = pedido.Id,
                 DataPedido = pedido.DataPedido,
                 ClienteId = pedido.ClienteId,
                 StatusPedidoId = pedido.StatusPedidoId,
                 UsuarioId = pedido.UsuarioId,
+                StatusPedido = pedido.StatusPedido.Nome,
+                StatusPagamento = pedido.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault(),
+
+                UsuarioOutputDTO = new UsuarioOutputDTO
+                {
+                    Nome = pedido.Cliente.Nome,
+                    Email = pedido.Cliente.Email,
+                    Telefone = pedido.Cliente.Telefone,
+                    EnderecoOutputDTO = new EnderecoOutputDTO
+                    {
+                        Logradouro = pedido.Cliente.Endereco.Logradouro,
+                        Numero = pedido.Cliente.Endereco.Numero,
+                        Cidade = pedido.Cliente.Endereco.Cidade,
+                        Estado = pedido.Cliente.Endereco.Estado,
+                        CEP = pedido.Cliente.Endereco.CEP
+                    }
+
+                },
+                ItemPedidoOutputDTOs = pedido.ItensPedido.Select(ip => new ItemPedidoOutputDTO
+                {
+                    Id = ip.Id,
+                    PedidoId = ip.PedidoId,
+                    ProdutoId = ip.ProdutoId,
+                    Quantidade = ip.Quantidade,
+                    PrecoUnitario = ip.PrecoUnitario,
+                    ProdutoOutputDTO = new ProdutoOutputDTO
+                    {
+                        Nome = ip.Produto.Nome,
+                        Codigo = ip.Produto.Codigo,
+                        Preco = ip.Produto.Preco,
+                        Foto = ip.Produto.Foto
+                    }
+
+                }).ToList(),
             };
 
             return Ok(pedidoDTO);
@@ -68,7 +142,7 @@ namespace PatinhasMagicasAPI.Controllers
                 UsuarioId = pedidoInputDTO.UsuarioId
             };
 
-            await _pedidoRepository.AddAsync(pedido);
+            await _pedidoService.CreatePedidoAsync(pedido);
 
             var pedidoOutputDTO = new PedidoOutputDTO
             {

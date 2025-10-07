@@ -1,13 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PatinhasMagicasAPI.Models;
+using PatinhasMagicasAPI.DTOs;
 
 namespace PatinhasMagicasAPI.Data
 {
     public class PatinhasMagicasDbContext : DbContext
     {
-        public PatinhasMagicasDbContext(DbContextOptions<PatinhasMagicasDbContext> options) : base(options) {
-        
-        }
+        public PatinhasMagicasDbContext(DbContextOptions<PatinhasMagicasDbContext> options) : base(options) {}
 
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
@@ -18,6 +17,12 @@ namespace PatinhasMagicasAPI.Data
         public DbSet<StatusAgendamento> StatusAgendamentos { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<ItemPedido> ItensPedido { get; set; }
+        public DbSet<Pagamento> Pagamentos { get; set; }
+        public DbSet<TipoPagamento> TipoPagamentos{ get; set; }
+        public DbSet<Servico> Servicos { get; set; }
+        public DbSet<TipoServico> TiposServico { get; set; }
+        public DbSet<StatusPedido> StatusPedidos { get; set; }
+        public DbSet<StatusPagamento> StatusPagamentos { get; set; }
 
     }
 

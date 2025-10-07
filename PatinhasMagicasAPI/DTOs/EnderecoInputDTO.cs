@@ -2,7 +2,7 @@
 
 namespace PatinhasMagicasAPI.Models.DTOs
 {
-    public class EnderecoDTO
+    public class EnderecoInputDTO
     {
         public int IdEndereco { get; set; }
 

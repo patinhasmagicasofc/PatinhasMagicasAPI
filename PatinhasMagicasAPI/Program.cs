@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 // Program.cs
+using PatinhasMagicasAPI.Services;
 
 
 
@@ -17,7 +18,7 @@ var secretKey = configuration["Jwt:Key"] ?? throw new ArgumentNullException("JWT
 
 
 // Add services to the container.
-//base de dados
+// Adicionar a conexão com o banco de dados SQL Server
 builder.Services.AddDbContext<PatinhasMagicasDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 //repositories
@@ -27,7 +28,6 @@ builder.Services.AddScoped<IItemPedidoRepository, ItemPedidoRepository>();
 builder.Services.AddScoped<IPedidoRepository, PedidoRepository>();
 builder.Services.AddScoped<IStatusAgendamentoRepository, StatusAgendamentoRepository>();
 builder.Services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();
-builder.Services.AddScoped<ITokenService, TokenService>();
 
 
 // Adicionar a conexão com o banco de dados SQL Server
@@ -39,6 +39,10 @@ builder.Services.AddDbContext<PatinhasMagicasDbContext>(options =>
 builder.Services.AddScoped<IEnderecoRepository, EnderecoRepository>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<ITipoUsuarioRepository, TipoUsuarioRepository>();
+builder.Services.AddScoped<ITipoPagamentoRepository, TipoPagamentoRepository>();
+builder.Services.AddScoped<IPagamentoRepository, PagamentoRepository>();
+builder.Services.AddScoped<ITipoServicoRepository, TipoServicoRepository>();
+builder.Services.AddScoped<IServicoRepository, ServicoRepository>();
 
 //Services
 // Configuração do JWT (Authentication)
@@ -56,6 +60,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
         };
     });
+builder.Services.AddScoped<PedidoService, PedidoService>();
 
 //configuração do Cors
 //não esquecer de colocar enabledCors nas controllers

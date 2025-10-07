@@ -1,0 +1,114 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using PatinhasMagicasAPI.DTOs;
+using PatinhasMagicasAPI.Interfaces;
+using PatinhasMagicasAPI.Models;
+
+namespace PatinhasMagicasAPI.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ServicoController : ControllerBase
+    {
+        private readonly IServicoRepository _servicoRepository;
+
+        public ServicoController(IServicoRepository servicoRepository)
+        {
+            _servicoRepository = servicoRepository;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ServicoOutputDTO>>> GetServicos()
+        {
+            var servicos = await _servicoRepository.GetAllAsync();
+
+            if (!servicos.Any())
+                return NotFound();
+
+            var servicoOutputDTOs = servicos.Select(p => new ServicoOutputDTO
+            {
+                Id = p.Id,
+                Nome = p.Nome,
+            }).ToList();
+
+            return Ok(servicoOutputDTOs);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ServicoOutputDTO>> GetById(int id)
+        {
+            var servico = await _servicoRepository.GetByIdAsync(id);
+
+            if (servico == null)
+                return NotFound();
+
+            var servicoDTO = new ServicoOutputDTO
+            {
+                Id = servico.Id,
+                Nome = servico.Nome,
+                Descricao = servico.Descricao,
+                Status = servico.Status,
+                TipoServicoId = servico.TipoServicoId,
+            };
+
+            return Ok(servicoDTO);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ServicoOutputDTO>> PostServico(ServicoInputDTO servicoInputDTO)
+        {
+            var servico = new Servico
+            {
+                Nome = servicoInputDTO.Nome,
+                Descricao = servicoInputDTO.Descricao,
+                Status = servicoInputDTO.Status,
+                TipoServicoId = servicoInputDTO.TipoServicoId
+            };
+
+            await _servicoRepository.AddAsync(servico);
+
+            var servicoOutputDTO = new ServicoOutputDTO
+            {
+                Id = servico.Id,
+                Nome = servico.Nome,
+                Descricao = servico.Descricao,
+                Status = servico.Status,
+                TipoServicoId = servico.TipoServicoId
+            };
+
+            return CreatedAtAction(nameof(GetById), new { id = servicoOutputDTO.Id }, servicoOutputDTO);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutServico(int id, ServicoInputDTO servicoInputDTO)
+        {
+            var servico = await _servicoRepository.GetByIdAsync(id);
+
+            if (servico == null)
+                return NotFound();
+
+            servico = new Servico
+            {
+                Id = id,
+                Nome = servicoInputDTO.Nome,
+                Status = servicoInputDTO.Status,
+                Descricao = servicoInputDTO.Descricao,
+                TipoServicoId = servicoInputDTO.TipoServicoId
+            };
+
+            await _servicoRepository.UpdateAsync(servico);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteServico(int id)
+        {
+            var servico = await _servicoRepository.GetByIdAsync(id);
+            if (servico == null)
+                return NotFound();
+
+            await _servicoRepository.DeleteAsync(id);
+            return NoContent();
+        }
+    }
+}

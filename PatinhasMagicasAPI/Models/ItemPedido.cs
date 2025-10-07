@@ -18,7 +18,7 @@ namespace PatinhasMagicasAPI.Models
         [Required(ErrorMessage = "O ProdutoId é obrigatório.")]
         [Range(1, int.MaxValue, ErrorMessage = "ProdutoId deve ser um valor válido.")]
         public int ProdutoId { get; set; }
-        // public Produto Produto { get; set; }
+        public Produto Produto { get; set; }
 
         [Required(ErrorMessage = "O PedidoId é obrigatório.")]
         [Range(1, int.MaxValue, ErrorMessage = "PedidoId deve ser um valor válido.")]
