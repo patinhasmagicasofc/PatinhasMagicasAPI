@@ -45,7 +45,8 @@ namespace PatinhasMagicasAPI.Controllers
             return Ok(new
             {
                 Token = token,
-                Perfil = role
+                Perfil = role,
+                IdUsuario = usuario.IdUsuario
             });
         }
 

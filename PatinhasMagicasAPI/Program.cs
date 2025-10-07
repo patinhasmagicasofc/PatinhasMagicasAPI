@@ -61,7 +61,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //não esquecer de colocar enabledCors nas controllers
 builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
 {
-    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().WithOrigins("http://127.0.0.1:5500", "http://localhost:5500").AllowCredentials(); // Se estiver usando cookies ou autenticação
+    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().WithOrigins("http://127.0.0.1:5501", "http://localhost:5501").AllowCredentials(); // Se estiver usando cookies ou autenticação
 }));
 
 

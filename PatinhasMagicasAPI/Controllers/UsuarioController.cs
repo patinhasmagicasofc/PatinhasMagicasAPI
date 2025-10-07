@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+
 
 namespace PatinhasMagicasAPI.Controllers
 {

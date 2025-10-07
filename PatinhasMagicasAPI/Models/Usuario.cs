@@ -44,5 +44,7 @@ namespace PatinhasMagicasAPI.Models
         // Ela é essencial para o .Include() funcionar.
         public virtual TipoUsuario? TipoUsuario { get; set; }
         public virtual Endereco? Endereco { get; set; }
+
+        public DateTime DataCadastro { get; set; }
     }
 }

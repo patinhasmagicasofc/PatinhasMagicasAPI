@@ -1,4 +1,5 @@
-﻿using PatinhasMagicasAPI.Models;
+﻿using PatinhasMagicasAPI.DTOs;
+using PatinhasMagicasAPI.Models;
 
 namespace PatinhasMagicasAPI.Interfaces
 {
@@ -12,5 +13,6 @@ namespace PatinhasMagicasAPI.Interfaces
         Task InativarAsync(int id);
         Task ReativarAsync(int id);
         Task<Usuario>? ValidarLoginAsync(string email, string senha);
+
     }
 }

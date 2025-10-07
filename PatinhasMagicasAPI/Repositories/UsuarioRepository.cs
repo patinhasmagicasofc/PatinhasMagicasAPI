@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.CodeAnalysis.Scripting;
+using Microsoft.EntityFrameworkCore;
 using PatinhasMagicasAPI.Data;
+using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
+
 
 namespace PatinhasMagicasAPI.Repositories
 {
@@ -37,7 +40,8 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task<Usuario> GetByIdAsync(int id)
         {
-            return await _context.Usuarios.Include(u => u.TipoUsuarioId).FirstOrDefaultAsync(u => u.IdUsuario == id);
+            //return await _context.Usuarios.Include(u => u.TipoUsuarioId).FirstOrDefaultAsync(u => u.IdUsuario == id);
+            return await _context.Usuarios.Include(u => u.TipoUsuario).Include(u => u.Endereco).FirstOrDefaultAsync(u => u.IdUsuario == id);
         }
 
         public Task InativarAsync(int id)
