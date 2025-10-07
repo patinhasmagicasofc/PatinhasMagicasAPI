@@ -1,41 +1,28 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using PatinhasMagicasAPI.Data;
 using PatinhasMagicasAPI.Interfaces;
-using PatinhasMagicasAPI.Services;
 using PatinhasMagicasAPI.Repositories;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-// Program.cs
 using PatinhasMagicasAPI.Services;
-
-
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var configuration = builder.Configuration;
 var secretKey = configuration["Jwt:Key"] ?? throw new ArgumentNullException("JWT Key not configured");
 
-
 // Add services to the container.
 // Adicionar a conexão com o banco de dados SQL Server
 builder.Services.AddDbContext<PatinhasMagicasDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-//repositories
+// Repositórios
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<ITipoUsuarioRepository, TipoUsuarioRepository>();
 builder.Services.AddScoped<IItemPedidoRepository, ItemPedidoRepository>();
 builder.Services.AddScoped<IPedidoRepository, PedidoRepository>();
 builder.Services.AddScoped<IStatusAgendamentoRepository, StatusAgendamentoRepository>();
 builder.Services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();
-
-
-// Adicionar a conexão com o banco de dados SQL Server
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<PatinhasMagicasDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-// Repositórios
 builder.Services.AddScoped<IEnderecoRepository, EnderecoRepository>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<ITipoUsuarioRepository, TipoUsuarioRepository>();
@@ -44,7 +31,9 @@ builder.Services.AddScoped<IPagamentoRepository, PagamentoRepository>();
 builder.Services.AddScoped<ITipoServicoRepository, TipoServicoRepository>();
 builder.Services.AddScoped<IServicoRepository, ServicoRepository>();
 
+
 //Services
+builder.Services.AddScoped<PedidoService, PedidoService>();
 // Configuração do JWT (Authentication)
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -60,7 +49,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
         };
     });
-builder.Services.AddScoped<PedidoService, PedidoService>();
 
 //configuração do Cors
 //não esquecer de colocar enabledCors nas controllers

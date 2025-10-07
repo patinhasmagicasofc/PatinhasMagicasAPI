@@ -11,13 +11,13 @@ VALUES
 ('Fornecedor');
 
 -- Usuários
-INSERT INTO Usuarios (Nome, CPF, Email, Ddd, Telefone, TipoUsuarioId)
+INSERT INTO Usuarios (Nome, CPF, Email, Ddd, Telefone, TipoUsuarioId, DataCadastro, Senha)
 VALUES
-('João Silva','111.111.111-11','joao@email.com',11,'999911111',1),
-('Maria Souza','222.222.222-22','maria@email.com',21,'988822222',1),
-('Carlos Lima','333.333.333-33','carlos@email.com',31,'977733333',2),
-('Ana Paula','444.444.444-44','ana@email.com',41,'966644444',2),
-('Lucas Santos','555.555.555-55','lucas@email.com',51,'955555555',3);
+('João Silva','111.111.111-11','joao@email.com',11,'999911111',1, GETDATE(), 'João Silva'),
+('Maria Souza','222.222.222-22','maria@email.com',21,'988822222',1,GETDATE(), 'João Silva'),
+('Carlos Lima','333.333.333-33','carlos@email.com',31,'977733333',2, GETDATE(), 'João Silva'),
+('Ana Paula','444.444.444-44','ana@email.com',41,'966644444',2, GETDATE(), 'João Silva'),
+('Lucas Santos','555.555.555-55','lucas@email.com',51,'955555555',3, GETDATE(), 'João Silva');
 
 -- Endereços
 INSERT INTO Enderecos (Logradouro, Numero, Bairro, Cidade, Estado, CEP, UsuarioId)
