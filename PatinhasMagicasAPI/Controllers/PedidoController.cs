@@ -48,9 +48,9 @@ namespace PatinhasMagicasAPI.Controllers
         }
 
         [HttpGet("paged")]
-        public async Task<ActionResult<IEnumerable<PedidoOutputDTO>>> GetAll(int page, int pageSize)
+        public async Task<ActionResult<IEnumerable<PedidoOutputDTO>>> GetAll(int page, int pageSize, DateTime dataInicio, DateTime dataFim)
         {
-            var (pedidos, total) = await _pedidoRepository.GetAllAsync(page, pageSize);
+            var (pedidos, total) = await _pedidoRepository.GetAllAsync(page, pageSize, dataInicio, dataFim);
 
             if (!pedidos.Any())
                 return NotFound();

@@ -23,7 +23,7 @@ namespace PatinhasMagicasAPI.Repositories
         public int GetTotalPedidosHoje(Pedido pedido)
         {
             var hoje = DateTime.Today;
-            var totalPedidosHoje =  _context.Pedidos
+            var totalPedidosHoje = _context.Pedidos
                 .Count(p => p.DataPedido.Date == hoje);
 
             return totalPedidosHoje;
@@ -48,16 +48,20 @@ namespace PatinhasMagicasAPI.Repositories
                                          .Include(p => p.StatusPedido).ToListAsync();
         }
 
-        public async Task<(List<Pedido>, int Total)> GetAllAsync(int page, int pageSize)
+        public async Task<(List<Pedido>, int Total)> GetAllAsync(int page, int pageSize, DateTime dataInicio, DateTime dataFim)
         {
-            var total = await _context.Pedidos.CountAsync();
             var skip = (page - 1) * pageSize;
-            var pedidos = await _context.Pedidos.Skip(skip).Take(pageSize)
-                                         .Include(p => p.Cliente).ThenInclude(c => c.Endereco)
-                                         .Include(p => p.ItensPedido).ThenInclude(i => i.Produto)
-                                         .Include(p => p.Pagamentos).ThenInclude(pg => pg.StatusPagamento)
-                                         .Include(p => p.Pagamentos).ThenInclude(pg => pg.TipoPagamento)
-                                         .Include(p => p.StatusPedido).OrderBy(i => i.Id).ToListAsync();
+            var query = _context.Pedidos
+                                        .Where(p => p.DataPedido.Date >= dataInicio && p.DataPedido.Date <= dataFim)
+                                        .Include(p => p.Cliente).ThenInclude(c => c.Endereco)
+                                        .Include(p => p.ItensPedido).ThenInclude(i => i.Produto)
+                                        .Include(p => p.Pagamentos).ThenInclude(pg => pg.StatusPagamento)
+                                        .Include(p => p.Pagamentos).ThenInclude(pg => pg.TipoPagamento)
+                                        .Include(p => p.StatusPedido);
+
+            var total = await query.CountAsync();
+            var pedidos = await query.OrderBy(p => p.Id).Skip(skip).Take(pageSize).ToListAsync();
+
 
             return (pedidos, total);
         }
@@ -79,8 +83,8 @@ namespace PatinhasMagicasAPI.Repositories
         public async Task DeleteAsync(int id)
         {
             var pedido = await _context.Pedidos.FindAsync(id);
-            if (pedido != null) 
-            { 
+            if (pedido != null)
+            {
                 _context.Pedidos.Remove(pedido);
                 await _context.SaveChangesAsync();
             }
