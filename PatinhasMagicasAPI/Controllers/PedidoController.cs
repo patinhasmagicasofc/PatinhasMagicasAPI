@@ -80,7 +80,7 @@ namespace PatinhasMagicasAPI.Controllers
                     Nome = pedido.Cliente.Nome,
                     Email = pedido.Cliente.Email,
                     Telefone = pedido.Cliente.Telefone,
-                    EnderecoOutputDTO = new EnderecoOutputDTO
+                    Endereco = new EnderecoOutputDTO
                     {
                         Logradouro = pedido.Cliente.Endereco.Logradouro,
                         Numero = pedido.Cliente.Endereco.Numero,

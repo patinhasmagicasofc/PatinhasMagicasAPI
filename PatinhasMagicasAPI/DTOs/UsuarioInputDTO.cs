@@ -4,6 +4,7 @@ namespace PatinhasMagicasAPI.DTOs
 {
     public class UsuarioInputDTO
     {
+
         [Required(ErrorMessage = "Campo obrigatório!")]
         [Display(Name = "Nome")]
         [StringLength(150)]
@@ -18,17 +19,24 @@ namespace PatinhasMagicasAPI.DTOs
         [StringLength(50, ErrorMessage = "O e-mail deve ter no máximo 50 caracteres.")]
         public string Email { get; set; }
 
+        [Required(ErrorMessage = "Campo obrigatório!")]
+        [Display(Name = "Senha")]
+        [StringLength(10)]
+        public string Senha { get; set; }
+
         [Required(ErrorMessage = "O DDD é obrigatório.")]
         [Range(11, 99, ErrorMessage = "O DDD deve ser um número de 2 dígitos.")]
+
         public int Ddd { get; set; }
 
         [Required(ErrorMessage = "O telefone é obrigatório.")]
         [StringLength(10, MinimumLength = 8, ErrorMessage = "O telefone deve ter entre 8 e 10 dígitos.")]
         public string Telefone { get; set; }
 
-        // Chave estrangeira para o relacionamento com TipoUsuario
         [Required(ErrorMessage = "Campo obrigatório!")]
         [Display(Name = "Tipo de Usuário")]
         public int TipoUsuarioId { get; set; }
+
+        public DateTime DataCadastro { get; set; }
     }
 }
