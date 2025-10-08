@@ -46,30 +46,53 @@ namespace PatinhasMagicasAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Endereco>> PostEndereco([FromBody] EnderecoInputDTO enderecoDto)
         {
-            // Mapear DTO para a Entidade Endereco
-            var endereco = new Endereco
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // Verifica se já existe um endereço "igual" (mesmo CEP, logradouro, bairro, cidade, estado e usuário)
+            var enderecoExistente = await _enderecoRepository.GetEnderecoExistenteAsync(
+    enderecoDto.UsuarioId,
+    enderecoDto.CEP,
+    enderecoDto.Logradouro,
+    enderecoDto.Bairro,
+    enderecoDto.Cidade,
+    enderecoDto.Estado
+);
+
+
+            if (enderecoExistente != null)
+            {
+                // Atualiza apenas número e complemento
+                enderecoExistente.Numero = enderecoDto.Numero;
+                enderecoExistente.Complemento = enderecoDto.Complemento;
+
+                if (await _enderecoRepository.SaveChangesAsync())
+                    return Ok(enderecoExistente);
+
+                return BadRequest("Falha ao atualizar o endereço existente.");
+            }
+
+            // Caso não exista, cria novo registro
+            var novoEndereco = new Endereco
             {
                 Logradouro = enderecoDto.Logradouro,
                 Numero = enderecoDto.Numero,
-                Bairro = enderecoDto.Bairro, // Assumindo que este campo está no seu DTO real
-                Cidade = enderecoDto.Cidade, // Assumindo que este campo está no seu DTO real
-                Estado = enderecoDto.Estado, // Assumindo que este campo está no seu DTO real
+                Bairro = enderecoDto.Bairro,
+                Cidade = enderecoDto.Cidade,
+                Estado = enderecoDto.Estado,
                 CEP = enderecoDto.CEP,
                 Complemento = enderecoDto.Complemento,
                 UsuarioId = enderecoDto.UsuarioId
             };
 
-            await _enderecoRepository.AddAsync(endereco);
-
+            await _enderecoRepository.AddAsync(novoEndereco);
 
             if (await _enderecoRepository.SaveChangesAsync())
-            {
-
-                return CreatedAtAction("GetEndereco", new { id = endereco.IdEndereco }, endereco);
-            }
+                return CreatedAtAction("GetEndereco", new { id = novoEndereco.IdEndereco }, novoEndereco);
 
             return BadRequest("Falha ao criar o endereço.");
         }
+
 
 
         [HttpPut("{id}")]

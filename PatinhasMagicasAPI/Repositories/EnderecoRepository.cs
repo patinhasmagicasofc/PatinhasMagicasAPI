@@ -27,6 +27,19 @@ namespace PatinhasMagicasAPI.Repositories
             return await _context.Enderecos.FindAsync(id);
         }
 
+        public async Task<Endereco> GetEnderecoExistenteAsync(int usuarioId, string cep, string logradouro, string bairro, string cidade, string estado)
+        {
+            return await _context.Enderecos.FirstOrDefaultAsync(e =>
+                e.UsuarioId == usuarioId &&
+                e.CEP == cep &&
+                e.Logradouro == logradouro &&
+                e.Bairro == bairro &&
+                e.Cidade == cidade &&
+                e.Estado == estado
+            );
+        }
+
+
         public async Task AddAsync(Endereco endereco)
         {
             await _context.Enderecos.AddAsync(endereco);
@@ -54,11 +67,16 @@ namespace PatinhasMagicasAPI.Repositories
             return Task.CompletedTask;
         }
 
+
+
+
         // MÉTODO CRÍTICO: Persiste as mudanças no banco.
         // Deve ser chamado pelo Controller ou Service após as operações Add/Update/Delete.
         public async Task<bool> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync() > 0;
         }
+
+        
     }
 }
