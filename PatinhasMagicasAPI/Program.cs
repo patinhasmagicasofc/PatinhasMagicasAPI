@@ -34,6 +34,8 @@ builder.Services.AddScoped<IServicoRepository, ServicoRepository>();
 
 //Services
 builder.Services.AddScoped<PedidoService, PedidoService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+
 // Configuração do JWT (Authentication)
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
