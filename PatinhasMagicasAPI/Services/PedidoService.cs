@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol.Core.Types;
 using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
@@ -38,7 +37,7 @@ namespace PatinhasMagicasAPI.Services
         //    await _pedidoRepository.UpdateAsync(pedido);
         //}
 
-        public async Task<(List<Pedido>, int Total)> GetPedidosPaginados(PedidoFiltroDTO filtro)
+        public async Task<DashboardPedido> GetPedidosPaginados(PedidoFiltroDTO filtro)
         {
             if (filtro.DataInicio == null || filtro.DataFim == null)
             {
@@ -67,8 +66,35 @@ namespace PatinhasMagicasAPI.Services
                 .Take(filtro.PageSize)
                 .ToListAsync();
 
-            return (pedidos, total);
+            var dashboardPedido = new DashboardPedido();
+            var pedidoOutputDTOs = Map(pedidos);
+
+            dashboardPedido.PedidoOutputDTO = pedidoOutputDTOs;
+            dashboardPedido.QTotalVendas = total;
+            dashboardPedido.ValorTotalVendas = GetTotalVendasHoje(pedidos);
+
+            return dashboardPedido;
         }
+
+        private List<PedidoOutputDTO> Map(List<Pedido> pedidos)
+        {
+            var pedidosDTO = pedidos.Select(p => new PedidoOutputDTO
+            {
+                Id = p.Id,
+                UsuarioId = p.UsuarioId,
+                ClienteId = p.ClienteId,
+                DataPedido = p.DataPedido,
+                StatusPedidoId = p.StatusPedidoId,
+                StatusPedido = p.StatusPedido.Nome,
+                NomeCliente = p.Cliente?.Nome,
+                ValorPedido = GetValorPedido(p),
+                FormaPagamento = GetFormaPagamento(p),
+                StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault()
+            }).ToList();
+
+            return pedidosDTO;
+        }
+
         private IQueryable<Pedido> FiltrarPorData(IQueryable<Pedido> query, DateTime? inicio, DateTime? fim)
         {
             if (inicio == null || fim == null) return query;
@@ -128,33 +154,11 @@ namespace PatinhasMagicasAPI.Services
             return formaPagamento ?? "Pendente";
         }
 
-        public int GetTotalPedidosHoje(Pedido pedido)
+        public decimal GetTotalVendasHoje(List<Pedido> pedidos)
         {
-            return _pedidoRepository.GetTotalPedidosHoje(pedido);
-        }
+            var totalVendasHoje = pedidos.Sum(p => p.ItensPedido.Sum(i => i.PrecoUnitario * i.Quantidade));
 
-        public decimal GetTotalVendasHoje(Pedido pedido)
-        {
-            return _pedidoRepository.GetTotalVendasHoje(pedido);
-        }
-
-        public async Task<Pedido> GetPedidoByIdAsync(int id)
-        {
-            return await _pedidoRepository.GetByIdAsync(id);
-        }
-
-        public async Task<List<Pedido>> GetAllPedidosAsync()
-        {
-            return await _pedidoRepository.GetAllAsync();
-        }
-        public async Task UpdatePedidoAsync(Pedido pedido)
-        {
-            await _pedidoRepository.UpdateAsync(pedido);
-        }
-
-        public async Task DeletePedidoAsync(int id)
-        {
-            await _pedidoRepository.DeleteAsync(id);
+            return totalVendasHoje;
         }
 
     }

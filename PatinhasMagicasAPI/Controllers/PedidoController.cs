@@ -41,8 +41,6 @@ namespace PatinhasMagicasAPI.Controllers
                 NomeCliente = p.Cliente?.Nome,
                 ValorPedido = _pedidoService.GetValorPedido(p),
                 FormaPagamento = _pedidoService.GetFormaPagamento(p),
-                TotalVendas = _pedidoService.GetTotalPedidosHoje(p),
-                ValorTotalVendas = _pedidoService.GetTotalVendasHoje(p),
                 StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault()
             }).ToList();
 
@@ -52,32 +50,11 @@ namespace PatinhasMagicasAPI.Controllers
         [HttpGet("paged")]
         public async Task<ActionResult<IEnumerable<PedidoOutputDTO>>> GetAll([FromQuery] PedidoFiltroDTO filtro)
         {
-            var (pedidos, total) = await _pedidoService.GetPedidosPaginados(filtro);
-
-            if (!pedidos.Any())
+            var dashboardPedido = await _pedidoService.GetPedidosPaginados(filtro);
+            if (!dashboardPedido.PedidoOutputDTO.Any())
                 return NotFound();
 
-            var pedidosDTO = pedidos.Select(p => new PedidoOutputDTO
-            {
-                Id = p.Id,
-                UsuarioId = p.UsuarioId,
-                ClienteId = p.ClienteId,
-                DataPedido = p.DataPedido,
-                StatusPedidoId = p.StatusPedidoId,
-                StatusPedido = p.StatusPedido.Nome,
-                NomeCliente = p.Cliente?.Nome,
-                ValorPedido = _pedidoService.GetValorPedido(p),
-                FormaPagamento = _pedidoService.GetFormaPagamento(p),
-                TotalVendas = _pedidoService.GetTotalPedidosHoje(p),
-                ValorTotalVendas = _pedidoService.GetTotalVendasHoje(p),
-                StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault()
-            }).ToList();
-
-            return Ok(new
-            {
-                pedidosDTO,
-                total
-            });
+            return Ok(dashboardPedido);
         }
 
         [HttpGet("{id}")]

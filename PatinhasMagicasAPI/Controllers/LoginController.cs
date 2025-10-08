@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
-using PatinhasMagicasAPI.Services; 
-using System.Threading.Tasks;
 
 namespace PatinhasMagicasAPI.Controllers
 {
