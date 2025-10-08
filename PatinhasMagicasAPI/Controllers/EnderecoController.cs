@@ -15,7 +15,6 @@ namespace PatinhasMagicasAPI.Controllers
     {
         private readonly IEnderecoRepository _enderecoRepository;
 
-        // Constructor for dependency injection
         public EnderecoController(IEnderecoRepository enderecoRepository)
         {
             _enderecoRepository = enderecoRepository;
@@ -23,7 +22,7 @@ namespace PatinhasMagicasAPI.Controllers
 
         // GET: api/Endereco
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EnderecoInputDTO>>> GetEnderecos()
+        public async Task<ActionResult<IEnumerable<Endereco>>> GetEnderecos()
         {
             var enderecos = await _enderecoRepository.GetAsync();
             return Ok(enderecos);
@@ -43,42 +42,73 @@ namespace PatinhasMagicasAPI.Controllers
             return Ok(endereco);
         }
 
-        // Post
+        // POST: api/Endereco
         [HttpPost]
-        public async Task<ActionResult<Endereco>> PostEndereco([FromBody] EnderecoInputDTO enderecoDto) 
+        public async Task<ActionResult<Endereco>> PostEndereco([FromBody] EnderecoInputDTO enderecoDto)
         {
-            // 2. Mapear DTO para a Entidade Endereco antes de salvar
+            // Mapear DTO para a Entidade Endereco
             var endereco = new Endereco
             {
                 Logradouro = enderecoDto.Logradouro,
                 Numero = enderecoDto.Numero,
-                Bairro = enderecoDto.Bairro,
-                Cidade = enderecoDto.Cidade,
-                Estado = enderecoDto.Estado,
+                Bairro = enderecoDto.Bairro, // Assumindo que este campo está no seu DTO real
+                Cidade = enderecoDto.Cidade, // Assumindo que este campo está no seu DTO real
+                Estado = enderecoDto.Estado, // Assumindo que este campo está no seu DTO real
                 CEP = enderecoDto.CEP,
                 Complemento = enderecoDto.Complemento,
-                UsuarioId = enderecoDto.UsuarioId // Apenas o ID
+                UsuarioId = enderecoDto.UsuarioId
             };
 
-            _enderecoRepository.AddAsync(endereco);
-            await _enderecoRepository.SaveChangesAsync();
+            await _enderecoRepository.AddAsync(endereco);
 
-            return CreatedAtAction("GetEndereco", new { id = endereco.IdEndereco }, endereco);
-        }
 
-        // PUT: api/Endereco/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutEndereco(int id, Endereco endereco)
-        {
-            if (id != endereco.IdEndereco)
+            if (await _enderecoRepository.SaveChangesAsync())
             {
-                return BadRequest();
+
+                return CreatedAtAction("GetEndereco", new { id = endereco.IdEndereco }, endereco);
             }
 
-            _enderecoRepository.UpdateAsync(endereco);
-            await _enderecoRepository.SaveChangesAsync();
+            return BadRequest("Falha ao criar o endereço.");
+        }
 
-            return NoContent();
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutEndereco(int id, [FromBody] EnderecoInputDTO enderecoDto)
+        {
+  
+            if (id != enderecoDto.IdEndereco)
+            {
+                return BadRequest("O ID na URL não corresponde ao ID do endereço no corpo da requisição.");
+            }
+
+
+            var existingEndereco = await _enderecoRepository.GetByIdAsync(id);
+            if (existingEndereco == null)
+            {
+                return NotFound();
+            }
+
+
+            existingEndereco.Logradouro = enderecoDto.Logradouro;
+            existingEndereco.Numero = enderecoDto.Numero;
+            existingEndereco.Bairro = enderecoDto.Bairro;
+            existingEndereco.Cidade = enderecoDto.Cidade;
+            existingEndereco.Estado = enderecoDto.Estado;
+            existingEndereco.CEP = enderecoDto.CEP;
+            existingEndereco.Complemento = enderecoDto.Complemento;
+
+            existingEndereco.UsuarioId = enderecoDto.UsuarioId;
+
+            // await _enderecoRepository.UpdateAsync(endereco); 
+
+            if (await _enderecoRepository.SaveChangesAsync())
+            {
+
+                return NoContent();
+            }
+
+
+            return BadRequest("Falha ao salvar as alterações do endereço.");
         }
 
         // DELETE: api/Endereco/5
@@ -91,10 +121,14 @@ namespace PatinhasMagicasAPI.Controllers
                 return NotFound();
             }
 
-            _enderecoRepository.DeleteAsync(endereco);
-            await _enderecoRepository.SaveChangesAsync();
+            await _enderecoRepository.DeleteAsync(endereco);
 
-            return NoContent();
+            if (await _enderecoRepository.SaveChangesAsync())
+            {
+                return NoContent();
+            }
+
+            return BadRequest("Falha ao deletar o endereço.");
         }
     }
 }

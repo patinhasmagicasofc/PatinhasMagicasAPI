@@ -13,9 +13,11 @@ namespace PatinhasMagicasAPI.Services
         private readonly string _jwtSecret;
 
         // Construtor (assumindo que você está injetando a chave secreta)
+        // No seu TokenService.cs
         public TokenService(IConfiguration configuration)
         {
-            _jwtSecret = configuration["JwtSettings:Secret"] ??
+            // Deve ler de "Jwt:Key"
+            _jwtSecret = configuration["Jwt:Key"] ??
                          throw new InvalidOperationException("A chave secreta JWT não foi configurada.");
         }
 

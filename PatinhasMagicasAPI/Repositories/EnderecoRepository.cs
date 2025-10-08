@@ -7,59 +7,57 @@ using PatinhasMagicasAPI.Models;
 
 namespace PatinhasMagicasAPI.Repositories
 {
-    // O repositório implementa a interface IEnderecoRepository para gerenciar as operações de persistência
     public class EnderecoRepository : IEnderecoRepository
     {
         private readonly PatinhasMagicasDbContext _context;
 
-        // Construtor para injeção de dependência do DbContext
         public EnderecoRepository(PatinhasMagicasDbContext context)
         {
             _context = context;
         }
 
-        // Obtém a lista completa de endereços de forma assíncrona
+        // Renomeado para GetAsync() conforme a interface
         public async Task<List<Endereco>> GetAsync()
         {
-            // Retorna a lista de endereços diretamente, sem DTO mapping, conforme a interface
             return await _context.Enderecos.ToListAsync();
         }
 
-        // Obtém um endereço específico pelo ID de forma assíncrona
         public async Task<Endereco> GetByIdAsync(int id)
         {
-            // FindAsync é o método mais eficiente para buscar pela chave primária
             return await _context.Enderecos.FindAsync(id);
         }
 
-        // Adiciona um novo endereço ao contexto de forma assíncrona
         public async Task AddAsync(Endereco endereco)
         {
-            await _context.AddAsync(endereco);
+            await _context.Enderecos.AddAsync(endereco);
         }
 
-        // Atualiza uma entidade Endereco no contexto
-        public Task UpdateAsync(Endereco endereco)
+        public async Task UpdateAsync(Endereco endereco)
         {
-            // Marca a entidade como modificada.
-            _context.Entry(endereco).State = EntityState.Modified;
-            // Retorna Task.CompletedTask pois a operação não acessa o banco diretamente (o SaveChangesAsync fará isso)
-            return Task.CompletedTask;
+
+            var existingEndereco = await _context.Enderecos
+                .FirstOrDefaultAsync(e => e.IdEndereco == endereco.IdEndereco);
+
+            if (existingEndereco == null)
+            {
+                throw new KeyNotFoundException($"Endereço com ID {endereco.IdEndereco} não encontrado.");
+            }
+
+            _context.Entry(existingEndereco).CurrentValues.SetValues(endereco);
+
+            await Task.CompletedTask;
         }
 
-        // Remove uma entidade Endereco do contexto
         public Task DeleteAsync(Endereco endereco)
         {
-            // Marca a entidade para remoção.
             _context.Enderecos.Remove(endereco);
-            // Retorna Task.CompletedTask pelo mesmo motivo acima.
             return Task.CompletedTask;
         }
 
-        // Persiste todas as mudanças pendentes (adição, atualização, remoção) no banco de dados
+        // MÉTODO CRÍTICO: Persiste as mudanças no banco.
+        // Deve ser chamado pelo Controller ou Service após as operações Add/Update/Delete.
         public async Task<bool> SaveChangesAsync()
         {
-            // Retorna true se uma ou mais linhas foram afetadas no banco
             return await _context.SaveChangesAsync() > 0;
         }
     }
