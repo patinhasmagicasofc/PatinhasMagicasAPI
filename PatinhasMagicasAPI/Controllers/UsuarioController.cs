@@ -19,8 +19,6 @@ namespace PatinhasMagicasAPI.Controllers
             _usuarioRepository = usuarioRepository;
         }
 
-        // GET: api/Usuario
-        // Retorna todos os usuários
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UsuarioOutputDTO>>> GetUsuarios()
         {
@@ -43,8 +41,6 @@ namespace PatinhasMagicasAPI.Controllers
             return Ok(usuariosDTO);
         }
 
-        // GET: api/Usuario/5
-        // Retorna um usuário específico pelo ID
         [HttpGet("{id}")]
         public async Task<ActionResult<Usuario>> GetUsuario(int id)
         {
@@ -58,62 +54,78 @@ namespace PatinhasMagicasAPI.Controllers
             return Ok(usuario);
         }
 
-        // POST: api/Usuario
-        // Adiciona um novo usuário
         [HttpPost]
         public async Task<ActionResult<Usuario>> Post(UsuarioInputDTO usuarioInputDTO)
         {
+            // Verifica se já existe email e cpf
+            var emailExistente = await _usuarioRepository.GetByEmailAsync(usuarioInputDTO.Email);
+            if (emailExistente != null)
+                return BadRequest(new { mensagem = "E-mail já cadastrado." });
+
+            var cpfExistente = await _usuarioRepository.GetByCPFAsync(usuarioInputDTO.CPF);
+            if (cpfExistente != null)
+                return BadRequest(new { mensagem = "CPF já cadastrado." });
+
+
             var usuario = new Usuario
             {
                 Nome = usuarioInputDTO.Nome,
                 Email = usuarioInputDTO.Email,
                 CPF = usuarioInputDTO.CPF,
-                Ddd = usuarioInputDTO.Ddd,
+                Ddd = usuarioInputDTO.Ddd.Value,
                 Telefone = usuarioInputDTO.Telefone,
                 DataCadastro = DateTime.Now,
                 Senha = usuarioInputDTO.Senha,
-                TipoUsuarioId = usuarioInputDTO.TipoUsuarioId
+                TipoUsuarioId = usuarioInputDTO.TipoUsuarioId.Value
             };
 
             await _usuarioRepository.AddAsync(usuario);
             return CreatedAtAction(nameof(GetUsuario), new { id = usuario.IdUsuario }, usuario);
         }
 
-        // PUT: api/Usuario/5
-        // Atualiza um usuário existente
+
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUsuario(int id, UsuarioInputDTO usuarioInputDTO)
+        public async Task<IActionResult> UpdateUsuario(int id, [FromBody] UsuarioInputDTO dto)
         {
-            var usuario = new Usuario
-            {
-                IdUsuario = id,
-                Nome = usuarioInputDTO.Nome,
-                Email = usuarioInputDTO.Email,
-                CPF = usuarioInputDTO.CPF,
-                Ddd = usuarioInputDTO.Ddd,
-                Telefone = usuarioInputDTO.Telefone,
-                DataCadastro = DateTime.Now,
-                Senha = usuarioInputDTO.Senha,
-                TipoUsuarioId = usuarioInputDTO.TipoUsuarioId
-            };
 
-            //if (id != usuario.IdUsuario)
-            //{
-            //    return BadRequest("O ID na URL não corresponde ao ID do objeto.");
-            //}
+            var emailDuplicado = await _usuarioRepository.GetByEmailAsync(dto.Email);
+            if (emailDuplicado != null && emailDuplicado.IdUsuario != id)
+                return BadRequest(new { mensagem = "E-mail já cadastrado para outro usuário." });
 
-            var existingUsuario = await _usuarioRepository.GetByIdAsync(id);
-            if (existingUsuario == null)
-            {
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var usuario = await _usuarioRepository.GetByIdAsync(id);
+            if (usuario == null)
                 return NotFound();
-            }
+
+            // Atualiza apenas campos enviados
+            if (!string.IsNullOrWhiteSpace(dto.Nome))
+                usuario.Nome = dto.Nome;
+
+            if (!string.IsNullOrWhiteSpace(dto.Email))
+                usuario.Email = dto.Email;
+
+            if (dto.Ddd.HasValue)
+                usuario.Ddd = dto.Ddd.Value;
+
+            if (!string.IsNullOrWhiteSpace(dto.Telefone))
+                usuario.Telefone = dto.Telefone;
+
+            if (dto.TipoUsuarioId.HasValue)
+                usuario.TipoUsuarioId = dto.TipoUsuarioId.Value;
+
+            if (!string.IsNullOrWhiteSpace(dto.Senha))
+                usuario.Senha = BCrypt.Net.BCrypt.HashPassword(dto.Senha);
+
 
             await _usuarioRepository.UpdateAsync(usuario);
-            return NoContent();
+
+            return Ok(usuario);
         }
 
-        // PUT: api/Usuario/inativar/5
-        // Inativa um usuário (exclusão lógica)
+
         [HttpPut("inativar/{id}")]
         public async Task<IActionResult> InativarUsuario(int id)
         {
@@ -127,8 +139,6 @@ namespace PatinhasMagicasAPI.Controllers
             return NoContent();
         }
 
-        // PUT: api/Usuario/reativar/5
-        // Reativa um usuário inativo
         [HttpPut("reativar/{id}")]
         public async Task<IActionResult> ReativarUsuario(int id)
         {
