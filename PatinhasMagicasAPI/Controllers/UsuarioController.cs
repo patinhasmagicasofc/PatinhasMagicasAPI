@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
+using PatinhasMagicasAPI.Services;
 
 namespace PatinhasMagicasAPI.Controllers
 {
@@ -21,10 +22,25 @@ namespace PatinhasMagicasAPI.Controllers
         // GET: api/Usuario
         // Retorna todos os usuários
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
+        public async Task<ActionResult<IEnumerable<UsuarioOutputDTO>>> GetUsuarios()
         {
             var usuarios = await _usuarioRepository.GetAllAsync();
-            return Ok(usuarios);
+
+            var usuariosDTO = usuarios.Select(u => new UsuarioOutputDTO
+            {
+                Id = u.IdUsuario,
+                Nome = u.Nome,
+                Email = u.Email,
+                CPF = u.CPF,
+                Ddd = u.Ddd,
+                Telefone = u.Telefone,
+                DataCadastro = u.DataCadastro,
+                Senha = u.Senha,
+                TipoUsuarioId = u.TipoUsuarioId,
+                TipoUsuarioNome = u.TipoUsuario.DescricaoTipoUsuario
+            }).ToList();
+
+            return Ok(usuariosDTO);
         }
 
         // GET: api/Usuario/5
