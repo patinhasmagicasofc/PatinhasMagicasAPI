@@ -48,7 +48,7 @@ namespace PatinhasMagicasAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUsuario(int id, [FromBody] UsuarioInputDTO dto)
+        public async Task<IActionResult> UpdateUsuario(int id, [FromBody] UsuarioInputDTO usuarioInputDTO)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 

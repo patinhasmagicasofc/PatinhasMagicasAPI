@@ -9,9 +9,6 @@ using PatinhasMagicasAPI.Services;
 using PatinhasMagicasAPI.Services.Interfaces;
 using System.Text;
 
-
-
-
 var builder = WebApplication.CreateBuilder(args);
 
 var configuration = builder.Configuration;
@@ -28,7 +25,6 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<ApplicationProfile>();
 });
 
-
 // Repositórios
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<ITipoUsuarioRepository, TipoUsuarioRepository>();
@@ -41,28 +37,24 @@ builder.Services.AddScoped<ITipoPagamentoRepository, TipoPagamentoRepository>();
 builder.Services.AddScoped<IPagamentoRepository, PagamentoRepository>();
 builder.Services.AddScoped<ITipoServicoRepository, TipoServicoRepository>();
 builder.Services.AddScoped<IServicoRepository, ServicoRepository>();
-builder.Services.AddScoped<ITokenService, TokenService>(); // CORREÇÃO do erro de DI 500
-builder.Services.AddScoped<PedidoService, PedidoService>(); // Service
-builder.Services.AddHttpClient<CepService>();
+
 
 // Configuração do Cors (CORREÇÃO do erro de CORS)
-builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
-{
-    // Permite as origens específicas e remove o AllowAnyOrigin para funcionar com AllowCredentials
-    builder.WithOrigins("http://127.0.0.1:5501", "http://localhost:5260")
-          .AllowAnyMethod()
-          .AllowAnyHeader()
-          .AllowCredentials(); // Crucial para o JWT
-}));
+//builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+//{
+//    // Permite as origens específicas e remove o AllowAnyOrigin para funcionar com AllowCredentials
+//    builder.WithOrigins("http://127.0.0.1:5501", "http://localhost:5260")
+//          .AllowAnyMethod()
+//          .AllowAnyHeader()
+//          .AllowCredentials(); // Crucial para o JWT
+//}));
 
 //Services
 builder.Services.AddScoped<IEnderecoService, EnderecoService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-
-
 builder.Services.AddScoped<PedidoService, PedidoService>();
-builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddHttpClient<CepService>();
 
 // Configuração do JWT (Authentication)
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -80,23 +72,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-//configuração do Cors
-//não esquecer de colocar enabledCors nas controllers
-//builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
-//{
-//    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().WithOrigins("http://127.0.0.1:5500", "http://localhost:5501").AllowCredentials(); // Se estiver usando cookies ou autenticação
-//}));
-
 
 builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
 {
     builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
 }));
 
-
-
 builder.Services.AddControllers();
-// Troca do openAPI pelo swagger
+
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
@@ -108,12 +91,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseRouting(); // Deve vir antes do UseCors se você usar rotas específicas
+app.UseRouting();
 
-// Ativar o CORS (POSIÇÃO CORRETA)
 app.UseCors("MyPolicy");
 
-// Autenticação (deve vir antes da Autorização)
 app.UseAuthentication();
 app.UseAuthorization();
 

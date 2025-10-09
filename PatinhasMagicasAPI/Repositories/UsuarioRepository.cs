@@ -1,7 +1,5 @@
-﻿using BCrypt.Net;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PatinhasMagicasAPI.Data;
-using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
 
@@ -30,32 +28,32 @@ namespace PatinhasMagicasAPI.Repositories
         }
 
 
-        public async Task UpdateAsync(Usuario usuario)
-        {
-            var existingUsuario = await _context.Usuarios
-                .FirstOrDefaultAsync(u => u.IdUsuario == usuario.IdUsuario);
+        //public async Task UpdateAsync(Usuario usuario)
+        //{
+        //    var existingUsuario = await _context.Usuarios
+        //        .FirstOrDefaultAsync(u => u.IdUsuario == usuario.IdUsuario);
 
-            if (existingUsuario == null)
-                throw new KeyNotFoundException($"Usuário com ID {usuario.IdUsuario} não encontrado.");
+        //    if (existingUsuario == null)
+        //        throw new KeyNotFoundException($"Usuário com ID {usuario.IdUsuario} não encontrado.");
 
-            // Atualiza apenas campos permitidos
-            existingUsuario.Nome = usuario.Nome;
-            existingUsuario.Email = usuario.Email;
-            existingUsuario.Ddd = usuario.Ddd;
-            existingUsuario.Telefone = usuario.Telefone;
-            existingUsuario.TipoUsuarioId = usuario.TipoUsuarioId;
+        //    // Atualiza apenas campos permitidos
+        //    existingUsuario.Nome = usuario.Nome;
+        //    existingUsuario.Email = usuario.Email;
+        //    existingUsuario.Ddd = usuario.Ddd;
+        //    existingUsuario.Telefone = usuario.Telefone;
+        //    existingUsuario.TipoUsuarioId = usuario.TipoUsuarioId;
 
-            // Mantém CPF original
-            existingUsuario.CPF = existingUsuario.CPF;
+        //    // Mantém CPF original
+        //    existingUsuario.CPF = existingUsuario.CPF;
 
-            // Atualiza senha somente se realmente for nova
-            if (!string.IsNullOrWhiteSpace(usuario.Senha) && usuario.Senha != existingUsuario.Senha)
-            {
-                existingUsuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
-            }
+        //    // Atualiza senha somente se realmente for nova
+        //    if (!string.IsNullOrWhiteSpace(usuario.Senha) && usuario.Senha != existingUsuario.Senha)
+        //    {
+        //        existingUsuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
+        //    }
 
-            await _context.SaveChangesAsync();
-        }
+        //    await _context.SaveChangesAsync();
+        //}
 
 
         public async Task<Usuario>? ValidarLoginAsync(string email, string senha)
