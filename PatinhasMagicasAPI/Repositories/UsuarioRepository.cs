@@ -77,8 +77,6 @@ namespace PatinhasMagicasAPI.Repositories
             }
         }
 
-        // MÉTODOS DE CONSULTA
-
         public async Task<List<Usuario>> GetAllAsync()
         {
             return await _context.Usuarios.Include(u => u.TipoUsuario).Include(u => u.Endereco).ToListAsync();
@@ -89,7 +87,11 @@ namespace PatinhasMagicasAPI.Repositories
             return await _context.Usuarios.Include(u => u.TipoUsuario).Include(u => u.Endereco).FirstOrDefaultAsync(u => u.IdUsuario == id);
         }
 
-        // MÉTODOS NÃO IMPLEMENTADOS
+        public async Task<Usuario> GetByCPFAsync(string cpf)
+        {
+            return await _context.Usuarios.FirstOrDefaultAsync(u => u.CPF == cpf);
+        }
+
 
         public Task InativarAsync(int id)
         {
@@ -105,11 +107,6 @@ namespace PatinhasMagicasAPI.Repositories
         {
             _context.Usuarios.Update(usuario);
             await _context.SaveChangesAsync();
-        }
-
-        public async Task<Usuario> GetByCPFAsync(string cpf)
-        {
-            return await _context.Usuarios.FirstOrDefaultAsync(u => u.CPF == cpf);
         }
 
     }

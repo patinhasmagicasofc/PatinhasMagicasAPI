@@ -69,5 +69,6 @@ namespace PatinhasMagicasAPI.Controllers
             await _usuarioService.ReativarAsync(id);
             return NoContent();
         }
+
     }
 }

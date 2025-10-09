@@ -24,6 +24,7 @@ namespace PatinhasMagicasAPI.Models
         [Required(ErrorMessage = "Campo obrigatório!")]
         [Display(Name = "Senha")]
         [StringLength(10)]
+        [MaxLength(100)]
         public string Senha { get; set; }
 
         [Required(ErrorMessage = "O DDD é obrigatório.")]
