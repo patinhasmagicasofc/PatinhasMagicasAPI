@@ -4,8 +4,6 @@ namespace PatinhasMagicasAPI.Models.DTOs
 {
     public class EnderecoInputDTO
     {
-        public int IdEndereco { get; set; }
-
         [Required(ErrorMessage = "O logradouro é obrigatório.")]
         [StringLength(200, ErrorMessage = "O logradouro deve ter no máximo 200 caracteres.")]
         public string Logradouro { get; set; }

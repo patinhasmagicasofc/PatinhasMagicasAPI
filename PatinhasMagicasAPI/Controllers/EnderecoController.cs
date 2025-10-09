@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using PatinhasMagicasAPI.Interfaces;
+using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Models;
 using PatinhasMagicasAPI.Models.DTOs;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using PatinhasMagicasAPI.Services.Interfaces;
 
 namespace PatinhasMagicasAPI.Controllers
 {
@@ -13,86 +12,55 @@ namespace PatinhasMagicasAPI.Controllers
     [ApiController]
     public class EnderecoController : ControllerBase
     {
-        private readonly IEnderecoRepository _enderecoRepository;
+        private readonly IEnderecoService _enderecoService;
 
-        // Constructor for dependency injection
-        public EnderecoController(IEnderecoRepository enderecoRepository)
+        public EnderecoController(IEnderecoService enderecoService)
         {
-            _enderecoRepository = enderecoRepository;
+            _enderecoService = enderecoService;
         }
 
-        // GET: api/Endereco
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EnderecoInputDTO>>> GetEnderecos()
+        public async Task<ActionResult<IEnumerable<EnderecoOutputDTO>>> GetEnderecos()
         {
-            var enderecos = await _enderecoRepository.GetAsync();
-            return Ok(enderecos);
+            var enderecoOutputDTOs = await _enderecoService.GetAsync();
+
+            return Ok(enderecoOutputDTOs);
         }
 
-        // GET: api/Endereco/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Endereco>> GetEndereco(int id)
+        public async Task<ActionResult<EnderecoOutputDTO>> GetEndereco(int id)
         {
-            var endereco = await _enderecoRepository.GetByIdAsync(id);
+            var enderecoOutputDTO = await _enderecoService.GetByIdAsync(id);
 
-            if (endereco == null)
-            {
-                return NotFound();
-            }
+            if (enderecoOutputDTO == null) return NotFound(new { message = "Endereço não encontrado." }); ;
 
-            return Ok(endereco);
+            return Ok(enderecoOutputDTO);
         }
 
-        // Post
         [HttpPost]
-        public async Task<ActionResult<Endereco>> PostEndereco([FromBody] EnderecoInputDTO enderecoDto) 
+        public async Task<ActionResult<Endereco>> PostEndereco([FromBody] EnderecoInputDTO enderecoInputDTO) 
         {
-            // 2. Mapear DTO para a Entidade Endereco antes de salvar
-            var endereco = new Endereco
-            {
-                Logradouro = enderecoDto.Logradouro,
-                Numero = enderecoDto.Numero,
-                Bairro = enderecoDto.Bairro,
-                Cidade = enderecoDto.Cidade,
-                Estado = enderecoDto.Estado,
-                CEP = enderecoDto.CEP,
-                Complemento = enderecoDto.Complemento,
-                UsuarioId = enderecoDto.UsuarioId // Apenas o ID
-            };
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            _enderecoRepository.AddAsync(endereco);
-            await _enderecoRepository.SaveChangesAsync();
+            await _enderecoService.AddAsync(enderecoInputDTO);
 
-            return CreatedAtAction("GetEndereco", new { id = endereco.IdEndereco }, endereco);
+            //return CreatedAtAction("GetEndereco", new { id = enderecoInputDTO.IdEndereco }, enderecoInputDTO);
+            return Ok();
         }
 
-        // PUT: api/Endereco/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEndereco(int id, Endereco endereco)
+        public async Task<IActionResult> PutEndereco(int id, EnderecoInputDTO enderecoInputDTO)
         {
-            if (id != endereco.IdEndereco)
-            {
-                return BadRequest();
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            _enderecoRepository.UpdateAsync(endereco);
-            await _enderecoRepository.SaveChangesAsync();
-
+            await _enderecoService.UpdateAsync(id, enderecoInputDTO);
             return NoContent();
         }
 
-        // DELETE: api/Endereco/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEndereco(int id)
         {
-            var endereco = await _enderecoRepository.GetByIdAsync(id);
-            if (endereco == null)
-            {
-                return NotFound();
-            }
-
-            _enderecoRepository.DeleteAsync(endereco);
-            await _enderecoRepository.SaveChangesAsync();
+            await _enderecoService.DeleteAsync(id);
 
             return NoContent();
         }

@@ -1,8 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.WebEncoders.Testing;
-using PatinhasMagicasAPI.Interfaces;
+﻿using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
-using System.Threading.Tasks;
 
 namespace PatinhasMagicasAPI.Services
 {
