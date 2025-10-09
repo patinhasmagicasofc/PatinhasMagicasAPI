@@ -37,7 +37,5 @@ namespace PatinhasMagicasAPI.DTOs
         [Display(Name = "Tipo de Usuário")]
         [Range(1, int.MaxValue, ErrorMessage = "O Tipo de Usuário é inválido.")]
         public int TipoUsuarioId { get; set; }
-
-        public DateTime DataCadastro { get; set; }
     }
 }
