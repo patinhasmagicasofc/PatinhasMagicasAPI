@@ -3,9 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PatinhasMagicasAPI.Data;
 using PatinhasMagicasAPI.Interfaces;
+using PatinhasMagicasAPI.Mapping;
 using PatinhasMagicasAPI.Repositories;
 using PatinhasMagicasAPI.Services;
+using PatinhasMagicasAPI.Services.Interfaces;
 using System.Text;
+
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +20,13 @@ var secretKey = configuration["Jwt:Key"] ?? throw new ArgumentNullException("JWT
 // Add services to the container.
 // Adicionar a conexão com o banco de dados SQL Server
 builder.Services.AddDbContext<PatinhasMagicasDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Registro do AutoMapper
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<ApplicationProfile>();
+});
+
 
 // Repositórios
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
@@ -33,7 +45,11 @@ builder.Services.AddScoped<IServicoRepository, ServicoRepository>();
 
 
 //Services
-builder.Services.AddScoped<PedidoService, PedidoService>();
+builder.Services.AddScoped<IEnderecoService, EnderecoService>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+
+
 // Configuração do JWT (Authentication)
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

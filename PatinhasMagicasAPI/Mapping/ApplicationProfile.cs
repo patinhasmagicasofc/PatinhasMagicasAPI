@@ -11,6 +11,12 @@ namespace PatinhasMagicasAPI.Mapping
         {
             CreateMap<Endereco, EnderecoOutputDTO>().ReverseMap();
             CreateMap<EnderecoInputDTO, Endereco>();
+
+            CreateMap<Usuario, UsuarioOutputDTO>().ReverseMap();
+            CreateMap<UsuarioInputDTO, Usuario>();
+
+            CreateMap<Usuario,LoginUsuarioOutputDTO>().ReverseMap();
+            CreateMap<LoginUsuarioInputDTO, Usuario>();
         }
     }
 }

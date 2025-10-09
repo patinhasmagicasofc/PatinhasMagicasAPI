@@ -32,7 +32,7 @@ namespace PatinhasMagicasAPI.Controllers
         {
             var enderecoOutputDTO = await _enderecoService.GetByIdAsync(id);
 
-            if (enderecoOutputDTO == null) return NotFound(new { message = "Endereço não encontrado." }); ;
+            if (enderecoOutputDTO == null) return NotFound(new { message = "Endereço não encontrado." });
 
             return Ok(enderecoOutputDTO);
         }

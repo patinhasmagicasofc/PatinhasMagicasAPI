@@ -41,6 +41,7 @@ namespace PatinhasMagicasAPI.Services
             var endereco = await _enderecoRepository.GetByIdAsync(id);
             if (endereco != null)
             {
+                _mapper.Map(enderecoInputDTO, endereco);
                 await _enderecoRepository.UpdateAsync(endereco);
             }
         }

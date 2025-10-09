@@ -1,6 +1,6 @@
 ﻿using PatinhasMagicasAPI.Models;
 
-namespace PatinhasMagicasAPI.Interfaces
+namespace PatinhasMagicasAPI.Services.Interfaces
 {
     public interface ITokenService
     {

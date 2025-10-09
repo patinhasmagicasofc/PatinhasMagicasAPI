@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using PatinhasMagicasAPI.DTOs;
-using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
+using PatinhasMagicasAPI.Services.Interfaces;
 
 namespace PatinhasMagicasAPI.Controllers
 {
@@ -11,114 +11,62 @@ namespace PatinhasMagicasAPI.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
-        private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IUsuarioService _usuarioService;
 
-        public UsuarioController(IUsuarioRepository usuarioRepository)
+        public UsuarioController(IUsuarioService usuarioService)
         {
-            _usuarioRepository = usuarioRepository;
+            _usuarioService = usuarioService;
         }
 
-        // GET: api/Usuario
-        // Retorna todos os usuários
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
+        public async Task<ActionResult<IEnumerable<UsuarioOutputDTO>>> GetUsuarios()
         {
-            var usuarios = await _usuarioRepository.GetAllAsync();
-            return Ok(usuarios);
+            var usuarioOutputDTOs = await _usuarioService.GetAllAsync();
+
+            return Ok(usuarioOutputDTOs);
         }
 
-        // GET: api/Usuario/5
-        // Retorna um usuário específico pelo ID
         [HttpGet("{id}")]
-        public async Task<ActionResult<Usuario>> GetUsuario(int id)
+        public async Task<ActionResult<UsuarioOutputDTO>> GetUsuario(int id)
         {
-            var usuario = await _usuarioRepository.GetByIdAsync(id);
+            var usuarioOutputDTO = await _usuarioService.GetByIdAsync(id);
 
-            if (usuario == null)
-            {
-                return NotFound();
-            }
+            if (usuarioOutputDTO == null) return NotFound(new { message = "Usuario não encontrado." });
 
-            return Ok(usuario);
+            return Ok(usuarioOutputDTO);
         }
 
-        // POST: api/Usuario
-        // Adiciona um novo usuário
         [HttpPost]
         public async Task<ActionResult<Usuario>> Post(UsuarioInputDTO usuarioInputDTO)
         {
-            var usuario = new Usuario
-            {
-                Nome = usuarioInputDTO.Nome,
-                Email = usuarioInputDTO.Email,
-                CPF = usuarioInputDTO.CPF,
-                Ddd = usuarioInputDTO.Ddd,
-                Telefone = usuarioInputDTO.Telefone,
-                TipoUsuarioId = usuarioInputDTO.TipoUsuarioId
-            };
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            await _usuarioRepository.AddAsync(usuario);
-            return CreatedAtAction(nameof(GetUsuario), new { id = usuario.IdUsuario }, usuario);
+            await _usuarioService.AddAsync(usuarioInputDTO);
+
+            //return CreatedAtAction(nameof(GetUsuario), new { id = usuario.IdUsuario }, usuario);
+            return Ok();
         }
 
-        // PUT: api/Usuario/5
-        // Atualiza um usuário existente
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUsuario(int id, UsuarioInputDTO usuarioInputDTO)
         {
-            var usuario = new Usuario
-            {
-                IdUsuario = id,
-                Nome = usuarioInputDTO.Nome,
-                Email = usuarioInputDTO.Email,
-                CPF = usuarioInputDTO.CPF,
-                Ddd = usuarioInputDTO.Ddd,
-                Telefone = usuarioInputDTO.Telefone,
-                TipoUsuarioId = usuarioInputDTO.TipoUsuarioId
-            };
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            //if (id != usuario.IdUsuario)
-            //{
-            //    return BadRequest("O ID na URL não corresponde ao ID do objeto.");
-            //}
-
-            var existingUsuario = await _usuarioRepository.GetByIdAsync(id);
-            if (existingUsuario == null)
-            {
-                return NotFound();
-            }
-
-            await _usuarioRepository.UpdateAsync(usuario);
+            await _usuarioService.UpdateAsync(id, usuarioInputDTO);
             return NoContent();
         }
 
-        // PUT: api/Usuario/inativar/5
-        // Inativa um usuário (exclusão lógica)
         [HttpPut("inativar/{id}")]
         public async Task<IActionResult> InativarUsuario(int id)
         {
-            var existingUsuario = await _usuarioRepository.GetByIdAsync(id);
-            if (existingUsuario == null)
-            {
-                return NotFound();
-            }
-
-            await _usuarioRepository.InativarAsync(id);
+            await _usuarioService.InativarAsync(id);
             return NoContent();
         }
 
-        // PUT: api/Usuario/reativar/5
-        // Reativa um usuário inativo
         [HttpPut("reativar/{id}")]
         public async Task<IActionResult> ReativarUsuario(int id)
         {
-            var existingUsuario = await _usuarioRepository.GetByIdAsync(id);
-            if (existingUsuario == null)
-            {
-                return NotFound();
-            }
-
-            await _usuarioRepository.ReativarAsync(id);
+            await _usuarioService.ReativarAsync(id);
             return NoContent();
         }
     }

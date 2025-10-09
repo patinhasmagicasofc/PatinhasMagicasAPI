@@ -10,6 +10,5 @@ namespace PatinhasMagicasAPI.Services.Interfaces
         Task AddAsync(EnderecoInputDTO enderecoInputDTO);
         Task UpdateAsync(int id, EnderecoInputDTO enderecoInputDTO);
         Task DeleteAsync(int id);
-
     }
 }

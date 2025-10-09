@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using PatinhasMagicasAPI.Interfaces;
+using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Models;
-using PatinhasMagicasAPI.Services; 
-using System.Threading.Tasks;
+using PatinhasMagicasAPI.Services.Interfaces;
 
 namespace PatinhasMagicasAPI.Controllers
 {
@@ -14,28 +13,30 @@ namespace PatinhasMagicasAPI.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IUsuarioService _usuarioService;
         private readonly ITokenService _tokenService;
 
-        public LoginController(IUsuarioRepository usuarioRepository, ITokenService tokenService)
+        public LoginController(IUsuarioService usuarioService, ITokenService tokenService)
         {
-            _usuarioRepository = usuarioRepository;
+            _usuarioService = usuarioService;
             _tokenService = tokenService;
         }
 
         [HttpPost("login")] 
         [AllowAnonymous]
-
-        public async Task<IActionResult> Login([FromBody] LoginUsuario model)
+        public async Task<IActionResult> Login([FromBody] LoginUsuarioInputDTO loginUsuarioInputDTO)
         {
 
-            var usuario = await _usuarioRepository.ValidarLoginAsync(model.Email, model.Senha);
+            var loginUsuarioOutputDTO = await _usuarioService.ValidarLoginAsync(loginUsuarioInputDTO.Email, loginUsuarioInputDTO.Senha);
 
-            if (usuario == null)
+            if (loginUsuarioOutputDTO == null)return Unauthorized(new { Message = "Usuário ou senha inválidos ou inativos." });
+
+            var usuario = new Usuario
             {
-                // Retorno padronizado de erro da API
-                return Unauthorized(new { Message = "Usuário ou senha inválidos ou inativos." });
-            }
+                IdUsuario = loginUsuarioOutputDTO.Id,
+                Email = loginUsuarioOutputDTO.Email,
+                TipoUsuario = loginUsuarioOutputDTO.TipoUsuario
+            };
 
             string role = usuario.TipoUsuario?.DescricaoTipoUsuario ?? "Cliente";
 
@@ -46,7 +47,7 @@ namespace PatinhasMagicasAPI.Controllers
             {
                 Token = token,
                 Perfil = role,
-                IdUsuario = usuario.IdUsuario
+                IdUsuario = loginUsuarioOutputDTO.Id
             });
         }
 
