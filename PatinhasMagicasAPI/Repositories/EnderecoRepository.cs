@@ -42,5 +42,7 @@ namespace PatinhasMagicasAPI.Repositories
             _context.Enderecos.Remove(endereco);
             await _context.SaveChangesAsync();
         }
+
+        
     }
 }

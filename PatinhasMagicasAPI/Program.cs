@@ -15,6 +15,7 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 var configuration = builder.Configuration;
+// Lê a chave secreta do appsettings.json
 var secretKey = configuration["Jwt:Key"] ?? throw new ArgumentNullException("JWT Key not configured");
 
 // Add services to the container.
@@ -36,19 +37,32 @@ builder.Services.AddScoped<IPedidoRepository, PedidoRepository>();
 builder.Services.AddScoped<IStatusAgendamentoRepository, StatusAgendamentoRepository>();
 builder.Services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();
 builder.Services.AddScoped<IEnderecoRepository, EnderecoRepository>();
-builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-builder.Services.AddScoped<ITipoUsuarioRepository, TipoUsuarioRepository>();
 builder.Services.AddScoped<ITipoPagamentoRepository, TipoPagamentoRepository>();
 builder.Services.AddScoped<IPagamentoRepository, PagamentoRepository>();
 builder.Services.AddScoped<ITipoServicoRepository, TipoServicoRepository>();
 builder.Services.AddScoped<IServicoRepository, ServicoRepository>();
+builder.Services.AddScoped<ITokenService, TokenService>(); // CORREÇÃO do erro de DI 500
+builder.Services.AddScoped<PedidoService, PedidoService>(); // Service
+builder.Services.AddHttpClient<CepService>();
 
+// Configuração do Cors (CORREÇÃO do erro de CORS)
+builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+{
+    // Permite as origens específicas e remove o AllowAnyOrigin para funcionar com AllowCredentials
+    builder.WithOrigins("http://127.0.0.1:5501", "http://localhost:5260")
+          .AllowAnyMethod()
+          .AllowAnyHeader()
+          .AllowCredentials(); // Crucial para o JWT
+}));
 
 //Services
 builder.Services.AddScoped<IEnderecoService, EnderecoService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
+
+builder.Services.AddScoped<PedidoService, PedidoService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 // Configuração do JWT (Authentication)
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -60,8 +74,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = configuration["Jwt:Issuer"], // Configurar no appsettings.json
-            ValidAudience = configuration["Jwt:Audience"], // Configurar no appsettings.json
+            ValidIssuer = configuration["Jwt:Issuer"],
+            ValidAudience = configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
         };
     });
@@ -94,8 +108,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//ativar o CORS
+app.UseRouting(); // Deve vir antes do UseCors se você usar rotas específicas
+
+// Ativar o CORS (POSIÇÃO CORRETA)
 app.UseCors("MyPolicy");
+
+// Autenticação (deve vir antes da Autorização)
 app.UseAuthentication();
 app.UseAuthorization();
 

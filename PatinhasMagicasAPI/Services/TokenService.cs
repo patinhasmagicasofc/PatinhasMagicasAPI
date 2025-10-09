@@ -13,7 +13,8 @@ namespace PatinhasMagicasAPI.Services
 
         public TokenService(IConfiguration configuration)
         {
-            _jwtSecret = configuration["JwtSettings:Secret"] ??
+            // Deve ler de "Jwt:Key"
+            _jwtSecret = configuration["Jwt:Key"] ??
                          throw new InvalidOperationException("A chave secreta JWT não foi configurada.");
         }
 
