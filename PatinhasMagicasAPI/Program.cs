@@ -43,6 +43,9 @@ builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
           .AllowCredentials(); // Crucial para o JWT
 }));
 
+//Services
+builder.Services.AddScoped<PedidoService, PedidoService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 // Configuração do JWT (Authentication)
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
