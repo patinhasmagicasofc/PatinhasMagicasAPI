@@ -18,63 +18,8 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task AddAsync(Usuario usuario)
         {
-            if (!string.IsNullOrEmpty(usuario.Senha))
-            {
-                usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
-            }
-
             await _context.Usuarios.AddAsync(usuario);
             await _context.SaveChangesAsync();
-        }
-
-
-        //public async Task UpdateAsync(Usuario usuario)
-        //{
-        //    var existingUsuario = await _context.Usuarios
-        //        .FirstOrDefaultAsync(u => u.IdUsuario == usuario.IdUsuario);
-
-        //    if (existingUsuario == null)
-        //        throw new KeyNotFoundException($"Usuário com ID {usuario.IdUsuario} não encontrado.");
-
-        //    // Atualiza apenas campos permitidos
-        //    existingUsuario.Nome = usuario.Nome;
-        //    existingUsuario.Email = usuario.Email;
-        //    existingUsuario.Ddd = usuario.Ddd;
-        //    existingUsuario.Telefone = usuario.Telefone;
-        //    existingUsuario.TipoUsuarioId = usuario.TipoUsuarioId;
-
-        //    // Mantém CPF original
-        //    existingUsuario.CPF = existingUsuario.CPF;
-
-        //    // Atualiza senha somente se realmente for nova
-        //    if (!string.IsNullOrWhiteSpace(usuario.Senha) && usuario.Senha != existingUsuario.Senha)
-        //    {
-        //        existingUsuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
-        //    }
-
-        //    await _context.SaveChangesAsync();
-        //}
-
-
-        public async Task<Usuario>? ValidarLoginAsync(string email, string senha)
-        {
-            var usuario = await _context.Usuarios
-                                        .Include(u => u.TipoUsuario)
-                                        .FirstOrDefaultAsync(u => u.Email == email);
-
-            if (usuario == null)
-            {
-                return null;
-            }
-
-            if (BCrypt.Net.BCrypt.Verify(senha, usuario.Senha))
-            {
-                return usuario;
-            }
-            else
-            {
-                return null;
-            }
         }
 
         public async Task<List<Usuario>> GetAllAsync()
@@ -92,6 +37,10 @@ namespace PatinhasMagicasAPI.Repositories
             return await _context.Usuarios.FirstOrDefaultAsync(u => u.CPF == cpf);
         }
 
+        public async Task<Usuario> GetByEmailAsync(string email)
+        {
+            return await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
+        }
 
         public Task InativarAsync(int id)
         {

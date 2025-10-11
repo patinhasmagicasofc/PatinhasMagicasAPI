@@ -21,10 +21,10 @@ namespace PatinhasMagicasAPI.Services
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, usuario.IdUsuario.ToString()), 
-                new Claim(ClaimTypes.Name, usuario.Nome), 
-                new Claim(ClaimTypes.Email, usuario.Email),
-                new Claim(ClaimTypes.Role, usuario.TipoUsuario?.DescricaoTipoUsuario ?? "Cliente") 
+               new Claim(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString()),
+               new Claim(ClaimTypes.Name, usuario.Nome),                            
+               new Claim(ClaimTypes.Email, usuario.Email),                         
+               new Claim(ClaimTypes.Role, usuario.TipoUsuario?.DescricaoTipoUsuario ?? "Cliente")
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecret));
