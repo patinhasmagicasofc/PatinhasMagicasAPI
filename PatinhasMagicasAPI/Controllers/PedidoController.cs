@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Interfaces;
@@ -10,6 +11,7 @@ namespace PatinhasMagicasAPI.Controllers
 {
     [Route("api/[controller]")]
     [EnableCors("MyPolicy")]
+    [Authorize]
     [ApiController]
     public class PedidoController : ControllerBase
     {
@@ -46,6 +48,7 @@ namespace PatinhasMagicasAPI.Controllers
 
             return Ok(pedidosDTO);
         }
+
 
         [HttpGet("paged")]
         public async Task<ActionResult<IEnumerable<PedidoOutputDTO>>> GetAll([FromQuery] PedidoFiltroDTO filtro)

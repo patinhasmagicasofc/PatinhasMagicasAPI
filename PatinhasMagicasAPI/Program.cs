@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using PatinhasMagicasAPI.Data;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Mapping;
+using PatinhasMagicasAPI.Middleware;
 using PatinhasMagicasAPI.Repositories;
 using PatinhasMagicasAPI.Services;
 using PatinhasMagicasAPI.Services.Interfaces;
@@ -83,6 +84,8 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

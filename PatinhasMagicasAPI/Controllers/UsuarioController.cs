@@ -44,7 +44,7 @@ namespace PatinhasMagicasAPI.Controllers
             await _usuarioService.AddAsync(usuarioInputDTO);
 
             //return CreatedAtAction(nameof(GetUsuario), new { id = usuario.IdUsuario }, usuario);
-            return Ok();
+            return Ok(new { success = true, message = "Usuário cadastrado com sucesso!" });
         }
 
         [HttpPut("{id}")]

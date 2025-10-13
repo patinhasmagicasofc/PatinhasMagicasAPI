@@ -29,7 +29,7 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task<Usuario> GetByIdAsync(int id)
         {
-            return await _context.Usuarios.Include(u => u.TipoUsuario).Include(u => u.Endereco).FirstOrDefaultAsync(u => u.IdUsuario == id);
+            return await _context.Usuarios.Include(u => u.TipoUsuario).Include(u => u.Endereco).FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task<Usuario> GetByCPFAsync(string cpf)
@@ -39,7 +39,7 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task<Usuario> GetByEmailAsync(string email)
         {
-            return await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
+            return await _context.Usuarios.Include(u => u.TipoUsuario).FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public Task InativarAsync(int id)

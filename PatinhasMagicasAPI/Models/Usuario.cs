@@ -5,7 +5,7 @@ namespace PatinhasMagicasAPI.Models
     public class Usuario
     {
         [Key]
-        public int IdUsuario { get; set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "Campo obrigatório!")]
         [Display(Name = "Nome")]
@@ -23,8 +23,8 @@ namespace PatinhasMagicasAPI.Models
 
         [Required(ErrorMessage = "Campo obrigatório!")]
         [Display(Name = "Senha")]
-        [StringLength(10)]
-        [MaxLength(100)]
+        [StringLength(200, MinimumLength = 8)]
+
         public string Senha { get; set; }
 
         [Required(ErrorMessage = "O DDD é obrigatório.")]

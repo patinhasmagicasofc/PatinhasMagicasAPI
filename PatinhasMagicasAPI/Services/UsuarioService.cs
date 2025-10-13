@@ -61,7 +61,7 @@ namespace PatinhasMagicasAPI.Services
         public async Task UpdateAsync(int id, UsuarioInputDTO usuarioInputDTO)
         {
             var usuario = _mapper.Map<Usuario>(usuarioInputDTO);
-            usuario.IdUsuario = id;
+            usuario.Id = id;
 
             if(await _usuarioRepository.GetByIdAsync(id) == null)
                 throw new KeyNotFoundException("Usuário não encontrado.");
@@ -81,13 +81,13 @@ namespace PatinhasMagicasAPI.Services
         private async Task<bool> ValidateEmailAsync(string email, int userId)
         {
             var existingUser = await _usuarioRepository.GetByEmailAsync(email);
-            return existingUser == null || existingUser.IdUsuario == userId;
+            return existingUser == null || existingUser.Id == userId;
         }
 
         private async Task<bool> ValidateCPFAsync(string cpf, int userId)
         {
             var existingUser = await _usuarioRepository.GetByCPFAsync(cpf);
-            return existingUser == null || existingUser.IdUsuario == userId;
+            return existingUser == null || existingUser.Id == userId;
         }
 
         public async Task<LoginUsuarioOutputDTO>? ValidarLoginAsync(string email, string senha)

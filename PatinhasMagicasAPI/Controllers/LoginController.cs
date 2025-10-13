@@ -28,7 +28,7 @@ namespace PatinhasMagicasAPI.Controllers
 
             if (loginUsuarioOutputDTO == null)return Unauthorized(new { Message = "Usuário ou senha inválidos ou inativos." });
 
-            return Ok(loginUsuarioOutputDTO);
+            return Ok(new { success = true, message = "Login Efetuado com sucesso sucesso!", data = loginUsuarioOutputDTO });
         }
     }
 }
