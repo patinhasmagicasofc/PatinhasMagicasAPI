@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using PatinhasMagicasAPI.Data;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Mapping;
@@ -11,20 +12,17 @@ using PatinhasMagicasAPI.Services.Interfaces;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
 var configuration = builder.Configuration;
-// Lê a chave secreta do appsettings.json
+
+// JWT Key
 var secretKey = configuration["Jwt:Key"] ?? throw new ArgumentNullException("JWT Key not configured");
 
-// Add services to the container.
-// Adicionar a conexão com o banco de dados SQL Server
-builder.Services.AddDbContext<PatinhasMagicasDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Add services to the container
+builder.Services.AddDbContext<PatinhasMagicasDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Registro do AutoMapper
-builder.Services.AddAutoMapper(cfg =>
-{
-    cfg.AddProfile<ApplicationProfile>();
-});
+// AutoMapper
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile<ApplicationProfile>());
 
 // Repositórios
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
@@ -39,25 +37,23 @@ builder.Services.AddScoped<IPagamentoRepository, PagamentoRepository>();
 builder.Services.AddScoped<ITipoServicoRepository, TipoServicoRepository>();
 builder.Services.AddScoped<IServicoRepository, ServicoRepository>();
 
-
-// Configuração do Cors (CORREÇÃO do erro de CORS)
-//builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
-//{
-//    // Permite as origens específicas e remove o AllowAnyOrigin para funcionar com AllowCredentials
-//    builder.WithOrigins("http://127.0.0.1:5501", "http://localhost:5260")
-//          .AllowAnyMethod()
-//          .AllowAnyHeader()
-//          .AllowCredentials(); // Crucial para o JWT
-//}));
-
-//Services
+// Services
 builder.Services.AddScoped<IEnderecoService, EnderecoService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<PedidoService, PedidoService>();
 builder.Services.AddHttpClient<CepService>();
 
-// Configuração do JWT (Authentication)
+// CORS
+builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+{
+    builder.WithOrigins("http://127.0.0.1:5500", "http://localhost:5260")
+           .AllowAnyMethod()
+           .AllowAnyHeader()
+           .AllowCredentials();
+}));
+
+// JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -73,31 +69,52 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-
-builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
-{
-    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-}));
-
+// Controllers
 builder.Services.AddControllers();
 
-builder.Services.AddSwaggerGen();
+// Swagger com suporte a JWT
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "PatinhasMagicasAPI", Version = "v1" });
+
+    // Definição do esquema JWT
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Insira o token JWT gerado após login"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 var app = builder.Build();
 
+// Middleware de tratamento de erro
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
-// Configure the HTTP request pipeline.
+// Swagger
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+// Pipeline
 app.UseRouting();
-
 app.UseCors("MyPolicy");
-
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -10,11 +10,19 @@ namespace PatinhasMagicasAPI.Services
     public class TokenService : ITokenService
     {
         private readonly string _jwtSecret;
+        private readonly string _issuer;
+        private readonly string _audience;
 
         public TokenService(IConfiguration configuration)
         {
-            _jwtSecret = configuration["Jwt:Key"] ??
-                         throw new InvalidOperationException("A chave secreta JWT não foi configurada.");
+            _jwtSecret = configuration["Jwt:Key"]
+                 ?? throw new InvalidOperationException("A chave secreta JWT não foi configurada.");
+
+            _issuer = configuration["Jwt:Issuer"]
+                      ?? throw new InvalidOperationException("JWT Issuer não configurado.");
+
+            _audience = configuration["Jwt:Audience"]
+                        ?? throw new InvalidOperationException("JWT Audience não configurado.");
         }
 
         public string GenerateToken(Usuario usuario)
@@ -22,8 +30,8 @@ namespace PatinhasMagicasAPI.Services
             var claims = new List<Claim>
             {
                new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
-               new Claim(ClaimTypes.Name, usuario.Nome),                            
-               new Claim(ClaimTypes.Email, usuario.Email),                         
+               new Claim(ClaimTypes.Name, usuario.Nome),
+               new Claim(ClaimTypes.Email, usuario.Email),
                new Claim(ClaimTypes.Role, usuario.TipoUsuario?.DescricaoTipoUsuario ?? "Cliente")
             };
 
@@ -34,7 +42,9 @@ namespace PatinhasMagicasAPI.Services
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddHours(2),
-                SigningCredentials = creds
+                SigningCredentials = creds,
+                Issuer = _issuer,
+                Audience = _audience,
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
