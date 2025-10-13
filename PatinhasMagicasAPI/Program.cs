@@ -36,6 +36,16 @@ builder.Services.AddHttpClient<CepService>();
 // ? CORS — configurado para cobrir todos os cenários locais
 builder.Services.AddCors(options =>
 {
+    // Permite as origens específicas e remove o AllowAnyOrigin para funcionar com AllowCredentials
+    builder.WithOrigins("http://127.0.0.1:5501", "http://localhost:5260")
+          .AllowAnyMethod()
+          .AllowAnyHeader()
+          .AllowCredentials(); // Crucial para o JWT
+}));
+
+//Services
+builder.Services.AddScoped<PedidoService, PedidoService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
     options.AddPolicy("MyPolicy", policy =>
     {
         policy
