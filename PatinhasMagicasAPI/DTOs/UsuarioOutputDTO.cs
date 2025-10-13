@@ -7,9 +7,11 @@ namespace PatinhasMagicasAPI.DTOs
         public string Nome { get; set; }
         public string CPF { get; set; }
         public string Email { get; set; }
+        public string Senha { get; set; }
         public int Ddd { get; set; }
         public string Telefone { get; set; }
         public int TipoUsuarioId { get; set; }
-        public EnderecoOutputDTO? EnderecoOutputDTO { get; set; }
+        public DateTime DataCadastro { get; set; }
+        public EnderecoOutputDTO Endereco { get; set; }
     }
 }

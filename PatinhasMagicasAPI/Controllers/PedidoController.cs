@@ -39,8 +39,8 @@ namespace PatinhasMagicasAPI.Controllers
                 StatusPedidoId = p.StatusPedidoId,
                 StatusPedido = p.StatusPedido.Nome,
                 NomeCliente = p.Cliente?.Nome,
+                ValorPedido = _pedidoService.GetValorPedido(p),
                 FormaPagamento = _pedidoService.GetFormaPagamento(p),
-                ValorTotal = _pedidoService.GetValorTotalPedido(p),
                 StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault()
             }).ToList();
 
@@ -48,33 +48,13 @@ namespace PatinhasMagicasAPI.Controllers
         }
 
         [HttpGet("paged")]
-        public async Task<ActionResult<IEnumerable<PedidoOutputDTO>>> GetAll(int page, int pageSize, DateTime dataInicio, DateTime dataFim)
+        public async Task<ActionResult<IEnumerable<PedidoOutputDTO>>> GetAll([FromQuery] PedidoFiltroDTO filtro)
         {
-            var (pedidos, total) = await _pedidoRepository.GetAllAsync(page, pageSize, dataInicio, dataFim);
-
-            if (!pedidos.Any())
+            var dashboardPedido = await _pedidoService.GetPedidosPaginados(filtro);
+            if (!dashboardPedido.PedidoOutputDTO.Any())
                 return NotFound();
 
-            var pedidosDTO = pedidos.Select(p => new PedidoOutputDTO
-            {
-                Id = p.Id,
-                UsuarioId = p.UsuarioId,
-                ClienteId = p.ClienteId,
-                DataPedido = p.DataPedido,
-                StatusPedidoId = p.StatusPedidoId,
-                StatusPedido = p.StatusPedido.Nome,
-                NomeCliente = p.Cliente?.Nome,
-                TotalVendasHoje = _pedidoService.GetTotalPedidosHoje(p),
-                FormaPagamento = _pedidoService.GetFormaPagamento(p),
-                ValorTotal = _pedidoService.GetTotalVendasHoje(p),
-                StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault()
-            }).ToList();
-
-            return Ok(new
-            {
-                pedidosDTO,
-                total
-            });
+            return Ok(dashboardPedido);
         }
 
         [HttpGet("{id}")]
@@ -100,7 +80,7 @@ namespace PatinhasMagicasAPI.Controllers
                     Nome = pedido.Cliente.Nome,
                     Email = pedido.Cliente.Email,
                     Telefone = pedido.Cliente.Telefone,
-                    EnderecoOutputDTO = new EnderecoOutputDTO
+                    Endereco = new EnderecoOutputDTO
                     {
                         Logradouro = pedido.Cliente.Endereco.Logradouro,
                         Numero = pedido.Cliente.Endereco.Numero,

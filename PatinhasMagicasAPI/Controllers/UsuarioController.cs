@@ -58,6 +58,7 @@ namespace PatinhasMagicasAPI.Controllers
                 CPF = usuarioInputDTO.CPF,
                 Ddd = usuarioInputDTO.Ddd.Value,
                 Telefone = usuarioInputDTO.Telefone,
+                DataCadastro = DateTime.Now,
                 Senha = usuarioInputDTO.Senha,
                 TipoUsuarioId = usuarioInputDTO.TipoUsuarioId.Value
             };
