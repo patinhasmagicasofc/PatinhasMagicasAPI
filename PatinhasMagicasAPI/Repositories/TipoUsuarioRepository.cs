@@ -1,9 +1,7 @@
-﻿using PatinhasMagicasAPI.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using PatinhasMagicasAPI.Data;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace PatinhasMagicasAPI.Repositories
 {
@@ -46,6 +44,12 @@ namespace PatinhasMagicasAPI.Repositories
                 _context.TiposUsuarios.Remove(tipoUsuario);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<TipoUsuario?> GetByNomeAsync(string nome)
+        {
+            return await _context.TiposUsuarios
+                .FirstOrDefaultAsync(t => t.DescricaoTipoUsuario.ToLower() == nome.ToLower());
         }
     }
 }

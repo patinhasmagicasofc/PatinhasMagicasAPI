@@ -32,10 +32,8 @@ namespace PatinhasMagicasAPI.DTOs
         [StringLength(10, MinimumLength = 8, ErrorMessage = "O telefone deve ter entre 8 e 10 dígitos (sem DDD).")]
         public string Telefone { get; set; }
 
-        // Chave estrangeira para o relacionamento com TipoUsuario
-        [Required(ErrorMessage = "O Tipo de Usuário é obrigatório.")]
         [Display(Name = "Tipo de Usuário")]
         [Range(1, int.MaxValue, ErrorMessage = "O Tipo de Usuário é inválido.")]
-        public int TipoUsuarioId { get; set; }
+        public int? TipoUsuarioId { get; set; }
     }
 }
