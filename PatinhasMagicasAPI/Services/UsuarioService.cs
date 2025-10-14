@@ -58,22 +58,37 @@ namespace PatinhasMagicasAPI.Services
             return _mapper.Map<UsuarioOutputDTO>(usuario);
         }
 
-        public async Task UpdateAsync(int id, UsuarioInputDTO usuarioInputDTO)
+        public async Task UpdateAsync(int id, UsuarioUpdateDTO usuarioUpdateDTO)
         {
-            var usuario = _mapper.Map<Usuario>(usuarioInputDTO);
+            //var usuario = _mapper.Map<Usuario>(usuarioUpdateDTO);
+
+            var usuario = new Usuario
+            {
+                Id = id,
+                Nome = usuarioUpdateDTO.Nome,
+                Ddd = usuarioUpdateDTO.Ddd.Value,
+                Email = usuarioUpdateDTO.Email,
+                Telefone = usuarioUpdateDTO.Telefone,
+                TipoUsuarioId = usuarioUpdateDTO.TipoUsuarioId.Value
+            };
+
             usuario.Id = id;
 
-            if(await _usuarioRepository.GetByIdAsync(id) == null)
+            var usuarioExiste = await _usuarioRepository.GetByIdAsync(id);
+            if (usuarioExiste == null)
                 throw new KeyNotFoundException("Usuário não encontrado.");
 
             if (!await ValidateEmailAsync(usuario.Email, id))
                 throw new ArgumentException("Email já cadastrado por outro usuário.");
 
-            if (!await ValidateCPFAsync(usuario.CPF, id))
-                throw new ArgumentException("CPF já cadastrado por outro usuário.");
+            //if (!await ValidateCPFAsync(usuario.CPF, id))
+            //    throw new ArgumentException("CPF já cadastrado por outro usuário.");
 
-            if (!string.IsNullOrEmpty(usuario.Senha))
-                usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
+            //if (!string.IsNullOrEmpty(usuario.Senha))
+            //    usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
+
+            usuario.CPF = usuarioExiste.CPF;
+            usuario.Senha = usuarioExiste.Senha;
 
             await _usuarioRepository.UpdateAsync(usuario);
         }

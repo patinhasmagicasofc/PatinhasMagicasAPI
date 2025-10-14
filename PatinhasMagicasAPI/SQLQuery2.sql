@@ -13,7 +13,7 @@ VALUES
 -- Usuários
 INSERT INTO Usuarios (Nome, CPF, Email, Ddd, Telefone, TipoUsuarioId, DataCadastro, Senha)
 VALUES
-('João Silva','111.111.111-11','joao@email.com',11,'999911111',1, GETDATE(), 'João Silva'),
+('Adm','111.111.111-10','adm@pm.com',11,'999911111',1, GETDATE(), 'João Silva'),
 ('Maria Souza','222.222.222-22','maria@email.com',21,'988822222',1,GETDATE(), 'João Silva'),
 ('Carlos Lima','333.333.333-33','carlos@email.com',31,'977733333',2, GETDATE(), 'João Silva'),
 ('Ana Paula','444.444.444-44','ana@email.com',41,'966644444',2, GETDATE(), 'João Silva'),

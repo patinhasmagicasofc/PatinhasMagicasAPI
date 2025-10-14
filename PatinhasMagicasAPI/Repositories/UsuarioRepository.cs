@@ -24,12 +24,12 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task<List<Usuario>> GetAllAsync()
         {
-            return await _context.Usuarios.Include(u => u.TipoUsuario).Include(u => u.Endereco).ToListAsync();
+            return await _context.Usuarios.AsNoTracking().Include(u => u.TipoUsuario).Include(u => u.Endereco).ToListAsync();
         }
 
         public async Task<Usuario> GetByIdAsync(int id)
         {
-            return await _context.Usuarios.Include(u => u.TipoUsuario).Include(u => u.Endereco).FirstOrDefaultAsync(u => u.Id == id);
+            return await _context.Usuarios.AsNoTracking().Include(u => u.TipoUsuario).Include(u => u.Endereco).FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task<Usuario> GetByCPFAsync(string cpf)
@@ -54,8 +54,19 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task UpdateAsync(Usuario usuario)
         {
-            _context.Usuarios.Update(usuario);
-            await _context.SaveChangesAsync();
+            var local = _context.Usuarios.Local.FirstOrDefault(u => u.Id == usuario.Id);
+            if (local != null)
+            {
+                // Desanexar a versão antiga da entidade
+                _context.Entry(local).State = EntityState.Detached;
+            }
+
+            // Anexar a nova versão da entidade
+            _context.Attach(usuario);
+            _context.Entry(usuario).State = EntityState.Modified;
+
+            // Salvar as alterações no banco
+            _context.SaveChanges();
         }
 
     }

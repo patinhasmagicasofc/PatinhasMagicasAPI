@@ -44,16 +44,17 @@ namespace PatinhasMagicasAPI.Controllers
             await _usuarioService.AddAsync(usuarioInputDTO);
 
             //return CreatedAtAction(nameof(GetUsuario), new { id = usuario.IdUsuario }, usuario);
-            return Ok(new { success = true, message = "Usuário cadastrado com sucesso!" });
+            return Ok(new { success = true, message = "Usuário cadastrado com sucesso!", usuarioInputDTO });
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUsuario(int id, [FromBody] UsuarioInputDTO usuarioInputDTO)
+        public async Task<IActionResult> UpdateUsuario(int id, [FromBody] UsuarioUpdateDTO usuarioInputDTO)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             await _usuarioService.UpdateAsync(id, usuarioInputDTO);
-            return NoContent();
+            //return NoContent();
+            return Ok(new { success = true, message = "Usuário atualizado com sucesso!" });
         }
 
         [HttpPut("inativar/{id}")]
