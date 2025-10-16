@@ -11,7 +11,7 @@ namespace PatinhasMagicasAPI.Controllers
 {
     [Route("api/[controller]")]
     [EnableCors("MyPolicy")]
-    [Authorize]
+    //[Authorize]
     [ApiController]
     public class PedidoController : ControllerBase
     {
@@ -48,6 +48,8 @@ namespace PatinhasMagicasAPI.Controllers
 
             return Ok(pedidosDTO);
         }
+
+
 
 
         [HttpGet("paged")]
@@ -142,21 +144,18 @@ namespace PatinhasMagicasAPI.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] PedidoInputDTO pedidoInputDTO)
         {
-            var pedido = await _pedidoRepository.GetByIdAsync(id);
 
-            if (pedido == null)
+            var pedidoExistente = await _pedidoRepository.GetByIdAsync(id);
+
+            if (pedidoExistente == null)
                 return NotFound();
 
-            pedido = new Pedido
-            {
-                Id = id,
-                DataPedido = pedidoInputDTO.DataPedido,
-                ClienteId = pedidoInputDTO.ClienteId,
-                StatusPedidoId = pedidoInputDTO.StatusPedidoId,
-                UsuarioId = pedidoInputDTO.UsuarioId
-            };
+            pedidoExistente.DataPedido = pedidoInputDTO.DataPedido;
+            pedidoExistente.ClienteId = pedidoInputDTO.ClienteId;
+            pedidoExistente.StatusPedidoId = pedidoInputDTO.StatusPedidoId;
+            pedidoExistente.UsuarioId = pedidoInputDTO.UsuarioId;
 
-            await _pedidoRepository.UpdateAsync(pedido);
+            await _pedidoRepository.UpdateAsync(pedidoExistente);
 
             return NoContent();
         }
