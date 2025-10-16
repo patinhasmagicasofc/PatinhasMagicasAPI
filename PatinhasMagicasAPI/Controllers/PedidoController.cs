@@ -55,7 +55,7 @@ namespace PatinhasMagicasAPI.Controllers
         {
             var dashboardPedido = await _pedidoService.GetPedidosPaginados(filtro);
             if (!dashboardPedido.PedidoOutputDTO.Any())
-                return NotFound();
+                return Ok(new { success = true, message = "Nenhum pedido encontrado!", pedidos = new List<PedidoOutputDTO>() });
 
             return Ok(dashboardPedido);
         }

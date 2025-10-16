@@ -71,7 +71,9 @@ namespace PatinhasMagicasAPI.Services
 
             dashboardPedido.PedidoOutputDTO = pedidoOutputDTOs;
             dashboardPedido.QTotalVendas = total;
-            dashboardPedido.ValorTotalVendas = GetTotalVendasHoje(pedidos);
+            dashboardPedido.ValorTotalVendas = GetTotalVendas(pedidos);
+            dashboardPedido.QPedidosCancelado = GetPedidosCancelados(pedidos);
+            dashboardPedido.QPedidosPendente = GetPedidosPendentes(pedidos);
 
             return dashboardPedido;
         }
@@ -105,7 +107,7 @@ namespace PatinhasMagicasAPI.Services
 
         private IQueryable<Pedido> FiltrarPorNome(IQueryable<Pedido> query, string nome)
         {
-            return query.Where(p => p.Cliente.Nome.Contains(nome)); // use Contains para busca parcial
+            return query.Where(p => p.Cliente.Nome.Contains(nome));
         }
 
         private IQueryable<Pedido> FiltrarPorStatus(IQueryable<Pedido> query, string status)
@@ -154,11 +156,22 @@ namespace PatinhasMagicasAPI.Services
             return formaPagamento ?? "Pendente";
         }
 
-        public decimal GetTotalVendasHoje(List<Pedido> pedidos)
+        public decimal GetTotalVendas(List<Pedido> pedidos)
         {
-            var totalVendasHoje = pedidos.Sum(p => p.ItensPedido.Sum(i => i.PrecoUnitario * i.Quantidade));
+            var totalVendas = pedidos.Sum(p => p.ItensPedido.Sum(i => i.PrecoUnitario * i.Quantidade));
 
-            return totalVendasHoje;
+            return totalVendas;
+        }
+
+        public int GetPedidosCancelados(List<Pedido> pedidos)
+        {
+            var totalPedidosCancelados = pedidos.Count(p => p.StatusPedido.Nome == "Cancelado");
+            return totalPedidosCancelados;
+        }
+        public int GetPedidosPendentes(List<Pedido> pedidos)
+        {
+            var totalPedidosPendentes = pedidos.Count(p => p.StatusPedido.Nome == "Pendente");
+            return totalPedidosPendentes;
         }
 
     }
