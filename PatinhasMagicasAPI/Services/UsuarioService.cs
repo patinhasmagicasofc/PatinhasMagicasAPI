@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
@@ -95,6 +96,75 @@ namespace PatinhasMagicasAPI.Services
             usuario.Senha = usuarioExiste.Senha;
 
             await _usuarioRepository.UpdateAsync(usuario);
+        }
+
+        public async Task<DashboardUsuarioDTO> GetUsuariosPaginados(UsuarioFiltroDTO filtro)
+        {
+            var query = _usuarioRepository.GetAllUsuarios();
+
+            if (filtro.DataInicio != null || filtro.DataFim != null)
+                query = FiltrarPorData(query, filtro.DataInicio, filtro.DataFim);
+
+            if (!string.IsNullOrEmpty(filtro.Nome))
+                query = FiltrarPorNome(query, filtro.Nome);
+
+            if (!string.IsNullOrEmpty(filtro.TipoUsuario))
+                query = FiltrarPorTipo(query, filtro.TipoUsuario);
+
+            // Total antes da paginação
+            var total = await query.CountAsync();
+
+            var usuarios = await query
+                .OrderByDescending(p => p.DataCadastro)
+                .Skip((filtro.Page - 1) * filtro.PageSize)
+                .Take(filtro.PageSize)
+                .ToListAsync();
+
+            var dashboardPedido = new DashboardUsuarioDTO();
+            var pedidoOutputDTOs = Map(usuarios);
+
+            dashboardPedido.UsuarioOutputDTOs = pedidoOutputDTOs;
+            //dashboardPedido.QTotalVendas = total;
+            //dashboardPedido.ValorTotalVendas = GetTotalVendas(pedidos);
+           // dashboardPedido.QPedidosCancelado = GetPedidosCancelados(pedidos);
+            //dashboardPedido.QPedidosPendente = GetPedidosPendentes(pedidos);
+
+            return dashboardPedido;
+        }
+
+        private List<UsuarioOutputDTO> Map(List<Usuario> usuarios)
+        {
+            var usuariosDTO = usuarios.Select(p => new UsuarioOutputDTO
+            {
+                Id = p.Id,
+                Nome = p.Nome,
+                Email = p.Email,
+                DataCadastro = p.DataCadastro,
+                Ddd = p.Ddd,
+                Telefone = p.Telefone,
+                TipoUsuarioNome = p.TipoUsuario.DescricaoTipoUsuario,
+               
+            }).ToList();
+
+            return usuariosDTO;
+        }
+
+        private IQueryable<Usuario> FiltrarPorData(IQueryable<Usuario> query, DateTime? inicio, DateTime? fim)
+        {
+            if (inicio == null || fim == null) return query;
+
+            var fimMaisUmDia = fim.Value.Date.AddDays(1);
+            return query.Where(p => p.DataCadastro >= inicio.Value.Date && p.DataCadastro < fimMaisUmDia);
+        }
+
+        private IQueryable<Usuario> FiltrarPorNome(IQueryable<Usuario> query, string nome)
+        {
+            return query.Where(p => p.TipoUsuario.DescricaoTipoUsuario.Contains(nome));
+        }
+
+        private IQueryable<Usuario> FiltrarPorTipo(IQueryable<Usuario> query, string tipoUsuario)
+        {
+            return query.Where(p => p.TipoUsuario.DescricaoTipoUsuario == tipoUsuario);
         }
 
         private async Task<bool> ValidateEmailAsync(string email, int userId)

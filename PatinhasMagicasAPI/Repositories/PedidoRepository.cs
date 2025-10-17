@@ -22,7 +22,7 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task<List<Pedido>> GetAllAsync()
         {
-            return await _context.Pedidos.Include(p => p.Cliente).ThenInclude(c => c.Endereco)
+            return await _context.Pedidos.Include(p => p.Usuario).ThenInclude(c => c.Endereco)
                                          .Include(p => p.ItensPedido).ThenInclude(i => i.Produto)
                                          .Include(p => p.Pagamentos).ThenInclude(pg => pg.StatusPagamento)
                                          .Include(p => p.Pagamentos).ThenInclude(pg => pg.TipoPagamento)
@@ -32,7 +32,7 @@ namespace PatinhasMagicasAPI.Repositories
         public IQueryable<Pedido> GetAllPedidos()
         {
             return _context.Pedidos
-                           .Include(p => p.Cliente).ThenInclude(c => c.Endereco)
+                           .Include(p => p.Usuario).ThenInclude(c => c.Endereco)
                            .Include(p => p.ItensPedido).ThenInclude(i => i.Produto)
                            .Include(p => p.Pagamentos).ThenInclude(pg => pg.StatusPagamento)
                            .Include(p => p.Pagamentos).ThenInclude(pg => pg.TipoPagamento)
@@ -42,7 +42,7 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task<Pedido> GetByIdAsync(int id)
         {
-            return await _context.Pedidos.Include(p => p.Cliente).ThenInclude(p => p.Endereco)
+            return await _context.Pedidos.Include(p => p.Usuario).ThenInclude(p => p.Endereco)
                                          .Include(p => p.ItensPedido).ThenInclude(p => p.Produto)
                                          .Include(p => p.Pagamentos).ThenInclude(p => p.StatusPagamento)
                                          .Include(p => p.StatusPedido).FirstOrDefaultAsync(p => p.Id == id);

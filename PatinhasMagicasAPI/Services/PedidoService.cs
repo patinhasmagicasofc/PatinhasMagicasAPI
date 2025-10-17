@@ -37,7 +37,7 @@ namespace PatinhasMagicasAPI.Services
         //    await _pedidoRepository.UpdateAsync(pedido);
         //}
 
-        public async Task<DashboardPedido> GetPedidosPaginados(PedidoFiltroDTO filtro)
+        public async Task<DashboardPedidoDTO> GetPedidosPaginados(PedidoFiltroDTO filtro)
         {
             if (filtro.DataInicio == null || filtro.DataFim == null)
             {
@@ -66,7 +66,7 @@ namespace PatinhasMagicasAPI.Services
                 .Take(filtro.PageSize)
                 .ToListAsync();
 
-            var dashboardPedido = new DashboardPedido();
+            var dashboardPedido = new DashboardPedidoDTO();
             var pedidoOutputDTOs = Map(pedidos);
 
             dashboardPedido.PedidoOutputDTO = pedidoOutputDTOs;
@@ -84,11 +84,10 @@ namespace PatinhasMagicasAPI.Services
             {
                 Id = p.Id,
                 UsuarioId = p.UsuarioId,
-                ClienteId = p.ClienteId,
                 DataPedido = p.DataPedido,
                 StatusPedidoId = p.StatusPedidoId,
                 StatusPedido = p.StatusPedido.Nome,
-                NomeCliente = p.Cliente?.Nome,
+                NomeCliente = p.Usuario?.Nome,
                 ValorPedido = GetValorPedido(p),
                 FormaPagamento = GetFormaPagamento(p),
                 StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault()
@@ -107,7 +106,7 @@ namespace PatinhasMagicasAPI.Services
 
         private IQueryable<Pedido> FiltrarPorNome(IQueryable<Pedido> query, string nome)
         {
-            return query.Where(p => p.Cliente.Nome.Contains(nome));
+            return query.Where(p => p.Usuario.Nome.Contains(nome));
         }
 
         private IQueryable<Pedido> FiltrarPorStatus(IQueryable<Pedido> query, string status)

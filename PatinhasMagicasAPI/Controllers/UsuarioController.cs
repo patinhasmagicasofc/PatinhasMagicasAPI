@@ -4,6 +4,7 @@ using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Models;
 using PatinhasMagicasAPI.Services.Interfaces;
 
+
 namespace PatinhasMagicasAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -24,6 +25,16 @@ namespace PatinhasMagicasAPI.Controllers
             var usuarioOutputDTOs = await _usuarioService.GetAllAsync();
 
             return Ok(usuarioOutputDTOs);
+        }
+
+        [HttpGet("paged")]
+        public async Task<ActionResult<IEnumerable<UsuarioOutputDTO>>> GetAll([FromQuery] UsuarioFiltroDTO filtro)
+        {
+            var dashboardUsuarioDTO = await _usuarioService.GetUsuariosPaginados(filtro);
+           if (!dashboardUsuarioDTO.UsuarioOutputDTOs.Any())
+                return Ok(new { success = true, message = "Nenhum usuario encontrado!", usuarios = new List<UsuarioOutputDTO>() });
+
+            return Ok(dashboardUsuarioDTO);
         }
 
         [HttpGet("{id}")]

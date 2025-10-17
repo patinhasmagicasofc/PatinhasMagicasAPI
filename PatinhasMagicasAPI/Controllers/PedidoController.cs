@@ -36,11 +36,10 @@ namespace PatinhasMagicasAPI.Controllers
             {
                 Id = p.Id,
                 UsuarioId = p.UsuarioId,
-                ClienteId = p.ClienteId,
                 DataPedido = p.DataPedido,
                 StatusPedidoId = p.StatusPedidoId,
                 StatusPedido = p.StatusPedido.Nome,
-                NomeCliente = p.Cliente?.Nome,
+                NomeCliente = p.Usuario?.Nome,
                 ValorPedido = _pedidoService.GetValorPedido(p),
                 FormaPagamento = _pedidoService.GetFormaPagamento(p),
                 StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault()
@@ -72,7 +71,6 @@ namespace PatinhasMagicasAPI.Controllers
             {
                 Id = pedido.Id,
                 DataPedido = pedido.DataPedido,
-                ClienteId = pedido.ClienteId,
                 StatusPedidoId = pedido.StatusPedidoId,
                 UsuarioId = pedido.UsuarioId,
                 StatusPedido = pedido.StatusPedido.Nome,
@@ -80,16 +78,16 @@ namespace PatinhasMagicasAPI.Controllers
 
                 UsuarioOutputDTO = new UsuarioOutputDTO
                 {
-                    Nome = pedido.Cliente.Nome,
-                    Email = pedido.Cliente.Email,
-                    Telefone = pedido.Cliente.Telefone,
+                    Nome = pedido.Usuario.Nome,
+                    Email = pedido.Usuario.Email,
+                    Telefone = pedido.Usuario.Telefone,
                     Endereco = new EnderecoOutputDTO
                     {
-                        Logradouro = pedido.Cliente.Endereco.Logradouro,
-                        Numero = pedido.Cliente.Endereco.Numero,
-                        Cidade = pedido.Cliente.Endereco.Cidade,
-                        Estado = pedido.Cliente.Endereco.Estado,
-                        CEP = pedido.Cliente.Endereco.CEP
+                        Logradouro = pedido.Usuario.Endereco.Logradouro,
+                        Numero = pedido.Usuario.Endereco.Numero,
+                        Cidade = pedido.Usuario.Endereco.Cidade,
+                        Estado = pedido.Usuario.Endereco.Estado,
+                        CEP = pedido.Usuario.Endereco.CEP
                     }
 
                 },
@@ -120,7 +118,6 @@ namespace PatinhasMagicasAPI.Controllers
             var pedido = new Pedido
             {
                 DataPedido = pedidoInputDTO.DataPedido,
-                ClienteId = pedidoInputDTO.ClienteId,
                 StatusPedidoId = pedidoInputDTO.StatusPedidoId,
                 UsuarioId = pedidoInputDTO.UsuarioId
             };
@@ -131,7 +128,6 @@ namespace PatinhasMagicasAPI.Controllers
             {
                 Id = pedido.Id,
                 DataPedido = pedido.DataPedido,
-                ClienteId = pedido.ClienteId,
                 StatusPedidoId = pedido.StatusPedidoId,
                 UsuarioId = pedido.UsuarioId
             };
@@ -151,7 +147,6 @@ namespace PatinhasMagicasAPI.Controllers
             {
                 Id = id,
                 DataPedido = pedidoInputDTO.DataPedido,
-                ClienteId = pedidoInputDTO.ClienteId,
                 StatusPedidoId = pedidoInputDTO.StatusPedidoId,
                 UsuarioId = pedidoInputDTO.UsuarioId
             };

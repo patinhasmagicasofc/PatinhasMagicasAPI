@@ -1,6 +1,6 @@
 ﻿namespace PatinhasMagicasAPI.DTOs
 {
-    public class DashboardPedido
+    public class DashboardPedidoDTO
     {
         public List<PedidoOutputDTO> PedidoOutputDTO { get; set; }
         public int QTotalVendas { get; set; }

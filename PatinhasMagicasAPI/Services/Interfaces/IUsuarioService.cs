@@ -12,5 +12,6 @@ namespace PatinhasMagicasAPI.Services.Interfaces
         Task ReativarAsync(int id);
         Task InativarAsync(int id);
         Task<LoginUsuarioOutputDTO>? ValidarLoginAsync(string email, string senha);
+        Task<DashboardUsuarioDTO> GetUsuariosPaginados(UsuarioFiltroDTO filtro);
     }
 }

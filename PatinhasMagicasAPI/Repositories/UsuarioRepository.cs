@@ -42,6 +42,13 @@ namespace PatinhasMagicasAPI.Repositories
             return await _context.Usuarios.Include(u => u.TipoUsuario).FirstOrDefaultAsync(u => u.Email == email);
         }
 
+        public IQueryable<Usuario> GetAllUsuarios()
+        {
+            return _context.Usuarios
+                           .Include(p => p.TipoUsuario)
+                           .AsQueryable();
+        }
+
         public Task InativarAsync(int id)
         {
             throw new NotImplementedException();
