@@ -28,7 +28,7 @@ namespace PatinhasMagicasAPI.Controllers
             var tipoPagamentoOutputDTO = pagamentos.Select(p => new TipoPagamentoOutputDTO
             {
                 Id = p.Id,
-                Metodo = p.Metodo,
+                Metodo = p.Nome,
             }).ToList();
 
             return Ok(tipoPagamentoOutputDTO);
@@ -45,7 +45,7 @@ namespace PatinhasMagicasAPI.Controllers
             var tipoPagamentoOutputDTO = new PagamentoOutputDTO
             {
                 Id = tipoPagamento.Id,
-                Status = tipoPagamento.Metodo,
+                Status = tipoPagamento.Nome,
             };
 
             return Ok(tipoPagamentoOutputDTO);
@@ -56,7 +56,7 @@ namespace PatinhasMagicasAPI.Controllers
         {
             var tipoPagamento = new TipoPagamento
             {
-                Metodo = tipoPagamentoInputDTO.Metodo,
+                Nome = tipoPagamentoInputDTO.Metodo,
             };
 
             await _tipoPagamentoRepository.AddAsync(tipoPagamento);
@@ -64,7 +64,7 @@ namespace PatinhasMagicasAPI.Controllers
             var tipoPagamentoOutputDTO = new PagamentoOutputDTO
             {
                 Id = tipoPagamento.Id,
-                Status = tipoPagamento.Metodo,
+                Status = tipoPagamento.Nome,
             };
 
             return CreatedAtAction(nameof(GetById), new { id = tipoPagamentoOutputDTO.Id }, tipoPagamentoOutputDTO);
@@ -81,7 +81,7 @@ namespace PatinhasMagicasAPI.Controllers
             tipoPagamento = new TipoPagamento
             {
                 Id = id,
-                Metodo = tipoPagamentoInputDTO.Metodo,
+                Nome = tipoPagamentoInputDTO.Metodo,
             };
 
             await _tipoPagamentoRepository.UpdateAsync(tipoPagamento);

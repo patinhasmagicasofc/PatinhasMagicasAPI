@@ -18,7 +18,7 @@ namespace PatinhasMagicasAPI.Mapping
             CreateMap<UsuarioInputDTO, Usuario>();
             CreateMap<Usuario, LoginUsuarioOutputDTO>()
                 .ForMember(dest => dest.Perfil,
-                           opt => opt.MapFrom(src => src.TipoUsuario.DescricaoTipoUsuario));
+                           opt => opt.MapFrom(src => src.TipoUsuario.Nome));
             CreateMap<LoginUsuarioInputDTO, Usuario>();
 
         }

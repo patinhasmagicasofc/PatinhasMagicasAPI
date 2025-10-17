@@ -7,18 +7,8 @@ namespace PatinhasMagicasAPI.Models
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "O método de pagamento é obrigatório")]
-        [StringLength(50, ErrorMessage = "O método deve ter no máximo 100 caracteres")]
-        public string Metodo { get; set; }
-
-        //public MetodoPagamento Metodo { get; set; }
-
-        //public enum MetodoPagamento
-        //{
-        //    Dinheiro,
-        //    Pix,
-        //    CartaoCredito,
-        //    CartaoDebito
-        //}
+        [Required(ErrorMessage = "O status do pagamento é obrigatório")]
+        [StringLength(50, ErrorMessage = "O status deve ter no máximo 50 caracteres")]
+        public string Nome { get; set; }
     }
 }

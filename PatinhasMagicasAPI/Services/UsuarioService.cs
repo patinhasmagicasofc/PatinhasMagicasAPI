@@ -143,7 +143,7 @@ namespace PatinhasMagicasAPI.Services
                 Ddd = p.Ddd,
                 Telefone = p.Telefone,
                 Ativo = p.Ativo,
-                TipoUsuarioNome = p.TipoUsuario.DescricaoTipoUsuario,
+                TipoUsuarioNome = p.TipoUsuario.Nome,
                
             }).ToList();
 
@@ -160,12 +160,12 @@ namespace PatinhasMagicasAPI.Services
 
         private IQueryable<Usuario> FiltrarPorNome(IQueryable<Usuario> query, string nome)
         {
-            return query.Where(p => p.TipoUsuario.DescricaoTipoUsuario.Contains(nome));
+            return query.Where(p => p.TipoUsuario.Nome.Contains(nome));
         }
 
         private IQueryable<Usuario> FiltrarPorTipo(IQueryable<Usuario> query, string tipoUsuario)
         {
-            return query.Where(p => p.TipoUsuario.DescricaoTipoUsuario == tipoUsuario);
+            return query.Where(p => p.TipoUsuario.Nome == tipoUsuario);
         }
 
         private async Task<bool> ValidateEmailAsync(string email, int userId)
@@ -184,18 +184,20 @@ namespace PatinhasMagicasAPI.Services
         {
             var usuario = await _usuarioRepository.GetByEmailAsync(email);
 
-            if(usuario.Ativo == false)
-                throw new ArgumentException("Usuário inativo. Entre em contato com o suporte.");
-
             if (usuario == null)
                 throw new ArgumentException("Usuário ou senha inválidos!");
+
+            if (usuario.Ativo == false)
+                throw new ArgumentException("Usuário inativo. Entre em contato com o suporte.");
 
             bool isValid = BCrypt.Net.BCrypt.Verify(senha, usuario.Senha);
 
             if (!isValid)
                 throw new ArgumentException("Usuário ou senha inválidos!");
 
-            string role = usuario.TipoUsuario?.DescricaoTipoUsuario ?? "Cliente";
+
+
+            string role = usuario.TipoUsuario?.Nome ?? "Cliente";
 
             var token = _tokenService.GenerateToken(usuario);
 
@@ -215,7 +217,7 @@ namespace PatinhasMagicasAPI.Services
             {
                 tipoUsuario = new TipoUsuario
                 {
-                    DescricaoTipoUsuario = "Cliente"
+                    Nome = "Cliente"
                 };
 
                 await _tipoUsuarioRepository.AddAsync(tipoUsuario);

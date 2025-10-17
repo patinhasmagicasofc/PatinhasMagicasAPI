@@ -37,6 +37,7 @@ builder.Services.AddScoped<IPagamentoRepository, PagamentoRepository>();
 builder.Services.AddScoped<ITipoServicoRepository, TipoServicoRepository>();
 builder.Services.AddScoped<IServicoRepository, ServicoRepository>();
 builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
+builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 
 // Services
 builder.Services.AddScoped<IEnderecoService, EnderecoService>();

@@ -5,7 +5,7 @@ namespace PatinhasMagicasAPI.Models
     public class Categoria
     {
         [Key]
-        public int IdCategoria { get; set; }
+        public int Id { get; set; }
         public string Nome { get; set; }
 
         // Propriedade de navegação

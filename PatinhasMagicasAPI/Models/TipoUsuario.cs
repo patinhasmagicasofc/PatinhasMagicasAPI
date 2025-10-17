@@ -9,9 +9,6 @@ namespace PatinhasMagicasAPI.Models
         [Required(ErrorMessage = "Campo obrigatório!")]
         [Display(Name = "Tipo de Usuário")]
         [StringLength(150)]
-        public string DescricaoTipoUsuario { get; set; }
-
-        // Propriedade de navegação
-        //public List<Usuario> Usuarios { get; set; } = new List<Usuario>();
+        public string Nome { get; set; }
     }
 }

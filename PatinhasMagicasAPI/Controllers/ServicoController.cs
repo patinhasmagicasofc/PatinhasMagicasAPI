@@ -48,7 +48,6 @@ namespace PatinhasMagicasAPI.Controllers
                 Id = servico.Id,
                 Nome = servico.Nome,
                 Descricao = servico.Descricao,
-                Status = servico.Status,
                 TipoServicoId = servico.TipoServicoId,
             };
 
@@ -62,9 +61,13 @@ namespace PatinhasMagicasAPI.Controllers
             {
                 Nome = servicoInputDTO.Nome,
                 Descricao = servicoInputDTO.Descricao,
-                Status = servicoInputDTO.Status,
+                DescricaoDetalhada = servicoInputDTO.DescricaoDetalhada,
+                TempoEstimadoMinutos = servicoInputDTO.TempoEstimadoMinutos,
+                Ativo = servicoInputDTO.Ativo,
                 TipoServicoId = servicoInputDTO.TipoServicoId
             };
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             await _servicoRepository.AddAsync(servico);
 
@@ -73,11 +76,13 @@ namespace PatinhasMagicasAPI.Controllers
                 Id = servico.Id,
                 Nome = servico.Nome,
                 Descricao = servico.Descricao,
-                Status = servico.Status,
+                DescricaoDetalhada = servico.DescricaoDetalhada,
+                TempoEstimadoMinutos = servico.TempoEstimadoMinutos,
+                Ativo = servico.Ativo,
                 TipoServicoId = servico.TipoServicoId
             };
 
-            return CreatedAtAction(nameof(GetById), new { id = servicoOutputDTO.Id }, servicoOutputDTO);
+            return Ok(new { success = true, message = "Serviço cadastrado com sucesso!", servicoOutputDTO });
         }
 
         [HttpPut("{id}")]
@@ -92,7 +97,6 @@ namespace PatinhasMagicasAPI.Controllers
             {
                 Id = id,
                 Nome = servicoInputDTO.Nome,
-                Status = servicoInputDTO.Status,
                 Descricao = servicoInputDTO.Descricao,
                 TipoServicoId = servicoInputDTO.TipoServicoId
             };

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
 using PatinhasMagicasAPI.DTOs;
+using PatinhasMagicasAPI.Services;
 using PatinhasMagicasAPI.Services.Interfaces;
 
 namespace PatinhasMagicasAPI.Controllers
@@ -19,6 +21,8 @@ namespace PatinhasMagicasAPI.Controllers
         public async Task<ActionResult<IEnumerable<ProdutoOutputDTO>>> GetProdutos()
         {
             var produtoOutputDTOs = await _produtoService.GetAllAsync();
+            if (!produtoOutputDTOs.Any())
+                return Ok(new { success = true, message = "Nenhum usuario encontrado!", produtos = new List<ProdutoOutputDTO>() });
 
             return Ok(produtoOutputDTOs);
         }

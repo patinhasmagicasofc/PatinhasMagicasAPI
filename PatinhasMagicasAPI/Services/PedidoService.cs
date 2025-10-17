@@ -151,7 +151,7 @@ namespace PatinhasMagicasAPI.Services
 
         public string GetFormaPagamento(Pedido pedido)
         {
-            var formaPagamento = pedido.Pagamentos.Select(p => p.TipoPagamento?.Metodo).FirstOrDefault();
+            var formaPagamento = pedido.Pagamentos.Select(p => p.TipoPagamento?.Nome).FirstOrDefault();
             return formaPagamento ?? "Pendente";
         }
 

@@ -49,7 +49,7 @@ namespace PatinhasMagicasAPI.Repositories
         public async Task<TipoUsuario?> GetByNomeAsync(string nome)
         {
             return await _context.TiposUsuarios
-                .FirstOrDefaultAsync(t => t.DescricaoTipoUsuario.ToLower() == nome.ToLower());
+                .FirstOrDefaultAsync(t => t.Nome.ToLower() == nome.ToLower());
         }
     }
 }
