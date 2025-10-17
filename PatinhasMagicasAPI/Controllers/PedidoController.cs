@@ -103,7 +103,7 @@ namespace PatinhasMagicasAPI.Controllers
                         Nome = ip.Produto.Nome,
                         Codigo = ip.Produto.Codigo,
                         Preco = ip.Produto.Preco,
-                        Foto = ip.Produto.Foto
+                        UrlImagem = ip.Produto.UrlImagem
                     }
 
                 }).ToList(),

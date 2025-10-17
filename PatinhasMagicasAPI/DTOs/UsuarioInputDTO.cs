@@ -31,6 +31,7 @@ namespace PatinhasMagicasAPI.DTOs
         [Required(ErrorMessage = "O telefone é obrigatório.")]
         [StringLength(10, MinimumLength = 8, ErrorMessage = "O telefone deve ter entre 8 e 10 dígitos (sem DDD).")]
         public string Telefone { get; set; }
+        public bool Ativo { get; set; }
 
         [Display(Name = "Tipo de Usuário")]
         [Range(1, int.MaxValue, ErrorMessage = "O Tipo de Usuário é inválido.")]

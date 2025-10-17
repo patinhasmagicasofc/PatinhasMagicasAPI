@@ -11,8 +11,8 @@ namespace PatinhasMagicasAPI.Interfaces
         IQueryable<Usuario> GetAllUsuarios();
         Task AddAsync(Usuario usuario);
         Task UpdateAsync(Usuario usuario);
-        Task InativarAsync(int id);
-        Task ReativarAsync(int id);
+        Task InativarAsync(Usuario usuario);
+        Task ReativarAsync(Usuario usuario);
 
     }
 }

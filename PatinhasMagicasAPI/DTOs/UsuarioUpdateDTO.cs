@@ -36,6 +36,7 @@ namespace PatinhasMagicasAPI.DTOs
         [Required(ErrorMessage = "O Tipo de Usuário é obrigatório.")]
         [Display(Name = "Tipo de Usuário")]
         [Range(1, int.MaxValue, ErrorMessage = "O Tipo de Usuário é inválido.")]
+        public bool Ativo { get; set; }
         public int? TipoUsuarioId { get; set; }
     }
 }

@@ -142,6 +142,7 @@ namespace PatinhasMagicasAPI.Services
                 DataCadastro = p.DataCadastro,
                 Ddd = p.Ddd,
                 Telefone = p.Telefone,
+                Ativo = p.Ativo,
                 TipoUsuarioNome = p.TipoUsuario.DescricaoTipoUsuario,
                
             }).ToList();
@@ -183,6 +184,9 @@ namespace PatinhasMagicasAPI.Services
         {
             var usuario = await _usuarioRepository.GetByEmailAsync(email);
 
+            if(usuario.Ativo == false)
+                throw new ArgumentException("Usuário inativo. Entre em contato com o suporte.");
+
             if (usuario == null)
                 throw new ArgumentException("Usuário ou senha inválidos!");
 
@@ -220,14 +224,19 @@ namespace PatinhasMagicasAPI.Services
             return tipoUsuario.IdTipoUsuario;
         }
 
-        public Task InativarAsync(int id)
+        public async Task InativarAsync(int id)
         {
-            throw new NotImplementedException();
+            var usuario = await _usuarioRepository.GetByIdAsync(id);
+            if (usuario != null && usuario.Ativo)
+               await _usuarioRepository.InativarAsync(usuario);
+
         }
 
-        public Task ReativarAsync(int id)
+        public async Task ReativarAsync(int id)
         {
-            throw new NotImplementedException();
+            var usuario = await _usuarioRepository.GetByIdAsync(id);
+            if (usuario != null && !usuario.Ativo)
+                await _usuarioRepository.ReativarAsync(usuario);
         }
     }
 }

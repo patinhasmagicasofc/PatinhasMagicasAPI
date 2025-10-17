@@ -10,6 +10,8 @@ namespace PatinhasMagicasAPI.Mapping
         public ApplicationProfile()
         {
 
+            CreateMap<Produto, ProdutoOutputDTO>().ReverseMap();
+            CreateMap<ProdutoInputDTO, Produto>();
             CreateMap<Endereco, EnderecoOutputDTO>().ReverseMap();
             CreateMap<EnderecoInputDTO, Endereco>();
             CreateMap<Usuario, UsuarioOutputDTO>().ReverseMap();

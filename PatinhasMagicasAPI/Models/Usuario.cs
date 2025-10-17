@@ -36,6 +36,9 @@ namespace PatinhasMagicasAPI.Models
         [StringLength(10, MinimumLength = 8, ErrorMessage = "O telefone deve ter entre 8 e 10 dígitos.")]
         public string Telefone { get; set; }
 
+        public DateTime DataCadastro { get; set; }
+        public bool Ativo { get; set; }
+
         // Chave estrangeira para o relacionamento com TipoUsuario
         [Required(ErrorMessage = "Campo obrigatório!")]
         [Display(Name = "Tipo de Usuário")]
@@ -46,6 +49,5 @@ namespace PatinhasMagicasAPI.Models
         public virtual TipoUsuario? TipoUsuario { get; set; }
         public virtual Endereco? Endereco { get; set; }
 
-        public DateTime DataCadastro { get; set; }
     }
 }

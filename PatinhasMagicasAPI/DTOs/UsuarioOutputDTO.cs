@@ -11,6 +11,7 @@
         public int TipoUsuarioId { get; set; }
         public string TipoUsuarioNome { get; set; }
         public DateTime DataCadastro { get; set; }
+        public bool Ativo { get; set; }
         public EnderecoOutputDTO Endereco { get; set; }
     }
 }

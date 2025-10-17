@@ -49,14 +49,16 @@ namespace PatinhasMagicasAPI.Repositories
                            .AsQueryable();
         }
 
-        public Task InativarAsync(int id)
+        public async Task InativarAsync(Usuario usuario)
         {
-            throw new NotImplementedException();
+                usuario.Ativo = false;
+                await _context.SaveChangesAsync();
         }
 
-        public Task ReativarAsync(int id)
+        public async Task ReativarAsync(Usuario usuario)
         {
-            throw new NotImplementedException();
+                usuario.Ativo = true;
+                await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Usuario usuario)

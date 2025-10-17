@@ -36,12 +36,14 @@ builder.Services.AddScoped<ITipoPagamentoRepository, TipoPagamentoRepository>();
 builder.Services.AddScoped<IPagamentoRepository, PagamentoRepository>();
 builder.Services.AddScoped<ITipoServicoRepository, TipoServicoRepository>();
 builder.Services.AddScoped<IServicoRepository, ServicoRepository>();
+builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
 
 // Services
 builder.Services.AddScoped<IEnderecoService, EnderecoService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<PedidoService, PedidoService>();
+builder.Services.AddScoped<IProdutoService, ProdutoService>();  
 builder.Services.AddHttpClient<CepService>();
 
 // CORS
