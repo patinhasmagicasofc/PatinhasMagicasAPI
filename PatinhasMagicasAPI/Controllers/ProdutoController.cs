@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Elfie.Serialization;
 using PatinhasMagicasAPI.DTOs;
-using PatinhasMagicasAPI.Services;
 using PatinhasMagicasAPI.Services.Interfaces;
 
 namespace PatinhasMagicasAPI.Controllers
@@ -45,7 +43,6 @@ namespace PatinhasMagicasAPI.Controllers
 
             await _produtoService.AddAsync(produtoInputDTO);
 
-            //return CreatedAtAction(nameof(GetProduto), new { id = produto.IdProduto }, produto);
             return Ok(new { success = true, message = "Produto cadastrado com sucesso!", produtoInputDTO });
         }
 
@@ -55,8 +52,7 @@ namespace PatinhasMagicasAPI.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             await _produtoService.UpdateAsync(id, produtoInputDTO);
-            //return NoContent();
-            return Ok(new { success = true, message = "Produto atualizado com sucesso!" });
+            return Ok(new { success = true, message = "Produto atualizado com sucesso!", produtoInputDTO });
         }
 
         [HttpPut("inativar/{id}")]

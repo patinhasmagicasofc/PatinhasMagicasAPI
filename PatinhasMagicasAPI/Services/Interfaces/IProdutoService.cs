@@ -1,5 +1,4 @@
 ﻿using PatinhasMagicasAPI.DTOs;
-using PatinhasMagicasAPI.Models;
 
 namespace PatinhasMagicasAPI.Services.Interfaces
 {

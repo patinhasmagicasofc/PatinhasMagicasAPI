@@ -39,28 +39,13 @@ namespace PatinhasMagicasAPI.Services
 
         public async Task UpdateAsync(int id, ProdutoInputDTO produtoInputDTO)
         {
-            var produto = _mapper.Map<Produto>(produtoInputDTO);
-            produto.Id = id;
-
             var produtoExiste = await _produtoRepository.GetByIdAsync(id);
             if (produtoExiste == null)
-                throw new KeyNotFoundException("Produto  não encontrado.");
+                throw new KeyNotFoundException("Produto não encontrado.");
 
-            await _produtoRepository.UpdateAsync(produto);
-        }
+            _mapper.Map(produtoInputDTO, produtoExiste);
 
-        private List<ProdutoOutputDTO> Map(List<Produto> produtos)
-        {
-            var produtosDTO = produtos.Select(p => new ProdutoOutputDTO
-            {
-                Id = p.Id,
-                Nome = p.Nome,
-                Descricao = p.Descricao,
-                Preco = p.Preco,
-                CategoriaId = p.CategoriaId
-            }).ToList();
-
-            return produtosDTO;
+            await _produtoRepository.UpdateAsync(produtoExiste);
         }
 
         public Task InativarAsync(int id)
