@@ -6,6 +6,7 @@ namespace PatinhasMagicasAPI.Interfaces
     {
         Task AddAsync(Servico servico);
         Task<List<Servico>> GetAllAsync();
+        Task<IEnumerable<ServicoTamanho>> GetServicosPorTamanhoAsync(int id);
         Task<Servico> GetByIdAsync(int id);
         Task UpdateAsync(Servico servico);
         Task DeleteAsync(int id);

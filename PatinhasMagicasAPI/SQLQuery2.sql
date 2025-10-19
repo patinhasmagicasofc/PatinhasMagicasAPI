@@ -2,9 +2,9 @@ USE [PatinhasMagicasDB]
 GO
 
 -- Tipos de Usuários
-INSERT INTO TiposUsuarios (DescricaoTipoUsuario)
+INSERT INTO TiposUsuarios (Nome)
 VALUES 
-('Cliente'),
+('Administrador'),
 ('Funcionário'),
 ('Administrador'),
 ('Veterinário'),

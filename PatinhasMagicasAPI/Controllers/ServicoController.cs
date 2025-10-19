@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
+using PatinhasMagicasAPI.Services.Interfaces;
 
 namespace PatinhasMagicasAPI.Controllers
 {
@@ -12,10 +13,12 @@ namespace PatinhasMagicasAPI.Controllers
     public class ServicoController : ControllerBase
     {
         private readonly IServicoRepository _servicoRepository;
+        private readonly IServicoService _servicoService;
 
-        public ServicoController(IServicoRepository servicoRepository)
+        public ServicoController(IServicoRepository servicoRepository, IServicoService servicoService)
         {
             _servicoRepository = servicoRepository;
+            _servicoService = servicoService;
         }
 
         [HttpGet]
@@ -33,6 +36,13 @@ namespace PatinhasMagicasAPI.Controllers
             }).ToList();
 
             return Ok(servicoOutputDTOs);
+        }
+
+        [HttpGet("por-animal/{idAnimal}")]
+        public async Task<ActionResult<IEnumerable<ServicoOutputDTO>>> GetServicosPorAnimal(int idAnimal)
+        {
+            var servicos = await _servicoService.GetServicosPorAnimalAsync(idAnimal);
+            return Ok(servicos);
         }
 
         [HttpGet("{id}")]

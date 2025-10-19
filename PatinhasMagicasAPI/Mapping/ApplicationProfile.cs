@@ -10,6 +10,18 @@ namespace PatinhasMagicasAPI.Mapping
         public ApplicationProfile()
         {
 
+            CreateMap<ServicoTamanho, ServicoOutputDTO>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Servico.Id))
+                .ForMember(dest => dest.Nome, opt => opt.MapFrom(src => src.Servico.Nome))
+                .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Servico.Descricao))
+                .ForMember(dest => dest.TempoEstimadoMinutos, opt => opt.MapFrom(src => src.Servico.TempoEstimadoMinutos))
+                .ForMember(dest => dest.Preco, opt => opt.MapFrom(src => src.Preco));
+
+            CreateMap<Animal, AnimalInputDTO>().ReverseMap();
+            CreateMap<AnimalInputDTO, Animal>();
+
+            CreateMap<TamanhoAnimal, TamanhoAnimalOutputDTO>().ReverseMap();
+            CreateMap<TamanhoAnimalInputDTO, TamanhoAnimal>();
             CreateMap<Produto, ProdutoOutputDTO>().ReverseMap();
             CreateMap<ProdutoInputDTO, Produto>();
             CreateMap<Endereco, EnderecoOutputDTO>().ReverseMap();
