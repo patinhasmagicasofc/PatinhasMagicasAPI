@@ -1,114 +1,49 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using PatinhasMagicasAPI.DTOs;
-using PatinhasMagicasAPI.Interfaces;
-using PatinhasMagicasAPI.Models;
+using PatinhasMagicasAPI.Services.Interfaces;
 
 namespace PatinhasMagicasAPI.Controllers
 {
     [Route("api/[controller]")]
     [EnableCors("MyPolicy")]
     [ApiController]
+    [Route("[controller]")]
     public class AgendamentoController : ControllerBase
     {
-        private readonly IAgendamentoRepository _agendamentoRepository;
+        private readonly IAgendamentoService _service;
 
-        public AgendamentoController(IAgendamentoRepository agendamentoRepository)
+        public AgendamentoController(IAgendamentoService service)
         {
-            _agendamentoRepository = agendamentoRepository;
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> GetAll()
-        {
-            var agendamentos = await _agendamentoRepository.GetAllAsync();
-
-            if (!agendamentos.Any())
-                return NotFound();
-
-            var agendamentoDTOs = agendamentos.Select(a => new AgendamentoOutputDTO
-            {
-                Id = a.Id,
-                DataAgendamento = a.DataAgendamento,
-                DataCadastro = a.DataCadastro,
-                PedidoId = a.PedidoId,
-                IdStatusAgendamento = a.IdStatusAgendamento
-            }).ToList();
-
-            return Ok(agendamentoDTOs);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult> GetById(int id)
-        {
-            var agendamento = await _agendamentoRepository.GetByIdAsync(id);
-
-            if (agendamento == null)
-                return NotFound();
-
-            var agendamentoDTO = new AgendamentoOutputDTO
-            {
-                Id = agendamento.Id,
-                DataAgendamento = agendamento.DataAgendamento,
-                DataCadastro = agendamento.DataCadastro,
-                PedidoId = agendamento.PedidoId,
-                IdStatusAgendamento = agendamento.IdStatusAgendamento
-            };
-
-            return Ok(agendamentoDTO);
+            _service = service;
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] AgendamentoInputDTO dto)
+        public async Task<IActionResult> Criar([FromBody] AgendamentoInputDTO dto)
         {
-            var agendamento = new Agendamento
-            {
-                DataAgendamento = dto.DataAgendamento,
-                DataCadastro = dto.DataCadastro,
-                PedidoId = dto.PedidoId,
-                IdStatusAgendamento = dto.IdStatusAgendamento
-            };
-
-            await _agendamentoRepository.AddAsync(agendamento);
-
-            var agendamentoOutput = new AgendamentoOutputDTO
-            {
-                Id = agendamento.Id,
-                DataAgendamento = agendamento.DataAgendamento,
-                DataCadastro = agendamento.DataCadastro,
-                PedidoId = agendamento.PedidoId,
-                IdStatusAgendamento = agendamento.IdStatusAgendamento
-            };
-
-            return CreatedAtAction(nameof(GetById), new { id = agendamento.Id }, agendamentoOutput);
+            await _service.CriarAsync(dto);
+            return Ok(dto);
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, [FromBody] AgendamentoInputDTO dto)
+        [HttpGet]
+        public async Task<IActionResult> Listar()
         {
-            var agendamento = await _agendamentoRepository.GetByIdAsync(id);
+            var lista = await _service.ListarAsync();
+            return Ok(lista);
+        }
 
-            if (agendamento == null)
-                return NotFound();
-
-            agendamento.DataAgendamento = dto.DataAgendamento;
-            agendamento.DataCadastro = dto.DataCadastro;
-            agendamento.PedidoId = dto.PedidoId;
-            agendamento.IdStatusAgendamento = dto.IdStatusAgendamento;
-
-            await _agendamentoRepository.UpdateAsync(agendamento);
-
-            return NoContent();
+        [HttpGet("{id}")]
+        public async Task<IActionResult> BuscarPorId(int id)
+        {
+            var agendamento = await _service.BuscarPorIdAsync(id);
+            if (agendamento == null) return NotFound();
+            return Ok(agendamento);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<IActionResult> Deletar(int id)
         {
-            var agendamento = await _agendamentoRepository.GetByIdAsync(id);
-            if (agendamento == null)
-                return NotFound();
-
-            await _agendamentoRepository.DeleteAsync(id);
+            await _service.DeletarAsync(id);
             return NoContent();
         }
     }

@@ -118,11 +118,11 @@ namespace PatinhasMagicasAPI.Services
         {
             // Adiciona o pedido ao repositório
 
-            var pagamento = _pagamentoRepository.GetByIdAsync(pedido.Id);
+            //var pagamento = await _pagamentoRepository.GetByIdAsync(pedido.Id);
 
-            var teste = _pagamentoRepository.ExistsByPedidoId(pedido.Id);
+            //var teste = await _pagamentoRepository.ExistsByPedidoId(pedido.Id);
 
-            if (teste == null)
+            //if (teste == null)
                 pedido.StatusPedidoId = 1; // Define o status inicial do pedido (ex: AguardandoPagamento)
 
             if (!pedido.Pagamentos.Any())

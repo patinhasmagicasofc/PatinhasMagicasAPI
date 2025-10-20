@@ -9,7 +9,7 @@ INSERT INTO TiposUsuarios (DescricaoTipoUsuario) VALUES
 ('Cliente');
 
 -- Tipo de Pagamentos
-INSERT INTO TipoPagamentos (Metodo) VALUES
+INSERT INTO TiposPagamentos (Nome) VALUES
 ('Cartão de Crédito'),
 ('Cartão de Débito'),
 ('Dinheiro'),

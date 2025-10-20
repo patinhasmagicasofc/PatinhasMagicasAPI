@@ -46,7 +46,7 @@ INSERT INTO StatusPagamentos (Nome)
 VALUES ('Pendente'),('Pago'),('Cancelado'),('Estornado'),('Aguardando');
 
 -- Tipos de Pagamento
-INSERT INTO TipoPagamentos (Metodo)
+INSERT INTO TipoPagamentos (Nome)
 VALUES ('Cartão de Crédito'),('Boleto'),('Pix'),('Dinheiro'),('Transferência');
 
 -- Status de Pedidos
