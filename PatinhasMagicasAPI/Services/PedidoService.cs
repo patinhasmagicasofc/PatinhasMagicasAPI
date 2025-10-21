@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
@@ -9,11 +10,13 @@ namespace PatinhasMagicasAPI.Services
     {
         private readonly IPedidoRepository _pedidoRepository;
         private readonly IPagamentoRepository _pagamentoRepository;
+        private readonly IMapper _mapper;
 
-        public PedidoService(IPedidoRepository pedidoRepository, IPagamentoRepository pagamentoRepository)
+        public PedidoService(IPedidoRepository pedidoRepository, IPagamentoRepository pagamentoRepository, IMapper mapper)
         {
             _pedidoRepository = pedidoRepository;
             _pagamentoRepository = pagamentoRepository;
+            _mapper = mapper;
         }
 
         //public async Task AtualizarStatusPedidoAsync(int pedidoId)
@@ -114,8 +117,9 @@ namespace PatinhasMagicasAPI.Services
             return query.Where(p => p.StatusPedido.Nome == status);
         }
 
-        public async Task<Pedido> CreatePedidoAsync(Pedido pedido)
+        public async Task<PedidoOutputDTO> CreatePedidoAsync(PedidoInputDTO pedidoInputDTO)
         {
+            var pedido = _mapper.Map<Pedido>(pedidoInputDTO);
             // Adiciona o pedido ao repositório
 
             //var pagamento = await _pagamentoRepository.GetByIdAsync(pedido.Id);
@@ -123,12 +127,14 @@ namespace PatinhasMagicasAPI.Services
             //var teste = await _pagamentoRepository.ExistsByPedidoId(pedido.Id);
 
             //if (teste == null)
-                pedido.StatusPedidoId = 1; // Define o status inicial do pedido (ex: AguardandoPagamento)
+            pedido.StatusPedidoId = 1; // Define o status inicial do pedido (ex: AguardandoPagamento)
 
             if (!pedido.Pagamentos.Any())
                 pedido.StatusPedidoId = 1; // Define o status inicial do pedido (ex: AguardandoPagamento)
 
             await _pedidoRepository.AddAsync(pedido);
+
+            var pedidoOutputDTO = _mapper.Map<PedidoOutputDTO>(pedido);
 
             //await _pedidoRepository.AddAsync(pedido);
             //// Cria um pagamento associado ao pedido
@@ -141,7 +147,7 @@ namespace PatinhasMagicasAPI.Services
             //};
             //// Adiciona o pagamento ao repositório
             //await _pagamentoRepository.AddAsync(pagamento);
-            return pedido;
+            return pedidoOutputDTO;
         }
 
         public decimal GetValorPedido(Pedido pedido)

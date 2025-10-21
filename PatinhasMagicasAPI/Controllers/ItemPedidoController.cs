@@ -64,10 +64,10 @@ namespace PatinhasMagicasAPI.Controllers
         {
             var pedido = new ItemPedido
             {
-                PedidoId = pedidoInputDTO.PedidoId,
-                PrecoUnitario = pedidoInputDTO.PrecoUnitario,
-                ProdutoId = pedidoInputDTO.ProdutoId,
-                Quantidade = pedidoInputDTO.Quantidade
+                PedidoId = pedidoInputDTO.PedidoId ?? 0,
+                PrecoUnitario = pedidoInputDTO.PrecoUnitario ?? 0,
+                ProdutoId = pedidoInputDTO.ProdutoId ?? 0,
+                Quantidade = pedidoInputDTO.Quantidade ?? 0
             };
 
             await _itemPedidoRepository.AddAsync(pedido);
@@ -95,10 +95,10 @@ namespace PatinhasMagicasAPI.Controllers
             itemPedido = new ItemPedido
             {
                 Id = id,
-                PedidoId = pedidoInputDTO.PedidoId,
-                PrecoUnitario = pedidoInputDTO.PrecoUnitario,
-                ProdutoId = pedidoInputDTO.ProdutoId,
-                Quantidade = pedidoInputDTO.Quantidade
+                PedidoId = pedidoInputDTO.PedidoId ?? 0,
+                PrecoUnitario = pedidoInputDTO.PrecoUnitario ?? 0,
+                ProdutoId = pedidoInputDTO.ProdutoId ?? 0,
+                Quantidade = pedidoInputDTO.Quantidade ?? 0
             };
 
             await _itemPedidoRepository.UpdateAsync(itemPedido);

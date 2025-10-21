@@ -115,24 +115,10 @@ namespace PatinhasMagicasAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] PedidoInputDTO pedidoInputDTO)
         {
-            var pedido = new Pedido
-            {
-                DataPedido = pedidoInputDTO.DataPedido,
-                StatusPedidoId = pedidoInputDTO.StatusPedidoId,
-                UsuarioId = pedidoInputDTO.UsuarioId
-            };
 
-            await _pedidoService.CreatePedidoAsync(pedido);
+            var pedidoOutputDTO = await _pedidoService.CreatePedidoAsync(pedidoInputDTO);
 
-            var pedidoOutputDTO = new PedidoOutputDTO
-            {
-                Id = pedido.Id,
-                DataPedido = pedido.DataPedido,
-                StatusPedidoId = pedido.StatusPedidoId,
-                UsuarioId = pedido.UsuarioId
-            };
-
-            return CreatedAtAction(nameof(GetById), new { id = pedidoOutputDTO.Id }, pedidoOutputDTO);
+            return Ok(new { success = true, message = "Pedido cadastrado com sucesso !", pedido = pedidoOutputDTO.Id });
         }
 
         [HttpPut("{id}")]
