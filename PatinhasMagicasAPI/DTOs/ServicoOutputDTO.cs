@@ -10,5 +10,6 @@
         public int? TempoEstimadoMinutos { get; set; }
         public bool? Ativo { get; set; }
         public int? TipoServicoId { get; set; }
+        public string  TipoServicoNome { get; set; }
     }
 }

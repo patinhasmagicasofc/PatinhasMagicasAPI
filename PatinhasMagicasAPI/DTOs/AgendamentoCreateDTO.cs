@@ -2,10 +2,10 @@
 {
     public class AgendamentoCreateDTO
     {
-        public int? IdUsuario { get; set; }
-        public int IdAnimal { get; set; }
-        public List<int>? IdServicos { get; set; }
+        public int? UsuarioId { get; set; }
+        public int AnimalId { get; set; }
+        public int ServicoId { get; set; }
         public DateTime? DataAgendamento { get; set; }
-        public int? IdTipoPagamento{ get; set; }
+        public int? TipoPagamentoId{ get; set; }
     }
 }

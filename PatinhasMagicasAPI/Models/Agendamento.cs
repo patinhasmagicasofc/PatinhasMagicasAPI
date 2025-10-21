@@ -26,5 +26,8 @@ namespace PatinhasMagicasAPI.Models
         [Range(1, int.MaxValue, ErrorMessage = "StatusAgendamentoId deve ser um valor válido.")]
         public int StatusAgendamentoId { get; set; }
         public StatusAgendamento? StatusAgendamento { get; set; }
+
+        public ICollection<AgendamentoServico> AgendamentoServicos { get; set; } = new List<AgendamentoServico>();
+
     }
 }

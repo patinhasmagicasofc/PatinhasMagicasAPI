@@ -2,6 +2,7 @@
 using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
+using PatinhasMagicasAPI.Repositories;
 using PatinhasMagicasAPI.Services.Interfaces;
 
 namespace PatinhasMagicasAPI.Services
@@ -33,77 +34,90 @@ namespace PatinhasMagicasAPI.Services
 
         public async Task<AgendamentoOutputDTO> CriarAgendamentoAsync(AgendamentoCreateDTO agendamentoCreateDTO)
         {
-            //using var transaction = await (_agendamentoRepository as AgendamentoRepository)!._context.Database.BeginTransactionAsync();
 
-            try
+            var animal = await _animalRepository.GetByIdAsync(agendamentoCreateDTO.AnimalId);
+            if (animal == null) throw new Exception("Animal não encontrado.");
+
+            var servicoTamanho = await _servicoTamanhoRepository
+                .GetByServicoAndTamanhoAsync(agendamentoCreateDTO.ServicoId, animal.TamanhoAnimalId);
+            if (servicoTamanho == null)
+                throw new Exception($"Serviço {agendamentoCreateDTO.ServicoId} não disponível para este animal.");
+
+            // Criar Pedido
+            var pedido = await _pedidoRepository.Add(new Pedido
             {
-                var animal = await _animalRepository.GetByIdAsync(agendamentoCreateDTO.IdAnimal);
-                if (animal == null) throw new Exception("Animal não encontrado");
+                UsuarioId = agendamentoCreateDTO.UsuarioId ?? 0,
+                StatusPedidoId = 1,
+                DataPedido = DateTime.Now
+            });
 
-                decimal valorTotal = 0;
-                var agendamentoServicoDTOs = new List<AgendamentoServicoDTO>();
-
-                foreach (var servicoId in agendamentoCreateDTO.IdServicos)
-                {
-                    var servicoTamanho = await _servicoTamanhoRepository.GetByServicoAndTamanhoAsync(servicoId, animal.TamanhoAnimalId);
-                    if (servicoTamanho == null) throw new Exception($"Serviço {servicoId} não disponível para este animal");
-
-                    valorTotal += servicoTamanho.Preco;
-                    agendamentoServicoDTOs.Add(new AgendamentoServicoDTO { Id = servicoId, Preco = servicoTamanho.Preco });
-                }
-
-                var pedido = await _pedidoRepository.Add(new Pedido
-                {
-                    UsuarioId = agendamentoCreateDTO.IdUsuario ?? 0,
-                    StatusPedidoId = 1,
-                    DataPedido = DateTime.Now
-                });
-
-
-                var agendamento = await _agendamentoRepository.Add(new Agendamento
-                {
-                    AnimalId = agendamentoCreateDTO.IdAnimal,
-                    PedidoId = pedido.Id,
-                    StatusAgendamentoId = 1,
-                    DataAgendamento = agendamentoCreateDTO.DataAgendamento ?? DateTime.Now,
-                    DataCadastro = DateTime.Now
-                });
-
-                var agendamentoServicos = agendamentoServicoDTOs.Select(s => new AgendamentoServico
-                {
-                    AgendamentoId = agendamento.Id,
-                    ServicoId = s.Id,
-                    Preco = s.Preco
-                }).ToList();
-
-                foreach (var agendamentoServico  in agendamentoServicos)
-                {
-                    await _agendamentoServicoRepository.AddAsync(agendamentoServico);
-                }
-
-                // transaction.CommitAsync();
-
-                return new AgendamentoOutputDTO
-                {
-                    Id = agendamento.Id,
-                    PedidoId = pedido.Id,
-                    DataAgendamento = agendamento.DataAgendamento,
-                    ValorTotal = valorTotal,
-                    AgendamentoServicos = agendamentoServicoDTOs,
-                    Status = "Agendado"
-                };
-            }
-            catch
+            // Criar Agendamento
+            var agendamento = await _agendamentoRepository.Add(new Agendamento
             {
-                //await transaction.RollbackAsync();
-                throw;
-            }
+                AnimalId = agendamentoCreateDTO.AnimalId,
+                PedidoId = pedido.Id,
+                StatusAgendamentoId = 1,
+                DataAgendamento = agendamentoCreateDTO.DataAgendamento ?? DateTime.Now,
+                DataCadastro = DateTime.Now
+            });
+
+            // Criar AgendamentoServico
+            var agendamentoServico = new AgendamentoServico
+            {
+                AgendamentoId = agendamento.Id,
+                ServicoId = agendamentoCreateDTO.ServicoId,
+                Preco = servicoTamanho.Preco
+            };
+
+            await _agendamentoServicoRepository.AddAsync(agendamentoServico);
+
+
+            // Retorno DTO
+            return new AgendamentoOutputDTO
+            {
+                Id = agendamento.Id,
+                PedidoId = pedido.Id,
+                DataAgendamento = agendamento.DataAgendamento,
+                ValorTotal = servicoTamanho.Preco,
+                AgendamentoServicos = new List<AgendamentoServicoDTO>
+            {
+                new AgendamentoServicoDTO
+                {
+                    Id = agendamentoCreateDTO.ServicoId,
+                    Preco = servicoTamanho.Preco
+                }
+            },
+                Status = "Agendado"
+            };
         }
 
-        public async Task CriarAsync(AgendamentoInputDTO dto)
+        public async Task<AgendamentoDetalhesDTO> GetByIdAsync(int id)
         {
-            var agendamento = _mapper.Map<Agendamento>(dto);
-            await _agendamentoRepository.AddAsync(agendamento);
+            var agendamento = await _agendamentoRepository.GetByIdAsync(id);
+            if (agendamento == null) return null;
+
+            var pedido = agendamento.Pedido;
+
+            var pagamento = pedido?.Pagamentos?
+                .Where(p => p.StatusPagamento != null && p.StatusPagamento.Nome == "Pago")
+                .OrderByDescending(p => p.DataPagamento)
+                .FirstOrDefault()
+                ?? pedido?.Pagamentos?.OrderByDescending(p => p.DataPagamento).FirstOrDefault();
+
+            var tipoPagamento = pagamento?.TipoPagamento?.Nome ?? "Não informado";
+            var dataConfirmacao = pagamento?.DataPagamento ?? pedido?.DataPedido;
+
+            return new AgendamentoDetalhesDTO
+            {
+                Id = agendamento.Id,
+                DataAgendamento = agendamento.DataAgendamento,
+                DataConfirmacao = dataConfirmacao ?? default(DateTime),
+                Status = agendamento.StatusAgendamento?.Nome,
+                TipoPagamento = tipoPagamento,
+                ValorTotal = agendamento.AgendamentoServicos.Sum(s => s.Preco),
+                Animal = new AnimalOutputDTO { Id = agendamento.Animal.Id, Nome = agendamento.Animal.Nome, Especie = agendamento.Animal.Especie, NomeTamanhoAnimal = agendamento.Animal.TamanhoAnimal.Nome },
+                Servicos = agendamento.AgendamentoServicos.Select(s => new ServicoOutputDTO { Id = s.Servico.Id, Nome = s.Servico.Nome, TipoServicoNome = s.Servico.TipoServico.Nome, Preco = s.Preco }).ToList()
+            };
         }
 
         public async Task<IEnumerable<AgendamentoOutputDTO>> ListarAsync()

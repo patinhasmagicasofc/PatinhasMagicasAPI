@@ -7,6 +7,7 @@ namespace PatinhasMagicasAPI.Interfaces
 
         Task<List<AgendamentoServico>> GetAllAsync();
         Task<AgendamentoServico> GetByIdAsync(int id);
+        Task<List<AgendamentoServico>> GetServicosByAgendamentoIdAsync(int agendamentoId);
         Task AddAsync(AgendamentoServico agendamentoServico);
         Task UpdateAsync(AgendamentoServico agendamentoServico);
         Task DeleteAsync(int id);

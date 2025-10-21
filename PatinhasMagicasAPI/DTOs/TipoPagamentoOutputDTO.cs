@@ -3,6 +3,6 @@
     public class TipoPagamentoOutputDTO
     {
         public int Id { get; set; }
-        public string Metodo { get; set; }
+        public string Nome { get; set; }
     }
 }

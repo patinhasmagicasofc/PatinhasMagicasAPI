@@ -1,6 +1,4 @@
-﻿using PatinhasMagicasAPI.Models;
-
-namespace PatinhasMagicasAPI.DTOs
+﻿namespace PatinhasMagicasAPI.DTOs
 {
     public class AgendamentoOutputDTO
     {

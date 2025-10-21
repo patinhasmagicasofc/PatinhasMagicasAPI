@@ -19,6 +19,14 @@ namespace PatinhasMagicasAPI.Repositories
             return await _context.AgendamentoServicos.ToListAsync();
         }
 
+        public async Task<List<AgendamentoServico>> GetServicosByAgendamentoIdAsync(int agendamentoId)
+        {
+            return await _context.AgendamentoServicos
+                .Include(asrv => asrv.Servico)  
+                .Where(asrv => asrv.AgendamentoId == agendamentoId)
+                .ToListAsync();
+        }
+
         public async Task<AgendamentoServico> GetByIdAsync(int id)
         {
             return await _context.AgendamentoServicos.FindAsync(id);

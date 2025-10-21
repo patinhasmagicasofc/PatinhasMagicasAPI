@@ -32,16 +32,15 @@ namespace PatinhasMagicasAPI.Controllers
             return Ok();
         }
 
-
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            //var pedido = await _agendamentoService.GetByIdAsync(id);
+            var agendamento = await _agendamentoService.GetByIdAsync(id);
+            if (agendamento == null)
+                return NotFound(new { message = "Agendamento não encontrado" });
 
-            // if (pedido == null)
-            // return NotFound();
+            return Ok(agendamento);
 
-            return Ok();
         }
 
         [HttpPost]
@@ -49,7 +48,10 @@ namespace PatinhasMagicasAPI.Controllers
         {
             var agendamento = await _agendamentoService.CriarAgendamentoAsync(agendamentoInputDTO);
 
-            return Ok(agendamento);
+            if (agendamento == null) return Ok(new { success = false, message = "Erro ao tentar agendar!" });
+
+            return Ok(new { success = true, message = "Agendamento realizado com sucesso!", agendamento = agendamento });
+
         }
 
         [HttpPut("{id}")]

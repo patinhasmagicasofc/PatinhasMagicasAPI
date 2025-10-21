@@ -6,6 +6,6 @@ namespace PatinhasMagicasAPI.DTOs
     {
         [Required(ErrorMessage = "O método de pagamento é obrigatório")]
         [StringLength(50, ErrorMessage = "O método deve ter no máximo 100 caracteres")]
-        public string Metodo { get; set; }
+        public string Nome { get; set; }
     }
 }
