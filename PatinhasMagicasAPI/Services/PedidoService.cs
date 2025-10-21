@@ -18,6 +18,12 @@ namespace PatinhasMagicasAPI.Services
             _pagamentoRepository = pagamentoRepository;
             _mapper = mapper;
         }
+        public async Task<PedidoOutputDTO> GetByIdAsync(int id)
+        {
+            var pedido = await _pedidoRepository.GetByIdAsync(id);
+
+            return _mapper.Map<PedidoOutputDTO>(pedido);
+        }
 
         //public async Task AtualizarStatusPedidoAsync(int pedidoId)
         //{

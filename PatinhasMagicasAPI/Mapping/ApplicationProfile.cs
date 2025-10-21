@@ -9,6 +9,8 @@ namespace PatinhasMagicasAPI.Mapping
     {
         public ApplicationProfile()
         {
+            CreateMap<Pagamento, PagamentoOutputDTO>().ReverseMap();
+            CreateMap<PagamentoInputDTO, Pagamento>();
 
             CreateMap<Pedido, PedidoOutputDTO>().ReverseMap();
             CreateMap<PedidoInputDTO, Pedido>();

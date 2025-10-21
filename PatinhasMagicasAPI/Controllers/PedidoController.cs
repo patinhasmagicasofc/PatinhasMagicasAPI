@@ -62,54 +62,13 @@ namespace PatinhasMagicasAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> GetById(int id)
         {
-            var pedido = await _pedidoRepository.GetByIdAsync(id);
+            var pedido = await _pedidoService.GetByIdAsync(id);
 
             if (pedido == null)
                 return NotFound();
 
-            var pedidoDTO = new PedidoOutputDTO
-            {
-                Id = pedido.Id,
-                DataPedido = pedido.DataPedido,
-                StatusPedidoId = pedido.StatusPedidoId,
-                UsuarioId = pedido.UsuarioId,
-                StatusPedido = pedido.StatusPedido.Nome,
-                StatusPagamento = pedido.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault(),
-
-                UsuarioOutputDTO = new UsuarioOutputDTO
-                {
-                    Nome = pedido.Usuario.Nome,
-                    Email = pedido.Usuario.Email,
-                    Telefone = pedido.Usuario.Telefone,
-                    Endereco = new EnderecoOutputDTO
-                    {
-                        Logradouro = pedido.Usuario.Endereco.Logradouro,
-                        Numero = pedido.Usuario.Endereco.Numero,
-                        Cidade = pedido.Usuario.Endereco.Cidade,
-                        Estado = pedido.Usuario.Endereco.Estado,
-                        CEP = pedido.Usuario.Endereco.CEP
-                    }
-
-                },
-                ItemPedidoOutputDTOs = pedido.ItensPedido.Select(ip => new ItemPedidoOutputDTO
-                {
-                    Id = ip.Id,
-                    PedidoId = ip.PedidoId,
-                    ProdutoId = ip.ProdutoId,
-                    Quantidade = ip.Quantidade,
-                    PrecoUnitario = ip.PrecoUnitario,
-                    ProdutoOutputDTO = new ProdutoOutputDTO
-                    {
-                        Nome = ip.Produto.Nome,
-                        Codigo = ip.Produto.Codigo,
-                        Preco = ip.Produto.Preco,
-                        UrlImagem = ip.Produto.UrlImagem
-                    }
-
-                }).ToList(),
-            };
-
-            return Ok(pedidoDTO);
+           
+            return Ok(pedido);
         }
 
         [HttpPost]
@@ -118,7 +77,7 @@ namespace PatinhasMagicasAPI.Controllers
 
             var pedidoOutputDTO = await _pedidoService.CreatePedidoAsync(pedidoInputDTO);
 
-            return Ok(new { success = true, message = "Pedido cadastrado com sucesso !", pedido = pedidoOutputDTO.Id });
+            return Ok(new { success = true, message = "Pedido cadastrado com sucesso !", pedidoId = pedidoOutputDTO.Id });
         }
 
         [HttpPut("{id}")]

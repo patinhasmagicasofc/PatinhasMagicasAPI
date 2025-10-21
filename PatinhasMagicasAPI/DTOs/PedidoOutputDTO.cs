@@ -15,5 +15,6 @@
         public decimal ValorPedido { get; set; }
         public UsuarioOutputDTO? UsuarioOutputDTO { get; set; }
         public List<ItemPedidoOutputDTO>? ItemPedidoOutputDTOs { get; set; }
+
     }
 }

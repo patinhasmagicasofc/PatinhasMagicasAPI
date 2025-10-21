@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Interfaces;
@@ -12,10 +13,12 @@ namespace PatinhasMagicasAPI.Controllers
     public class PagamentoController : ControllerBase
     {
         private readonly IPagamentoRepository _pagamentoRepository;
+        private readonly IMapper _mapper;
 
-        public PagamentoController(IPagamentoRepository pagamentoRepository)
+        public PagamentoController(IPagamentoRepository pagamentoRepository, IMapper mapper)
         {
             _pagamentoRepository = pagamentoRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -59,24 +62,11 @@ namespace PatinhasMagicasAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] PagamentoInputDTO pagamentoInputDTO)
         {
-            var pagamento = new Pagamento
-            {
-                DataPagamento = pagamentoInputDTO.Data,
-                TipoPagamentoId = pagamentoInputDTO.TipoPagamentoId,
-                PedidoId = pagamentoInputDTO.PedidoId
-            };
-
+            var pagamento = _mapper.Map<Pagamento>(pagamentoInputDTO);
             await _pagamentoRepository.AddAsync(pagamento);
+            
 
-            var pagamentoOutputDTO = new PagamentoOutputDTO
-            {
-                Id = pagamento.Id,
-                Data = pagamento.DataPagamento,
-                TipoPagamentoId = pagamento.TipoPagamentoId,
-                PedidoId = pagamento.PedidoId,
-            };
-
-            return CreatedAtAction(nameof(GetById), new { id = pagamentoOutputDTO.Id }, pagamentoOutputDTO);
+            return Ok(new { success = true, message = "Pagamento cadastrado com sucesso !" });
         }
 
         [HttpPut("{id}")]
@@ -86,14 +76,6 @@ namespace PatinhasMagicasAPI.Controllers
 
             if (pagamento == null)
                 return NotFound();
-
-            pagamento = new Pagamento
-            {
-                Id = id,
-                DataPagamento = pagamentoInputDTO.Data,
-                TipoPagamentoId = pagamentoInputDTO.TipoPagamentoId,
-                PedidoId = pagamentoInputDTO.PedidoId
-            };
 
             await _pagamentoRepository.UpdateAsync(pagamento);
 
