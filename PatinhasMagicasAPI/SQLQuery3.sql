@@ -178,7 +178,7 @@ CREATE TABLE AgendamentoServico (
 -- ========================================================
 -- 1️⃣ TamanhoAnimal
 -- ========================================================
-INSERT INTO TamanhoAnimal (tamanho) VALUES
+INSERT INTO TamanhoAnimals (Nome) VALUES
 ('Pequeno'),
 ('Médio'),
 ('Grande');

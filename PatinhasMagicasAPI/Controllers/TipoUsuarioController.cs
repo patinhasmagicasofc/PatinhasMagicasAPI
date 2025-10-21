@@ -46,14 +46,14 @@ namespace PatinhasMagicasAPI.Controllers
         public async Task<ActionResult<TipoUsuario>> PostTipoUsuario(TipoUsuario tipo)
         {
             await _tipoUsuarioRepository.AddAsync(tipo);
-            return CreatedAtAction(nameof(GetTipoUsuario), new { id = tipo.IdTipoUsuario }, tipo);
+            return CreatedAtAction(nameof(GetTipoUsuario), new { id = tipo.Id }, tipo);
         }
 
         // PUT: api/TipoUsuario/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTipoUsuario(int id, TipoUsuario tipo)
         {
-            if (id != tipo.IdTipoUsuario)
+            if (id != tipo.Id)
             {
                 return BadRequest();
             }

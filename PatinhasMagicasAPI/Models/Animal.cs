@@ -33,5 +33,7 @@ namespace PatinhasMagicasAPI.Models
         public int UsuarioId { get; set; }
 
         public Usuario Usuario { get; set; }
+
+        public ICollection<Agendamento> Agendamentos { get; set; }
     }
 }

@@ -23,6 +23,8 @@ namespace PatinhasMagicasAPI.Models
         public ICollection<Pagamento> Pagamentos { get; set; } = new List<Pagamento>();
 
         public ICollection<ItemPedido> ItensPedido { get; set; } = new List<ItemPedido>();
-
+        public ICollection<Agendamento> Agendamentos { get; set; } = new List<Agendamento>();
     }
+
+
 }

@@ -223,7 +223,7 @@ namespace PatinhasMagicasAPI.Services
                 await _tipoUsuarioRepository.AddAsync(tipoUsuario);
             }
 
-            return tipoUsuario.IdTipoUsuario;
+            return tipoUsuario.Id;
         }
 
         public async Task InativarAsync(int id)

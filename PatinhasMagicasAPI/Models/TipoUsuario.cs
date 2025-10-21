@@ -5,7 +5,7 @@ namespace PatinhasMagicasAPI.Models
     public class TipoUsuario
     {
         [Key]
-        public int IdTipoUsuario { get; set; }
+        public int Id { get; set; }
         [Required(ErrorMessage = "Campo obrigatório!")]
         [Display(Name = "Tipo de Usuário")]
         [StringLength(150)]

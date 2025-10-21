@@ -20,6 +20,14 @@ namespace PatinhasMagicasAPI.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<Pedido> Add(Pedido pedido)
+        {
+            await _context.AddAsync(pedido);
+            await _context.SaveChangesAsync();
+            return pedido;
+        }
+
+
         public async Task<List<Pedido>> GetAllAsync()
         {
             return await _context.Pedidos.Include(p => p.Usuario).ThenInclude(c => c.Endereco)

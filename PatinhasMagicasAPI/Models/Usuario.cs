@@ -37,15 +37,12 @@ namespace PatinhasMagicasAPI.Models
         public string Telefone { get; set; }
 
         public DateTime DataCadastro { get; set; }
-        public bool Ativo { get; set; }
+        public bool Ativo { get; set; } = true;
 
         // Chave estrangeira para o relacionamento com TipoUsuario
         [Required(ErrorMessage = "Campo obrigatório!")]
         [Display(Name = "Tipo de Usuário")]
         public int TipoUsuarioId { get; set; }
-
-        // Propriedade de navegação
-        // Ela é essencial para o .Include() funcionar.
         public virtual TipoUsuario? TipoUsuario { get; set; }
         public virtual Endereco? Endereco { get; set; }
 

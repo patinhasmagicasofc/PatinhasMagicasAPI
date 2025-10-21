@@ -8,7 +8,6 @@ namespace PatinhasMagicasAPI.Models
         public int Id { get; set; }
         public string Nome { get; set; }
 
-        // Propriedade de navegação
         public List<Produto> Produtos { get; set; } = new List<Produto>();
     }
 }

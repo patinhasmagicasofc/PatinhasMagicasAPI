@@ -1,49 +1,86 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using PatinhasMagicasAPI.DTOs;
+using PatinhasMagicasAPI.Models;
 using PatinhasMagicasAPI.Services.Interfaces;
 
 namespace PatinhasMagicasAPI.Controllers
 {
     [Route("api/[controller]")]
     [EnableCors("MyPolicy")]
+    [Authorize]
     [ApiController]
-    [Route("[controller]")]
     public class AgendamentoController : ControllerBase
     {
-        private readonly IAgendamentoService _service;
+        private readonly IAgendamentoService _agendamentoService;
 
-        public AgendamentoController(IAgendamentoService service)
+        public AgendamentoController(IAgendamentoService agendamentoService)
         {
-            _service = service;
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Criar([FromBody] AgendamentoInputDTO dto)
-        {
-            await _service.CriarAsync(dto);
-            return Ok(dto);
+            _agendamentoService = agendamentoService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Listar()
+        public async Task<ActionResult<IEnumerable<PedidoOutputDTO>>> GetAll()
         {
-            var lista = await _service.ListarAsync();
-            return Ok(lista);
+            //var pedidos = await _pedidoRepository.GetAllAsync();
+
+            //if (!pedidos.Any())
+            //    return NotFound();
+
+            //return Ok(pedidosDTO);
+            return Ok();
         }
 
+
         [HttpGet("{id}")]
-        public async Task<IActionResult> BuscarPorId(int id)
+        public async Task<ActionResult> GetById(int id)
         {
-            var agendamento = await _service.BuscarPorIdAsync(id);
-            if (agendamento == null) return NotFound();
+            //var pedido = await _agendamentoService.GetByIdAsync(id);
+
+            // if (pedido == null)
+            // return NotFound();
+
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Post([FromBody] AgendamentoCreateDTO agendamentoInputDTO)
+        {
+            var agendamento = await _agendamentoService.CriarAgendamentoAsync(agendamentoInputDTO);
+
             return Ok(agendamento);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Deletar(int id)
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Put(int id, [FromBody] AgendamentoInputDTO agendamentoInputDTO)
         {
-            await _service.DeletarAsync(id);
+            //var pedido = await _agendamentoService.GetByIdAsync(id);
+
+            //if (pedido == null)
+            //    return NotFound();
+
+            //pedido = new Pedido
+            //{
+            //    Id = id,
+            //    DataPedido = pedidoInputDTO.DataPedido,
+            //    StatusPedidoId = pedidoInputDTO.StatusPedidoId,
+            //    UsuarioId = pedidoInputDTO.UsuarioId
+            //};
+
+            //await _pedidoRepository.UpdateAsync(pedido);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            //var pedido = await _agendamentoService.GetByIdAsync(id);
+            //if (pedido == null)
+            //    return NotFound();
+
+            //await _agendamentoService.DeleteAsync(id);
             return NoContent();
         }
     }

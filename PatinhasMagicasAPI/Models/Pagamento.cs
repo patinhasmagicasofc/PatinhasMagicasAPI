@@ -8,9 +8,10 @@ namespace PatinhasMagicasAPI.Models
         public int Id { get; set; }
 
         [Required]
-        public DateTime Data { get; set; } = DateTime.Now;
+        public DateTime DataPagamento { get; set; } = DateTime.Now;
         public decimal Valor { get; set; }
 
+        public string  Observacao { get; set; }
 
         public int StatusPagamentoId { get; set; }
         public StatusPagamento? StatusPagamento { get; set; }

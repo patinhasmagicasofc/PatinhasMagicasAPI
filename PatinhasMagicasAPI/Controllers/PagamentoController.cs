@@ -29,7 +29,7 @@ namespace PatinhasMagicasAPI.Controllers
             var pagamentoOutputDTO = pagamentos.Select(p => new PagamentoOutputDTO
             {
                 Id = p.Id,
-                Data = p.Data,
+                Data = p.DataPagamento,
                 TipoPagamentoId = p.TipoPagamentoId,
                 PedidoId = p.PedidoId,
             }).ToList();
@@ -48,7 +48,7 @@ namespace PatinhasMagicasAPI.Controllers
             var pagamentoDTO = new PagamentoOutputDTO
             {
                 Id = pagamento.Id,
-                Data = pagamento.Data,
+                Data = pagamento.DataPagamento,
                 TipoPagamentoId = pagamento.TipoPagamentoId,
                 PedidoId = pagamento.PedidoId,
             };
@@ -61,7 +61,7 @@ namespace PatinhasMagicasAPI.Controllers
         {
             var pagamento = new Pagamento
             {
-                Data = pagamentoInputDTO.Data,
+                DataPagamento = pagamentoInputDTO.Data,
                 TipoPagamentoId = pagamentoInputDTO.TipoPagamentoId,
                 PedidoId = pagamentoInputDTO.PedidoId
             };
@@ -71,7 +71,7 @@ namespace PatinhasMagicasAPI.Controllers
             var pagamentoOutputDTO = new PagamentoOutputDTO
             {
                 Id = pagamento.Id,
-                Data = pagamento.Data,
+                Data = pagamento.DataPagamento,
                 TipoPagamentoId = pagamento.TipoPagamentoId,
                 PedidoId = pagamento.PedidoId,
             };
@@ -90,7 +90,7 @@ namespace PatinhasMagicasAPI.Controllers
             pagamento = new Pagamento
             {
                 Id = id,
-                Data = pagamentoInputDTO.Data,
+                DataPagamento = pagamentoInputDTO.Data,
                 TipoPagamentoId = pagamentoInputDTO.TipoPagamentoId,
                 PedidoId = pagamentoInputDTO.PedidoId
             };

@@ -40,8 +40,10 @@ builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddScoped<ITamanhoAnimalRepository, TamanhoAnimalRepository>();
 builder.Services.AddScoped<IAnimalRepository, AnimalRepository>();
-
-// 3️⃣ Services
+builder.Services.AddScoped<IAgendamentoServicoRepository, AgendamentoServicoRepository>();
+builder.Services.AddScoped<IServicoTamanhoRepository, ServicoTamanhoRepository>();
+//builder.Services.AddScoped<IStatusPagamentoRepository, StatusPagamentoRepository>();
+//builder.Services.AddScoped<IStatusPedidoRepository, StatusPedidoRepository>();
 
 
 // Services
@@ -53,6 +55,7 @@ builder.Services.AddScoped<PedidoService, PedidoService>();
 builder.Services.AddScoped<IProdutoService, ProdutoService>();
 builder.Services.AddScoped<ITamanhoAnimalService, TamanhoAnimalService>();
 builder.Services.AddScoped<IAnimalService, AnimalService>();
+builder.Services.AddScoped<IAgendamentoService, AgendamentoService>();
 builder.Services.AddHttpClient<CepService>();
 
 // CORS

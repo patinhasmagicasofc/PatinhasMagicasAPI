@@ -2,95 +2,100 @@
 using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
-using PatinhasMagicasAPI.Repositories;
 using PatinhasMagicasAPI.Services.Interfaces;
 
 namespace PatinhasMagicasAPI.Services
 {
     public class AgendamentoService : IAgendamentoService
     {
-        private readonly IPedidoRepository _pedidoRepo;
-        private readonly IAgendamentoRepository _agendamentoRepo;
-        private readonly IServicoTamanhoRepository _servicoTamanhoRepo;
+        private readonly IPedidoRepository _pedidoRepository;
+        private readonly IAgendamentoRepository _agendamentoRepository;
+        private readonly IServicoTamanhoRepository _servicoTamanhoRepository;
+        private readonly IAnimalRepository _animalRepository;
+        private readonly IAgendamentoServicoRepository _agendamentoServicoRepository;
         private readonly IMapper _mapper;
 
         public AgendamentoService(
-            IPedidoRepository pedidoRepo,
-            IAgendamentoRepository agendamentoRepo,
-            IServicoTamanhoRepository servicoTamanhoRepo,
+            IPedidoRepository pedidoRepository,
+            IAgendamentoRepository agendamentoRepository,
+            IServicoTamanhoRepository servicoTamanhoRepository,
+            IAnimalRepository animalRepository,
+            IAgendamentoServicoRepository agendamentoServicoRepository,
             IMapper mapper)
         {
-            _pedidoRepo = pedidoRepo;
-            _agendamentoRepo = agendamentoRepo;
-            _servicoTamanhoRepo = servicoTamanhoRepo;
+            _pedidoRepository = pedidoRepository;
+            _agendamentoRepository = agendamentoRepository;
+            _servicoTamanhoRepository = servicoTamanhoRepository;
+            _animalRepository = animalRepository;
+            _agendamentoServicoRepository = agendamentoServicoRepository;
             _mapper = mapper;
         }
 
-        public async Task<AgendamentoResponseDTO> CriarAgendamentoAsync(AgendamentoCreateDTO dto)
+        public async Task<AgendamentoOutputDTO> CriarAgendamentoAsync(AgendamentoCreateDTO agendamentoCreateDTO)
         {
-            using var transaction = await (_agendamentoRepo as AgendamentoRepository)!._context.Database.BeginTransactionAsync();
+            //using var transaction = await (_agendamentoRepository as AgendamentoRepository)!._context.Database.BeginTransactionAsync();
 
             try
             {
-                // 1️⃣ Buscar o tamanho do animal
-                var animal = await (_agendamentoRepo as AgendamentoRepository)!._context.Animal.FindAsync(dto.IdAnimal);
+                var animal = await _animalRepository.GetByIdAsync(agendamentoCreateDTO.IdAnimal);
                 if (animal == null) throw new Exception("Animal não encontrado");
 
                 decimal valorTotal = 0;
-                var servicosDetalhes = new List<AgendamentoServicoDTO>();
+                var agendamentoServicoDTOs = new List<AgendamentoServicoDTO>();
 
-                foreach (var idServico in dto.IdServicos)
+                foreach (var servicoId in agendamentoCreateDTO.IdServicos)
                 {
-                    var st = await _servicoTamanhoRepo.GetByServicoAndTamanhoAsync(idServico, animal.IdTamanhoAnimal);
-                    if (st == null) throw new Exception($"Serviço {idServico} não disponível para este animal");
+                    var servicoTamanho = await _servicoTamanhoRepository.GetByServicoAndTamanhoAsync(servicoId, animal.TamanhoAnimalId);
+                    if (servicoTamanho == null) throw new Exception($"Serviço {servicoId} não disponível para este animal");
 
-                    valorTotal += st.preco;
-                    servicosDetalhes.Add(new AgendamentoServicoDTO { IdServico = idServico, Preco = st.preco });
+                    valorTotal += servicoTamanho.Preco;
+                    agendamentoServicoDTOs.Add(new AgendamentoServicoDTO { Id = servicoId, Preco = servicoTamanho.Preco });
                 }
 
-                // 2️⃣ Criar Pedido
-                var pedido = await _pedidoRepo.AddAsync(new Pedido
+                var pedido = await _pedidoRepository.Add(new Pedido
                 {
-                    IdUsuario = dto.IdUsuario,
-                    IdStatusPedido = 1,
-                    dataPedido = DateTime.Now
+                    UsuarioId = agendamentoCreateDTO.IdUsuario ?? 0,
+                    StatusPedidoId = 1,
+                    DataPedido = DateTime.Now
                 });
 
-                // 3️⃣ Criar Agendamento
-                var agendamento = await _agendamentoRepo.AddAsync(new Agendamento
+
+                var agendamento = await _agendamentoRepository.Add(new Agendamento
                 {
-                    IdAnimal = dto.IdAnimal,
-                    IdPedido = pedido.IdPedido,
-                    IdStatusAgendamento = 1,
-                    dataAgendamento = dto.DataAgendamento,
-                    dataCadastro = DateTime.Now
+                    AnimalId = agendamentoCreateDTO.IdAnimal,
+                    PedidoId = pedido.Id,
+                    StatusAgendamentoId = 1,
+                    DataAgendamento = agendamentoCreateDTO.DataAgendamento ?? DateTime.Now,
+                    DataCadastro = DateTime.Now
                 });
 
-                // 4️⃣ Criar AgendamentoServico
-                var agendamentoServicos = servicosDetalhes.Select(s => new AgendamentoServico
+                var agendamentoServicos = agendamentoServicoDTOs.Select(s => new AgendamentoServico
                 {
-                    IdAgendamento = agendamento.IdAgendamento,
-                    IdServico = s.IdServico,
-                    preco = s.Preco
+                    AgendamentoId = agendamento.Id,
+                    ServicoId = s.Id,
+                    Preco = s.Preco
                 }).ToList();
 
-                await _agendamentoRepo.AddAgendamentoServicosAsync(agendamentoServicos);
-
-                await transaction.CommitAsync();
-
-                return new AgendamentoResponseDTO
+                foreach (var agendamentoServico  in agendamentoServicos)
                 {
-                    IdAgendamento = agendamento.IdAgendamento,
-                    IdPedido = pedido.IdPedido,
-                    DataAgendamento = agendamento.dataAgendamento,
+                    await _agendamentoServicoRepository.AddAsync(agendamentoServico);
+                }
+
+                // transaction.CommitAsync();
+
+                return new AgendamentoOutputDTO
+                {
+                    Id = agendamento.Id,
+                    PedidoId = pedido.Id,
+                    DataAgendamento = agendamento.DataAgendamento,
                     ValorTotal = valorTotal,
-                    Servicos = servicosDetalhes,
+                    AgendamentoServicos = agendamentoServicoDTOs,
                     Status = "Agendado"
                 };
             }
             catch
             {
-                await transaction.RollbackAsync();
+                //await transaction.RollbackAsync();
                 throw;
             }
         }
@@ -98,24 +103,24 @@ namespace PatinhasMagicasAPI.Services
         public async Task CriarAsync(AgendamentoInputDTO dto)
         {
             var agendamento = _mapper.Map<Agendamento>(dto);
-            await _repo.AddAsync(agendamento);
+            await _agendamentoRepository.AddAsync(agendamento);
         }
 
         public async Task<IEnumerable<AgendamentoOutputDTO>> ListarAsync()
         {
-            var lista = await _repo.GetAllAsync();
+            var lista = await _agendamentoRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<AgendamentoOutputDTO>>(lista);
         }
 
         public async Task<AgendamentoOutputDTO> BuscarPorIdAsync(int id)
         {
-            var agendamento = await _repo.GetByIdAsync(id);
+            var agendamento = await _agendamentoRepository.GetByIdAsync(id);
             return _mapper.Map<AgendamentoOutputDTO>(agendamento);
         }
 
         public async Task DeletarAsync(int id)
         {
-            await _repo.DeleteAsync(id);
+            await _agendamentoRepository.DeleteAsync(id);
         }
 
     }

@@ -5,7 +5,7 @@ namespace PatinhasMagicasAPI.Models
     public class Endereco
     {
         [Key]
-        public int IdEndereco { get; set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "O logradouro é obrigatório.")]
         [StringLength(200, ErrorMessage = "O logradouro deve ter no máximo 200 caracteres.")]
@@ -39,6 +39,6 @@ namespace PatinhasMagicasAPI.Models
         //propriedades de relacionamento
 
         public int UsuarioId { get; set; }
-        //public virtual Usuario? Usuario { get; set; }
+        public virtual Usuario? Usuario { get; set; }
     }
 }
