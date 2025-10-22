@@ -17,7 +17,7 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task<ServicoTamanho?> GetByServicoAndTamanhoAsync(int idServico, int idTamanhoAnimal)
         {
-            return await _context.ServicoTamanhos
+            return await _context.ServicoTamanho
                 .Where(st => st.ServicoId == idServico && st.TamanhoAnimalId == idTamanhoAnimal)
                 .FirstOrDefaultAsync();
         }

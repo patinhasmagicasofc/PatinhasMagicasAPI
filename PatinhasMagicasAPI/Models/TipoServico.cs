@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace PatinhasMagicasAPI.Models
 {
@@ -7,11 +6,13 @@ namespace PatinhasMagicasAPI.Models
     {
         [Key]
         public int Id { get; set; }
-        public string Nome { get; set; }
+
+        [Required(ErrorMessage = "O nome do tipo de serviço é obrigatório.")]
+        [StringLength(50, ErrorMessage = "O nome do tipo de serviço deve ter no máximo 50 caracteres.")]
+        public string Nome { get; set; } = string.Empty;
 
 
-        [JsonIgnore]
-        public ICollection<Servico>? Servicos { get; set; }
+        public virtual ICollection<Servico> Servicos { get; set; } = new List<Servico>();
     }
 }
 

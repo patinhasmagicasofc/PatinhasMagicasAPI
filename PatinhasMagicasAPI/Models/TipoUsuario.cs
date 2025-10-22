@@ -6,9 +6,12 @@ namespace PatinhasMagicasAPI.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required(ErrorMessage = "Campo obrigatório!")]
+
+        [Required(ErrorMessage = "O nome do tipo de usuário é obrigatório.")]
+        [StringLength(150, ErrorMessage = "O nome do tipo de usuário deve ter no máximo 150 caracteres.")]
         [Display(Name = "Tipo de Usuário")]
-        [StringLength(150)]
-        public string Nome { get; set; }
+        public string Nome { get; set; } = string.Empty;
+
+        public virtual ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
     }
 }

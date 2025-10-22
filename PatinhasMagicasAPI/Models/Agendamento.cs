@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PatinhasMagicasAPI.Models
 {
@@ -11,16 +12,18 @@ namespace PatinhasMagicasAPI.Models
         public DateTime DataAgendamento { get; set; }
 
         [Required(ErrorMessage = "A data de cadastro é obrigatória.")]
-        public DateTime DataCadastro { get; set; }
+        public DateTime DataCadastro { get; set; } = DateTime.Now;
 
         [Required(ErrorMessage = "O PedidoId é obrigatório.")]
         [Range(1, int.MaxValue, ErrorMessage = "PedidoId deve ser um valor válido.")]
         public int PedidoId { get; set; }
         public Pedido? Pedido { get; set; }
 
+        [Required(ErrorMessage = "O AnimalId é obrigatório.")]
+        [Range(1, int.MaxValue, ErrorMessage = "AnimalId deve ser um valor válido.")]
+
         public int AnimalId { get; set; }
         public Animal? Animal { get; set; }
-
 
         [Required(ErrorMessage = "O StatusAgendamentoId é obrigatório.")]
         [Range(1, int.MaxValue, ErrorMessage = "StatusAgendamentoId deve ser um valor válido.")]

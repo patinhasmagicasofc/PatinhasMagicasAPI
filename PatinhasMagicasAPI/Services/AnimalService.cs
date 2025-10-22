@@ -55,7 +55,6 @@ namespace PatinhasMagicasAPI.Services
             if (entity == null) return null;
 
             entity.Nome = dto.Nome;
-            entity.Especie = dto.Especie;
             entity.Raca = dto.Raca;
             entity.Idade = dto.Idade;
             entity.TamanhoAnimalId = dto.TamanhoAnimalId;
@@ -71,7 +70,6 @@ namespace PatinhasMagicasAPI.Services
             {
                 Id = animal.Id,
                 Nome = animal.Nome,
-                Especie = animal.Especie,
                 Raca = animal.Raca,
                 Idade = animal.Idade,
                 TamanhoAnimalId = animal.TamanhoAnimalId,

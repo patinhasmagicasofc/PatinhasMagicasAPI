@@ -16,17 +16,17 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task<List<TipoUsuario>> GetAllAsync()
         {
-            return await _context.TiposUsuarios.ToListAsync();
+            return await _context.TiposUsuario.ToListAsync();
         }
 
         public async Task<TipoUsuario> GetByIdAsync(int id)
         {
-            return await _context.TiposUsuarios.FindAsync(id);
+            return await _context.TiposUsuario.FindAsync(id);
         }
 
         public async Task AddAsync(TipoUsuario tipoUsuario)
         {
-            await _context.TiposUsuarios.AddAsync(tipoUsuario);
+            await _context.TiposUsuario.AddAsync(tipoUsuario);
             await _context.SaveChangesAsync();
         }
 
@@ -38,17 +38,17 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task DeleteAsync(int id)
         {
-            var tipoUsuario = await _context.TiposUsuarios.FindAsync(id);
+            var tipoUsuario = await _context.TiposUsuario.FindAsync(id);
             if (tipoUsuario != null)
             {
-                _context.TiposUsuarios.Remove(tipoUsuario);
+                _context.TiposUsuario.Remove(tipoUsuario);
                 await _context.SaveChangesAsync();
             }
         }
 
         public async Task<TipoUsuario?> GetByNomeAsync(string nome)
         {
-            return await _context.TiposUsuarios
+            return await _context.TiposUsuario
                 .FirstOrDefaultAsync(t => t.Nome.ToLower() == nome.ToLower());
         }
     }

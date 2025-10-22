@@ -15,29 +15,29 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task AddAsync(TipoPagamento tipoPagamento)
         {
-            await _context.TipoPagamentos.AddAsync(tipoPagamento);
+            await _context.TipoPagamento.AddAsync(tipoPagamento);
             await _context.SaveChangesAsync();
         }
 
         public async Task<List<TipoPagamento>> GetAllAsync()
         {
-            return await _context.TipoPagamentos.ToListAsync();
+            return await _context.TipoPagamento.ToListAsync();
         }
 
         public async Task<TipoPagamento> GetByIdAsync(int id)
         {
-            return await _context.TipoPagamentos.FindAsync(id);
+            return await _context.TipoPagamento.FindAsync(id);
         }
 
         public async Task UpdateAsync(TipoPagamento tipoPagamento)
         {
-            _context.TipoPagamentos.Update(tipoPagamento);
+            _context.TipoPagamento.Update(tipoPagamento);
             await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
-            var tipoPagamento = await _context.TipoPagamentos.FindAsync(id);
+            var tipoPagamento = await _context.TipoPagamento.FindAsync(id);
             if (tipoPagamento != null)
             {
                 _context.Remove(tipoPagamento);

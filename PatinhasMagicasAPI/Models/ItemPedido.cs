@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PatinhasMagicasAPI.Models
 {
@@ -12,7 +13,7 @@ namespace PatinhasMagicasAPI.Models
         public int Quantidade { get; set; }
 
         [Required(ErrorMessage = "O preço unitário é obrigatório.")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "O preço unitário deve ser maior que zero.")]
+        [Column(TypeName = "decimal(10,2)")]
         public decimal PrecoUnitario { get; set; }
 
         [Required(ErrorMessage = "O ProdutoId é obrigatório.")]

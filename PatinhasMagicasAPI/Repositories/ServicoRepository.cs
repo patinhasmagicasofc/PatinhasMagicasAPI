@@ -14,7 +14,7 @@ namespace PatinhasMagicasAPI.Repositories
         }
         public async Task<IEnumerable<ServicoTamanho>> GetServicosPorTamanhoAsync(int tamanhoAnimalId)
         {
-            return await _context.ServicoTamanhos
+            return await _context.ServicoTamanho
                 .Include(st => st.Servico) 
                 .Where(st => st.TamanhoAnimalId == tamanhoAnimalId)
                 .ToListAsync();

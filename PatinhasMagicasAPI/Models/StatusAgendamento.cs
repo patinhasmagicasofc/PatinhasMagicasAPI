@@ -11,6 +11,6 @@ namespace PatinhasMagicasAPI.Models
         [StringLength(100, ErrorMessage = "O nome do status deve ter no máximo 100 caracteres.")]
         public string Nome { get; set; } = string.Empty;
 
-        public ICollection<Agendamento>? Agendamentos { get; set; }
+        public virtual ICollection<Agendamento> Agendamentos { get; set; } = new List<Agendamento>();
     }
 }

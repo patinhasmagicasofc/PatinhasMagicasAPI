@@ -14,31 +14,31 @@ namespace PatinhasMagicasAPI.Repositories
         }
         public async Task AddAsync(TipoServico tipoServico)
         {
-            await _context.TiposServico.AddAsync(tipoServico);
+            await _context.TipoServico.AddAsync(tipoServico);
             await _context.SaveChangesAsync();
         }
 
         public async Task<List<TipoServico>> GetAllAsync()
         {
-            return await _context.TiposServico.ToListAsync();
+            return await _context.TipoServico.ToListAsync();
         }
 
         public async Task<TipoServico> GetByIdAsync(int id)
         {
-            return await _context.TiposServico.FindAsync(id);
+            return await _context.TipoServico.FindAsync(id);
         }
 
         public async Task UpdateAsync(TipoServico tipoServico)
         {
-            _context.TiposServico.Update(tipoServico);
+            _context.TipoServico.Update(tipoServico);
             await _context.SaveChangesAsync();
         }
         public async Task DeleteAsync(int id)
         {
-            var tipoServico = await _context.TiposServico.FindAsync(id);
+            var tipoServico = await _context.TipoServico.FindAsync(id);
             if (tipoServico != null)
             {
-                _context.TiposServico.Remove(tipoServico);
+                _context.TipoServico.Remove(tipoServico);
                 await _context.SaveChangesAsync();
             }
         }

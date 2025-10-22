@@ -16,12 +16,12 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task<List<AgendamentoServico>> GetAllAsync()
         {
-            return await _context.AgendamentoServicos.ToListAsync();
+            return await _context.AgendamentoServico.ToListAsync();
         }
 
         public async Task<List<AgendamentoServico>> GetServicosByAgendamentoIdAsync(int agendamentoId)
         {
-            return await _context.AgendamentoServicos
+            return await _context.AgendamentoServico
                 .Include(asrv => asrv.Servico)  
                 .Where(asrv => asrv.AgendamentoId == agendamentoId)
                 .ToListAsync();
@@ -29,12 +29,12 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task<AgendamentoServico> GetByIdAsync(int id)
         {
-            return await _context.AgendamentoServicos.FindAsync(id);
+            return await _context.AgendamentoServico.FindAsync(id);
         }
 
         public async Task AddAsync(AgendamentoServico agendamentoServico)
         {
-            await _context.AgendamentoServicos.AddAsync(agendamentoServico);
+            await _context.AgendamentoServico.AddAsync(agendamentoServico);
             await _context.SaveChangesAsync();
         }
 
@@ -46,10 +46,10 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task DeleteAsync(int id)
         {
-            var agendamentoServico = await _context.AgendamentoServicos.FindAsync(id);
+            var agendamentoServico = await _context.AgendamentoServico.FindAsync(id);
             if (agendamentoServico != null)
             {
-                _context.AgendamentoServicos.Remove(agendamentoServico);
+                _context.AgendamentoServico.Remove(agendamentoServico);
                 await _context.SaveChangesAsync();
             }
         }

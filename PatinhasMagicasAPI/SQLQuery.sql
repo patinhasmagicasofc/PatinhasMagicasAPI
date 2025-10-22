@@ -186,7 +186,7 @@ INSERT INTO TamanhoAnimals (Nome) VALUES
 -- ========================================================
 -- 2️⃣ Usuário
 -- ========================================================
-INSERT INTO Usuario (nome, email, senha, CPF, ddd, telefone, ativo)
+INSERT INTO Usuario (nome, email, senha, CPF, ddd, telefone, ativo, IdTipoUsuario)
 VALUES
 ('João Silva', 'joao@email.com', 'senha123', '123.456.789-00', '11', '999999999', 1);
 

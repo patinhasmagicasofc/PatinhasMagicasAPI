@@ -22,13 +22,13 @@ namespace PatinhasMagicasAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<StatusPedido>>> GetAllAsync()
         {
-            return await _context.StatusPedidos.ToListAsync();
+            return await _context.StatusPedido.ToListAsync();
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<StatusPedido>> GetStatusPedidoOutputDTO(int id)
         {
-            var statusPedidoOutputDTO = await _context.StatusPedidos.FindAsync(id);
+            var statusPedidoOutputDTO = await _context.StatusPedido.FindAsync(id);
 
             if (statusPedidoOutputDTO == null)
             {
@@ -71,7 +71,7 @@ namespace PatinhasMagicasAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<StatusPedidoOutputDTO>> PostStatusPedidoOutputDTO(StatusPedido statusPedidoOutputDTO)
         {
-            _context.StatusPedidos.Add(statusPedidoOutputDTO);
+            _context.StatusPedido.Add(statusPedidoOutputDTO);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetStatusPedidoOutputDTO", new { id = statusPedidoOutputDTO.Id }, statusPedidoOutputDTO);
@@ -81,13 +81,13 @@ namespace PatinhasMagicasAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStatusPedidoOutputDTO(int id)
         {
-            var statusPedidoOutputDTO = await _context.StatusPedidos.FindAsync(id);
+            var statusPedidoOutputDTO = await _context.StatusPedido.FindAsync(id);
             if (statusPedidoOutputDTO == null)
             {
                 return NotFound();
             }
 
-            _context.StatusPedidos.Remove(statusPedidoOutputDTO);
+            _context.StatusPedido.Remove(statusPedidoOutputDTO);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -95,7 +95,7 @@ namespace PatinhasMagicasAPI.Controllers
 
         private bool StatusPedidoOutputDTOExists(int id)
         {
-            return _context.StatusPedidos.Any(e => e.Id == id);
+            return _context.StatusPedido.Any(e => e.Id == id);
         }
     }
 }

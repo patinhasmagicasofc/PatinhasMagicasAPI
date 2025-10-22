@@ -4,13 +4,14 @@ namespace PatinhasMagicasAPI.Models
 {
     public class TamanhoAnimal
     {
-        [Key]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "O nome do tamanho é obrigatório.")]
         [StringLength(50, ErrorMessage = "O nome do tamanho não pode exceder 50 caracteres.")]
-        public string Nome { get; set; }
+        public string Nome { get; set; } = string.Empty;
 
-        public ICollection<Animal> Animais { get; set; }
+        public virtual ICollection<Animal> Animais { get; set; } = new List<Animal>();
+        public virtual ICollection<ServicoTamanho> ServicoTamanhos { get; set; } = new List<ServicoTamanho>();
+
     }
 }

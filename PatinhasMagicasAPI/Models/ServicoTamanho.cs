@@ -6,20 +6,23 @@ namespace PatinhasMagicasAPI.Models
     public class ServicoTamanho
     {
         [Key]
-        public int Id{ get; set; }
+        public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "O preço é obrigatório.")]
         [Column(TypeName = "decimal(10,2)")]
         public decimal Preco { get; set; }
 
-        [Required]
-        [ForeignKey("Servico")]
+        [Required(ErrorMessage = "O ServicoId é obrigatório.")]
+        [Range(1, int.MaxValue, ErrorMessage = "ServicoId deve ser um valor válido.")]
         public int ServicoId { get; set; }
-        public Servico Servico { get; set; }
+        public virtual Servico Servico { get; set; } = null!;
 
-        [Required]
-        [ForeignKey("TamanhoAnimal")]
+        [Required(ErrorMessage = "O TamanhoAnimalId é obrigatório.")]
+        [Range(1, int.MaxValue, ErrorMessage = "TamanhoAnimalId deve ser um valor válido.")]
         public int TamanhoAnimalId { get; set; }
-        public TamanhoAnimal TamanhoAnimal { get; set; }
+        public virtual TamanhoAnimal TamanhoAnimal { get; set; } = null!;
+
+        public virtual ICollection<AgendamentoServico> AgendamentoServicos { get; set; } = new List<AgendamentoServico>();
+
     }
 }

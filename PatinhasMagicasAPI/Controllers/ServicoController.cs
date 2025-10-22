@@ -73,7 +73,6 @@ namespace PatinhasMagicasAPI.Controllers
                 Descricao = servicoInputDTO.Descricao,
                 DescricaoDetalhada = servicoInputDTO.DescricaoDetalhada,
                 TempoEstimadoMinutos = servicoInputDTO.TempoEstimadoMinutos,
-                Ativo = servicoInputDTO.Ativo,
                 TipoServicoId = servicoInputDTO.TipoServicoId
             };
 
@@ -88,7 +87,6 @@ namespace PatinhasMagicasAPI.Controllers
                 Descricao = servico.Descricao,
                 DescricaoDetalhada = servico.DescricaoDetalhada,
                 TempoEstimadoMinutos = servico.TempoEstimadoMinutos,
-                Ativo = servico.Ativo,
                 TipoServicoId = servico.TipoServicoId
             };
 

@@ -16,32 +16,32 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task AddAsync(StatusAgendamento statusAgendamento)
         {
-            await _context.StatusAgendamentos.AddAsync(statusAgendamento);
+            await _context.StatusAgendamento.AddAsync(statusAgendamento);
             await _context.SaveChangesAsync();
         }
 
         public async Task<List<StatusAgendamento>> GetAllAsync()
         {
-            return await _context.StatusAgendamentos.ToListAsync();
+            return await _context.StatusAgendamento.ToListAsync();
         }
 
         public async Task<StatusAgendamento> GetByIdAsync(int id)
         {
-            return await _context.StatusAgendamentos.FindAsync(id);
+            return await _context.StatusAgendamento.FindAsync(id);
         }
 
         public async Task UpdateAsync(StatusAgendamento statusAgendamento)
         {
-            _context.StatusAgendamentos.Update(statusAgendamento);
+            _context.StatusAgendamento.Update(statusAgendamento);
             await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
-            var statusAgendamento = await _context.StatusAgendamentos.FindAsync(id);
+            var statusAgendamento = await _context.StatusAgendamento.FindAsync(id);
             if (statusAgendamento != null)
             {
-                _context.StatusAgendamentos.Remove(statusAgendamento);
+                _context.StatusAgendamento.Remove(statusAgendamento);
                 await _context.SaveChangesAsync();
             }
         }

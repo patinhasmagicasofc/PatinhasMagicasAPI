@@ -6,8 +6,11 @@ namespace PatinhasMagicasAPI.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required(ErrorMessage = "O status do pagamento é obrigatório")]
-        [StringLength(30, ErrorMessage = "O status deve ter no máximo 30 caracteres")]
-        public string Nome { get; set; }    
+
+        [Required(ErrorMessage = "O status do pagamento é obrigatório.")]
+        [StringLength(30, ErrorMessage = "O status deve ter no máximo 30 caracteres.")]
+        public string Nome { get; set; } = string.Empty;
+
+        public virtual ICollection<Pagamento> Pagamentos { get; set; } = new List<Pagamento>();
     }
 }

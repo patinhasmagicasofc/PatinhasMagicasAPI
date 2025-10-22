@@ -16,14 +16,14 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task<Animal> AddAsync(Animal animal)
         {
-            _context.Animals.Add(animal);
+            _context.Animais.Add(animal);
             await _context.SaveChangesAsync();
             return animal;
         }
 
         public async Task<IEnumerable<Animal>> GetAnimalsByUsuarioIdAsync(int usuarioId)
         {
-            return await _context.Animals
+            return await _context.Animais
                 .Include(a => a.TamanhoAnimal)
                 .Where(a => a.UsuarioId == usuarioId)
                 .ToListAsync();
@@ -31,17 +31,17 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var entity = await _context.Animals.FindAsync(id);
+            var entity = await _context.Animais.FindAsync(id);
             if (entity == null) return false;
 
-            _context.Animals.Remove(entity);
+            _context.Animais.Remove(entity);
             await _context.SaveChangesAsync();
             return true;
         }
 
         public async Task<IEnumerable<Animal>> GetAllAsync()
         {
-            return await _context.Animals
+            return await _context.Animais
                 .Include(a => a.TamanhoAnimal)
                 .Include(a => a.Usuario)
                 .ToListAsync();
@@ -49,7 +49,7 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task<Animal> GetByIdAsync(int id)
         {
-            return await _context.Animals
+            return await _context.Animais
                 .Include(a => a.TamanhoAnimal)
                 .Include(a => a.Usuario)
                 .FirstOrDefaultAsync(a => a.Id == id);
@@ -57,7 +57,7 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task<Animal> UpdateAsync(Animal animal)
         {
-            _context.Animals.Update(animal);
+            _context.Animais.Update(animal);
             await _context.SaveChangesAsync();
             return animal;
         }

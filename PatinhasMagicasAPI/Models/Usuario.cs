@@ -39,12 +39,18 @@ namespace PatinhasMagicasAPI.Models
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; } = true;
 
-        // Chave estrangeira para o relacionamento com TipoUsuario
         [Required(ErrorMessage = "Campo obrigatório!")]
         [Display(Name = "Tipo de Usuário")]
         public int TipoUsuarioId { get; set; }
         public virtual TipoUsuario? TipoUsuario { get; set; }
+
         public virtual Endereco? Endereco { get; set; }
+
+        public virtual ICollection<Pedido> Pedidos { get; set; } = new List<Pedido>();
+
+        public virtual ICollection<Animal> Animais { get; set; } = new List<Animal>();
+
+
 
     }
 }
