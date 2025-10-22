@@ -56,10 +56,6 @@ namespace PatinhasMagicasAPI.Data
                 .Property(u => u.Ativo)
                 .HasDefaultValue(true);
 
-            modelBuilder.Entity<Servico>()
-                .Property(s => s.Ativo)
-                .HasDefaultValue(true);
-
             // -------------------------------
             // Decimal Precision
             // -------------------------------
