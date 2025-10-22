@@ -175,105 +175,34 @@ CREATE TABLE AgendamentoServico (
     IdServico INT NOT NULL FOREIGN KEY REFERENCES Servico(IdServico)
 );
 
--- ========================================================
--- 1️⃣ TamanhoAnimal
--- ========================================================
-INSERT INTO TamanhoAnimals (Nome) VALUES
-('Pequeno'),
-('Médio'),
-('Grande');
-
--- ========================================================
--- 2️⃣ Usuário
--- ========================================================
-INSERT INTO Usuario (nome, email, senha, CPF, ddd, telefone, ativo, IdTipoUsuario)
-VALUES
-('João Silva', 'joao@email.com', 'senha123', '123.456.789-00', '11', '999999999', 1);
-
--- ========================================================
--- 3️⃣ Animal
--- ========================================================
--- Supondo que João Silva tenha IdUsuario = 1
-INSERT INTO Animals (nome, especie, raca, idade, TamanhoAnimalId, UsuarioId)
-VALUES
-('Luna', 'Cachorro', 'Vira-lata', 3, 2, 1),  -- Médio
-('Mimi', 'Gato', 'Siames', 2, 1, 1);         -- Pequeno
-
--- ========================================================
--- 4️⃣ TipoServico
--- ========================================================
-INSERT INTO TiposServico(nome) VALUES
-('Higiene'),
-('Saúde');
-
--- ========================================================
--- 5️⃣ Servico
--- ========================================================
-INSERT INTO Servicos (nome, descricao, tempoEstimadoMinutos, ativo, TipoServicoId)
-VALUES
-('Banho', 'Banho simples', 45, 1, 1),
-('Tosa Completa', 'Tosa completa e banho', 60, 1, 1),
-('Consulta Veterinária', 'Consulta geral', 30, 1, 2);
-
--- ========================================================
--- 6️⃣ ServicoTamanho
--- ========================================================
--- Banho: Pequeno, Médio, Grande
-INSERT INTO ServicoTamanhos(preco, ServicoId, TamanhoAnimalId) VALUES
-(30.00, 1, 1),  -- Banho Pequeno
-(50.00, 1, 2),  -- Banho Médio
-(70.00, 1, 3),  -- Banho Grande
-
--- Tosa Completa: Pequeno, Médio, Grande
-(60.00, 2, 1),
-(80.00, 2, 2),
-(100.00, 2, 3),
-
--- Consulta Veterinária: mesmo preço para todos tamanhos
-(120.00, 3, 1),
-(120.00, 3, 2),
-(120.00, 3, 3);
-
 -- ============================================
--- Tabelas Fixas
+-- TABELAS FIXAS
 -- ============================================
 
 -- Tipos de Usuário
-INSERT INTO TiposUsuarios (DescricaoTipoUsuario) VALUES
+INSERT INTO TiposUsuario(Nome) VALUES
 ('Administrador'),
 ('Funcionário'),
 ('Cliente');
 
--- Tipo de Pagamentos
-INSERT INTO TiposPagamentos (Nome) VALUES
-('Cartão de Crédito'),
-('Cartão de Débito'),
-('Dinheiro'),
-('PIX');
+-- TamanhoAnimal
+INSERT INTO TamanhoAnimal (Nome) VALUES
+('Pequeno'),
+('Médio'),
+('Grande');
 
--- Status do Pedido
-INSERT INTO StatusPedidos (Nome) VALUES
-('Pendente'),
-('Confirmado'),
-('Cancelado'),
-('Concluído');
-
--- Status de Agendamento
-INSERT INTO StatusAgendamentos (Nome) VALUES
-('Pendente'),
-('Confirmado'),
-('Cancelado'),
-('Concluído');
-
--- Status de Pagamento
-INSERT INTO StatusPagamentos (Status) VALUES
-('Pendente'),
-('Em Processamento'),
-('Aprovado'),
-('Recusado'),
-('Cancelado'),
-('Estornado'),
-('Expirado');
+-- Especies
+INSERT INTO Especies (Nome) VALUES
+('Cachorro'),
+('Gato'),
+('Coelho'),
+('Pássaro'),
+('Hamster'),
+('Porquinho-da-Índia'),
+('Tartaruga'),
+('Peixe'),
+('Calopsita'),
+('Furão');
 
 -- Categorias
 INSERT INTO Categorias (Nome) VALUES
@@ -282,153 +211,277 @@ INSERT INTO Categorias (Nome) VALUES
 ('Acessórios'),
 ('Medicamentos');
 
--- Tipos de Serviço
-INSERT INTO TiposServico (Nome) VALUES
+-- TipoServicos
+INSERT INTO TipoServico(Nome) VALUES
 ('Banho'),
 ('Tosa'),
 ('Consulta Veterinária'),
-('Vacinação');
+('Vacinação'),
+('Higiene e Cuidados'),
+('Adestramento'),
+('Transporte Pet');
+
+-- TipoPagamento
+INSERT INTO TipoPagamento(Nome) VALUES
+('Cartão de Crédito'),
+('Cartão de Débito'),
+('PIX'),
+('Dinheiro'),
+('Boleto Bancário'),
+('Transferência Bancária'),
+('Carteira Digital');
+
+-- StatusPagamento
+INSERT INTO StatusPagamento (Nome) VALUES
+('Pendente'),
+('Aprovado'),
+('Recusado'),
+('Em Processamento'),
+('Estornado'),
+('Cancelado'),
+('Concluído');
+
+-- StatusPedido
+INSERT INTO StatusPedido (Nome) VALUES
+('Pendente'),
+('Aguardando Pagamento'),
+('Pagamento Aprovado'),
+('Em Preparação'),
+('Enviado'),
+('Concluído'),
+('Cancelado'),
+('Devolvido');
+
+-- StatusAgendamento
+INSERT INTO StatusAgendamento (Nome) VALUES
+('Pendente'),
+('Confirmado'),
+('Em Andamento'),
+('Concluído'),
+('Cancelado pelo Cliente'),
+('Cancelado pela Loja'),
+('Remarcado'),
+('Não Compareceu');
 
 
 -- ============================================
--- Dados de Exemplo (para DEV)
+-- Produtos
 -- ============================================
-
--- Usuários
-INSERT INTO Usuarios (Nome, CPF, Email, Ddd, Telefone, TipoUsuarioId) VALUES
-('Admin Master', '00000000000', 'admin@teste.com', 11, '999999999', 1),
-('Maria Funcionária', '11111111111', 'maria@teste.com', 11, '988888888', 2),
-('João Cliente', '22222222222', 'joao@teste.com', 11, '977777777', 3);
-
--- Endereços
-INSERT INTO Enderecos (Logradouro, Numero, Bairro, Cidade, Estado, CEP, Complemento, UsuarioId) VALUES
-('Rua Central', 100, 'Centro', 'São Paulo', 'SP', '01000000', 'Apto 101', 3);
-
--- Produtos
-INSERT INTO Produtos (Nome, Preco, Foto, Codigo, Validade, CategoriaId) VALUES
-('Ração Premium Cães', 120.50, 'racao.jpg', 'RAC001', DATEADD(MONTH, 6, GETDATE()), 1),
-('Bola de Brinquedo', 20.00, 'bola.jpg', 'BRQ001', DATEADD(MONTH, 12, GETDATE()), 2);
-
--- Pedido
-INSERT INTO Pedidos (DataPedido, ClienteId, UsuarioId, StatusPedidoId) VALUES
-(GETDATE(), 3, 2, 1);
-
--- Itens do Pedido
-INSERT INTO ItensPedido (Quantidade, PrecoUnitario, ProdutoId, PedidoId) VALUES
-(2, 120.50, 1, 1),
-(1, 20.00, 2, 1);
-
--- Pagamento
-INSERT INTO Pagamentos (Data, valor, StatusPagamentoId, TipoPagamentoId, PedidoId) VALUES
-(GETDATE(), 100, 3, 4, 1);
-
--- Agendamento
-INSERT INTO Agendamentos (DataAgendamento, DataCadastro, PedidoId, IdStatusAgendamento) VALUES
-(DATEADD(DAY, 2, GETDATE()), GETDATE(), 1, 1);
-
-
-USE [PatinhasMagicasDB]
-GO
-
--- Tipos de Usuários
-INSERT INTO TiposUsuarios(Nome)
-VALUES 
-('Administrador'),
-('Funcionário'),
-('Administrador'),
-('Veterinário'),
-('Fornecedor');
-
--- Usuários
-INSERT INTO Usuarios (Nome, CPF, Email, Ddd, Telefone, TipoUsuarioId, DataCadastro, Senha)
+INSERT INTO Produtos 
+(Nome, EspecieId, Preco, Marca, UrlImagem, Codigo, Descricao, DescricaoDetalhada, Validade, CategoriaId)
 VALUES
-('Adm','111.111.111-10','adm@pm.com',11,'999911111',1, GETDATE(), 'João Silva'),
-('Maria Souza','222.222.222-22','maria@email.com',21,'988822222',1,GETDATE(), 'João Silva'),
-('Carlos Lima','333.333.333-33','carlos@email.com',31,'977733333',2, GETDATE(), 'João Silva'),
-('Ana Paula','444.444.444-44','ana@email.com',41,'966644444',2, GETDATE(), 'João Silva'),
-('Lucas Santos','555.555.555-55','lucas@email.com',51,'955555555',3, GETDATE(), 'João Silva');
+('Ração Premium para Cães Adultos 10kg', 1, 179.90, 'Golden', 'https://example.com/produtos/racao-golden-cachorro.jpg', 'PROD001',
+ 'Ração completa para cães adultos de médio e grande porte.',
+ 'Ração balanceada com proteínas de alta qualidade e ômega 3 e 6 para pelagem saudável.', '2026-05-15', 1),
+('Ração Seca para Gatos Filhotes 1,5kg', 2, 69.90, 'Whiskas', 'https://example.com/produtos/racao-whiskas-filhote.jpg', 'PROD002',
+ 'Ração completa para gatos filhotes até 12 meses.',
+ 'Enriquecida com cálcio e vitaminas para o crescimento saudável do seu gato.', '2026-02-10', 1),
+('Ração Especial para Coelhos Adultos 2kg', 3, 42.90, 'NutriPet', 'https://example.com/produtos/racao-coelho.jpg', 'PROD003',
+ 'Ração rica em fibras e nutrientes essenciais.',
+ 'Ajuda na digestão e mantém o pelo macio e saudável.', '2026-07-20', 1),
+('Brinquedo Interativo para Calopsitas com Espelho', 9, 24.50, 'AviToy', 'https://example.com/produtos/brinquedo-calopsita.jpg', 'PROD004',
+ 'Brinquedo com espelho e sininho para estimular as aves.',
+ 'Ajuda a reduzir o estresse e promove o entretenimento da calopsita.', NULL, 2),
+('Ração Color Flakes para Peixes Ornamentais 250g', 8, 22.90, 'Alcon', 'https://example.com/produtos/racao-peixe.jpg', 'PROD005',
+ 'Ração em flocos para peixes tropicais e ornamentais.',
+ 'Realça a coloração natural e fortalece o sistema imunológico.', '2027-01-01', 1),
+('Comedouro Duplo Inox para Cães', 1, 49.90, 'PetInox', 'https://example.com/produtos/comedouro-inox.jpg', 'PROD006',
+ 'Comedouro duplo em aço inox resistente.',
+ 'Ideal para água e ração, com base antiderrapante.', NULL, 3),
+('Coleira Ajustável para Gatos com Guizo', 2, 27.90, 'CatStyle', 'https://example.com/produtos/coleira-gato.jpg', 'PROD007',
+ 'Coleira com guizo ajustável e segura.',
+ 'Disponível em várias cores e tamanhos.', NULL, 3),
+('Brinquedo Mordedor para Cães Filhotes', 1, 19.90, 'DogToy', 'https://example.com/produtos/mordedor-cachorro.jpg', 'PROD008',
+ 'Brinquedo de borracha macia ideal para filhotes.',
+ 'Ajuda na dentição e evita que o cão roa móveis.', NULL, 2),
+('Suplemento Vitamínico para Hamsters 30ml', 5, 31.90, 'RodentCare', 'https://example.com/produtos/suplemento-hamster.jpg', 'PROD009',
+ 'Complexo vitamínico líquido para hamsters.',
+ 'Fortalece o sistema imunológico e melhora a vitalidade.', '2026-09-30', 4),
+('Pomada Cicatrizante para Cães e Gatos 50g', 1, 29.50, 'VetPlus', 'https://example.com/produtos/pomada-cicatrizante.jpg', 'PROD010',
+ 'Pomada para uso tópico em ferimentos leves.',
+ 'Acelera o processo de cicatrização e possui ação antibacteriana.', '2026-12-12', 4);
 
--- Endereços
-INSERT INTO Enderecos (Logradouro, Numero, Bairro, Cidade, Estado, CEP, UsuarioId)
+-- ============================================
+-- Usuarios
+-- ============================================
+INSERT INTO Usuarios 
+(Nome, CPF, Email, Senha, Ddd, Telefone, DataCadastro, Ativo, TipoUsuarioId)
 VALUES
-('Rua A',100,'Centro','São Paulo','SP','01001-000',1),
-('Rua B',200,'Jardim','Rio de Janeiro','RJ','20020-000',2),
-('Rua C',300,'Bela Vista','Belo Horizonte','MG','30100-000',3),
-('Rua D',400,'Centro','Curitiba','PR','80010-000',4),
-('Rua E',500,'Centro','Porto Alegre','RS','90010-000',5);
+('Mariana Souza', '123.456.789-00', 'mariana.souza@gmail.com', 'Senha@123', 11, '988776655', '2024-12-05', 1, 3),
+('Ricardo Lima', '987.654.321-00', 'ricardo.lima@yahoo.com', 'Senha@123', 21, '987654321', '2025-01-10', 1, 3),
+('Fernanda Oliveira', '321.654.987-11', 'fernanda.oli@hotmail.com', 'Senha@123', 31, '991234567', '2025-02-20', 1, 3),
+('Lucas Andrade', '654.987.321-22', 'lucas.andrade@gmail.com', 'Senha@123', 47, '999112233', '2025-03-15', 1, 3),
+('Patrícia Gomes', '741.852.963-33', 'patricia.gomes@gmail.com', 'Senha@123', 19, '981223344', '2025-04-08', 1, 3),
+('Camila Torres', '852.963.741-44', 'camila.torres@patinhas.com', 'Adm@1234', 11, '999887766', '2024-11-12', 1, 2),
+('Gustavo Ribeiro', '963.258.741-55', 'gustavo.ribeiro@patinhas.com', 'Adm@1234', 11, '977665544', '2024-10-20', 1, 2),
+('Administrador do Sistema', '111.222.333-44', 'admin@patinhas.com', 'Root@2024', 11, '900000000', '2024-01-01', 1, 1);
 
--- Categorias de Produtos
-INSERT INTO Categorias (Nome)
-VALUES ('Ração'),('Brinquedos'),('Medicamentos'),('Acessórios'),('Higiene');
-
--- Produtos
-INSERT INTO Produtos (Nome, Preco, Foto, Codigo, Validade, CategoriaId)
+-- ============================================
+-- Animais
+-- ============================================
+INSERT INTO Animais 
+(Nome, Raca, Idade, EspecieId, TamanhoAnimalId, UsuarioId)
 VALUES
-('Ração Premium',120.00,'img1.jpg','RAC001','2026-12-31',1),
-('Bola de Borracha',25.00,'img2.jpg','BRQ002','2027-01-15',2),
-('Antipulgas',50.00,'img3.jpg','ANT003','2025-11-30',3),
-('Coleira Pet',30.00,'img4.jpg','COL004','2028-03-10',4),
-('Shampoo Pet',40.00,'img5.jpg','SHM005','2026-05-20',5);
+('Rex', 'Labrador', 3, 1, 3, 1),
+('Mimi', 'Siamês', 2, 2, 1, 2),
+('Bilu', 'Coelho Holandês', 1, 3, 1, 3),
+('Pipoca', 'Calopsita', 2, 9, 1, 4),
+('Nemo', 'Peixe Beta', 1, 8, 1, 5),
+('Thor', 'Golden Retriever', 4, 1, 3, 1),
+('Luna', 'Persa', 3, 2, 2, 2),
+('Fifi', 'Porquinho-da-Índia', 1, 6, 1, 3),
+('Spike', 'Pitbull', 5, 1, 3, 6),
+('Tortuga', 'Tartaruga', 10, 7, 2, 7);
 
--- Status de Pagamentos
-INSERT INTO StatusPagamentos (Nome)
-VALUES ('Pendente'),('Pago'),('Cancelado'),('Estornado'),('Aguardando');
-
--- Tipos de Pagamento
-INSERT INTO TipoPagamentos (Nome)
-VALUES ('Cartão de Crédito'),('Boleto'),('Pix'),('Dinheiro'),('Transferência');
-
--- Status de Pedidos
-INSERT INTO StatusPedidos (Nome)
-VALUES ('Pendente'),('Processando'),('Concluído'),('Cancelado'),('Entregue');
-
--- Status de Agendamentos
-INSERT INTO StatusAgendamentos (Nome)
-VALUES ('Agendado'),('Em andamento'),('Concluído'),('Cancelado'),('Aguardando');
-
--- Tipos de Serviço
-INSERT INTO TiposServico (Nome)
-VALUES ('Banho'),('Tosa'),('Consulta Veterinária'),('Vacinação'),('Hospedagem');
-
--- Serviços
-INSERT INTO Servicos (Nome, Descricao, Status, TipoServicoId)
+-- ============================================
+-- Servicos
+-- ============================================
+INSERT INTO Servicos
+(Nome, TipoServicoId, Descricao)
 VALUES
-('Banho Completo','Banho e secagem','Ativo',1),
-('Tosa Higiênica','Apenas corte de pelos','Ativo',2),
-('Consulta Geral','Checkup de saúde','Ativo',3),
-('Vacina Antirrábica','Vacina anual','Ativo',4),
-('Hospedagem Pet','Hospedagem por período','Ativo',5);
+('Banho Simples', 1, 'Banho básico para pets de pequeno a grande porte.'),
+('Tosa Higiênica', 2, 'Tosa higiênica e aparo de pelos em regiões específicas.'),
+('Consulta Veterinária Rotina', 3, 'Consulta de rotina para avaliação da saúde do animal.'),
+('Vacinação Anual', 4, 'Vacinas obrigatórias e preventivas.'),
+('Higiene Bucal', 5, 'Escovação e cuidados dentários.'),
+('Adestramento Básico', 6, 'Treinamento de comandos básicos e comportamento.'),
+('Transporte Seguro', 7, 'Transporte do animal com segurança e conforto.');
 
+-- ============================================
 -- Pedidos
-INSERT INTO Pedidos (DataPedido, ClienteId, UsuarioId, StatusPedidoId)
+-- ============================================
+INSERT INTO Pedidos
+(DataPedido, UsuarioId, StatusPedidoId)
 VALUES
-(GETDATE(),1,3,1),(GETDATE(),2,4,1),(GETDATE(),1,3,2),(GETDATE(),2,4,2),(GETDATE(),1,3,3),
-(GETDATE(),2,4,3),(GETDATE(),1,3,4),(GETDATE(),2,4,4),(GETDATE(),1,3,5),(GETDATE(),2,4,5),
-(GETDATE(),1,3,1),(GETDATE(),2,4,2),(GETDATE(),1,3,3),(GETDATE(),2,4,4),(GETDATE(),1,3,5);
+('2025-10-15 10:00', 1, 1),
+('2025-10-16 11:30', 2, 2),
+('2025-10-17 14:00', 3, 3),
+('2025-10-18 09:15', 4, 4),
+('2025-10-19 16:00', 5, 5),
+('2025-10-20 13:30', 1, 1),
+('2025-10-21 15:00', 2, 2),
+('2025-10-22 10:45', 3, 3),
+('2025-10-23 12:30', 4, 4),
+('2025-10-24 14:15', 5, 5);
 
--- Itens de Pedido
-INSERT INTO ItensPedido (Quantidade, PrecoUnitario, ProdutoId, PedidoId)
-VALUES
-(2,120.00,1,1),(1,25.00,2,1),(3,50.00,3,2),(1,30.00,4,2),(2,40.00,5,3),
-(1,120.00,1,4),(2,25.00,2,5),(1,50.00,3,6),(1,30.00,4,7),(3,40.00,5,8),
-(2,120.00,1,9),(1,25.00,2,10),(3,50.00,3,11),(1,30.00,4,12),(2,40.00,5,13);
-
--- Pagamentos
-INSERT INTO Pagamentos (Data, Valor, StatusPagamentoId, TipoPagamentoId, PedidoId)
-VALUES
-(GETDATE(),265.00,1,1,1),(GETDATE(),150.00,2,2,2),(GETDATE(),190.00,1,3,3),
-(GETDATE(),120.00,2,4,4),(GETDATE(),200.00,1,5,5),(GETDATE(),140.00,2,1,6),
-(GETDATE(),180.00,1,2,7),(GETDATE(),130.00,2,3,8),(GETDATE(),160.00,1,4,9),
-(GETDATE(),150.00,2,5,10),(GETDATE(),170.00,1,1,11),(GETDATE(),140.00,2,2,12),
-(GETDATE(),190.00,1,3,13),(GETDATE(),120.00,2,4,14),(GETDATE(),200.00,1,5,15);
-
+-- ============================================
 -- Agendamentos
-INSERT INTO Agendamentos (DataAgendamento, DataCadastro, PedidoId, IdStatusAgendamento, StatusAgendamentoId)
+-- ============================================
+INSERT INTO Agendamentos
+(DataAgendamento, DataCadastro, PedidoId, AnimalId, StatusAgendamentoId)
 VALUES
-(DATEADD(day,1,GETDATE()),GETDATE(),1,1,1),
-(DATEADD(day,2,GETDATE()),GETDATE(),2,2,2),
-(DATEADD(day,3,GETDATE()),GETDATE(),3,3,3),
-(DATEADD(day,4,GETDATE()),GETDATE(),4,4,4),
-(DATEADD(day,5,GETDATE()),GETDATE(),5,5,5);
+('2025-10-25 10:00', '2025-10-15', 1, 1, 2),
+('2025-10-26 14:30', '2025-10-16', 2, 2, 1),
+('2025-10-27 09:00', '2025-10-17', 3, 3, 2),
+('2025-10-28 15:00', '2025-10-18', 4, 4, 1),
+('2025-10-29 11:30', '2025-10-19', 5, 5, 2),
+('2025-11-01 13:00', '2025-10-20', 6, 6, 3),
+('2025-11-02 10:30', '2025-10-21', 7, 7, 2),
+('2025-11-03 16:00', '2025-10-22', 8, 8, 1),
+('2025-11-04 09:30', '2025-10-23', 9, 9, 2),
+('2025-11-05 14:00', '2025-10-24', 10, 10, 3);
 
-GO
+-- ============================================
+-- AgendamentoServico
+-- ============================================
+INSERT INTO AgendamentoServico
+(Preco, AgendamentoId, ServicoId)
+VALUES
+(60.00, 1, 1),
+(90.00, 2, 2),
+(45.00, 3, 3),
+(30.00, 4, 4),
+(20.00, 5, 5),
+(20.00, 6, 7),
+(15.00, 7, 8),
+(60.00, 8, 6),
+(40.00, 9, 9),
+(90.00, 10, 2);
+
+-- ============================================
+-- Enderecos
+-- ============================================
+INSERT INTO Enderecos
+(Logradouro, Numero, Bairro, Cidade, Estado, CEP, Complemento, UsuarioId)
+VALUES
+('Rua das Flores', 123, 'Jardim Primavera', 'São Paulo', 'SP', '01234-567', 'Apto 101', 1),
+('Avenida Central', 456, 'Centro', 'Rio de Janeiro', 'RJ', '20010-890', 'Sala 202', 2),
+('Rua do Sol', 78, 'Vila Nova', 'Belo Horizonte', 'MG', '30123-456', NULL, 3),
+('Rua das Acácias', 150, 'Boa Vista', 'Curitiba', 'PR', '80015-789', 'Casa B', 4),
+('Alameda Santos', 321, 'Jardim Paulista', 'São Paulo', 'SP', '01412-345', 'Cobertura', 5),
+('Rua das Palmeiras', 87, 'Centro', 'Fortaleza', 'CE', '60020-123', NULL, 6),
+('Avenida Brasil', 500, 'Centro', 'Porto Alegre', 'RS', '90040-567', 'Sala 3', 7),
+('Rua do Comércio', 250, 'São José', 'Florianópolis', 'SC', '88015-789', 'Loja 5', 8);
+
+-- ============================================
+-- ItensPedido
+-- ============================================
+INSERT INTO ItensPedido
+(Quantidade, PrecoUnitario, ProdutoId, PedidoId)
+VALUES
+(2, 120.00, 1, 1),
+(1, 85.50, 2, 1),
+(3, 45.00, 3, 2),
+(1, 60.00, 4, 2),
+(2, 30.00, 5, 3),
+(1, 95.00, 6, 3),
+(1, 150.00, 7, 4),
+(2, 40.00, 8, 4),
+(1, 70.00, 9, 5),
+(3, 25.00, 10, 5),
+(1, 55.00, 11, 6),
+(2, 65.00, 12, 6),
+(1, 80.00, 13, 7),
+(1, 90.00, 14, 7),
+(2, 35.00, 15, 8),
+(3, 50.00, 16, 8),
+(1, 120.00, 17, 9),
+(2, 45.00, 18, 9),
+(1, 60.00, 19, 10),
+(2, 75.00, 20, 10);
+
+-- ============================================
+-- Pagamentos
+-- ============================================
+INSERT INTO Pagamentos
+(DataPagamento, Valor, Observacao, StatusPagamentoId, TipoPagamentoId, PedidoId)
+VALUES
+('2025-10-15 10:30', 205.50, 'Pagamento realizado via cartão', 2, 1, 1),
+('2025-10-16 12:00', 105.00, 'Pagamento via PIX', 2, 3, 2),
+('2025-10-17 14:30', 125.00, 'Pagamento parcial', 1, 2, 3),
+('2025-10-18 09:45', 190.00, 'Pagamento aprovado', 2, 1, 4),
+('2025-10-19 16:30', 145.00, 'Pagamento via dinheiro', 2, 4, 5),
+('2025-10-20 14:00', 120.00, 'Pagamento pendente', 1, 3, 6),
+('2025-10-21 15:15', 170.00, 'Pagamento aprovado via cartão', 2, 1, 7),
+('2025-10-22 11:00', 100.00, 'Pagamento via PIX', 2, 3, 8),
+('2025-10-23 12:45', 165.00, 'Pagamento aprovado', 2, 2, 9),
+('2025-10-24 14:30', 135.00, 'Pagamento via dinheiro', 2, 4, 10);
+
+-- ============================================
+-- ServicoTamanho
+-- ============================================
+INSERT INTO ServicoTamanho
+(Preco, ServicoId, TamanhoAnimalId)
+VALUES
+(50.00, 1, 1),
+(70.00, 1, 2),
+(90.00, 1, 3),
+(80.00, 2, 1),
+(100.00, 2, 2),
+(120.00, 2, 3),
+(30.00, 3, 1),
+(50.00, 3, 2),
+(70.00, 3, 3),
+(60.00, 4, 1),
+(60.00, 4, 2),
+(60.00, 4, 3),
+(25.00, 5, 1),
+(25.00, 5, 2),
+(25.00, 5, 3),
+(20.00, 6, 1),
+(30.00, 6, 2),
+(40.00, 6, 3),
+(15.00, 7, 1),
+(25.00, 7, 2),
+(35.00, 7, 3);
+

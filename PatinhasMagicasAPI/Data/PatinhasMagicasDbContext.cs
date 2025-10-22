@@ -26,6 +26,7 @@ namespace PatinhasMagicasAPI.Data
         public DbSet<Animal> Animais { get; set; }
         public DbSet<ServicoTamanho> ServicoTamanho { get; set; }
         public DbSet<AgendamentoServico> AgendamentoServico { get; set; }
+        public DbSet<Especie> Especies { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -28,6 +28,5 @@ namespace PatinhasMagicasAPI.Models
 
         public virtual ICollection<AgendamentoServico> AgendamentoServicos { get; set; } = new List<AgendamentoServico>();
 
-
     }
 }
