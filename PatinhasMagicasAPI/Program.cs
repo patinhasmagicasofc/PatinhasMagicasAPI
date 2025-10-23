@@ -42,6 +42,7 @@ builder.Services.AddScoped<ITamanhoAnimalRepository, TamanhoAnimalRepository>();
 builder.Services.AddScoped<IAnimalRepository, AnimalRepository>();
 builder.Services.AddScoped<IAgendamentoServicoRepository, AgendamentoServicoRepository>();
 builder.Services.AddScoped<IServicoTamanhoRepository, ServicoTamanhoRepository>();
+builder.Services.AddScoped<IEspecieRepository, EspecieRepository>();
 //builder.Services.AddScoped<IStatusPagamentoRepository, StatusPagamentoRepository>();
 //builder.Services.AddScoped<IStatusPedidoRepository, StatusPedidoRepository>();
 

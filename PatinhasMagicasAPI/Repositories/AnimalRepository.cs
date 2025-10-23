@@ -25,6 +25,7 @@ namespace PatinhasMagicasAPI.Repositories
         {
             return await _context.Animais
                 .Include(a => a.TamanhoAnimal)
+                .Include(a => a.Especie)
                 .Where(a => a.UsuarioId == usuarioId)
                 .ToListAsync();
         }
@@ -43,6 +44,7 @@ namespace PatinhasMagicasAPI.Repositories
         {
             return await _context.Animais
                 .Include(a => a.TamanhoAnimal)
+                .Include(a => a.Especie)
                 .Include(a => a.Usuario)
                 .ToListAsync();
         }

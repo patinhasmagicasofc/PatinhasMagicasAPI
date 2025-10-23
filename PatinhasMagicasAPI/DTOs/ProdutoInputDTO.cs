@@ -4,7 +4,7 @@
     {
         public string? Nome { get; set; }
         public decimal? Preco { get; set; }
-        //public string? Especie { get; set; }
+        public int? EspecieId { get; set; }
         public string? Marca { get; set; }
         public string? UrlImagem { get; set; }
         public string? Codigo { get; set; }

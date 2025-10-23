@@ -114,7 +114,7 @@ namespace PatinhasMagicasAPI.Services
                 Status = agendamento.StatusAgendamento?.Nome,
                 TipoPagamento = tipoPagamento,
                 ValorTotal = agendamento.AgendamentoServicos.Sum(s => s.Preco),
-                Animal = new AnimalOutputDTO { Id = agendamento.Animal.Id, Nome = agendamento.Animal.Nome, Especie = agendamento.Animal.Especie.Nome, NomeTamanhoAnimal = agendamento.Animal.TamanhoAnimal.Nome },
+                Animal = new AnimalOutputDTO { Id = agendamento.Animal.Id, Nome = agendamento.Animal.Nome, NomeEspecie = agendamento.Animal.Especie.Nome, NomeTamanhoAnimal = agendamento.Animal.TamanhoAnimal.Nome },
                 Servicos = agendamento.AgendamentoServicos.Select(s => new ServicoOutputDTO { Id = s.Servico.Id, Nome = s.Servico.Nome, TipoServicoNome = s.Servico.TipoServico.Nome, Preco = s.Preco }).ToList()
             };
         }

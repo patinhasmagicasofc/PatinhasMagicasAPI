@@ -33,7 +33,7 @@ namespace PatinhasMagicasAPI.Services
                 throw new ArgumentException("CPF já cadastrado.");
 
             usuario.TipoUsuarioId = await GetTipoUsuarioIdAsync(usuario.TipoUsuarioId);
-
+            usuario.Ativo = true;
             usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
 
             await _usuarioRepository.AddAsync(usuario);

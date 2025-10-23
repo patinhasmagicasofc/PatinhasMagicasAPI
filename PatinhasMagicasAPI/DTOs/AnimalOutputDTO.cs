@@ -4,7 +4,8 @@
     {
         public int Id { get; set; }
         public string Nome { get; set; }
-        public string Especie { get; set; }
+        public int EspecieId { get; set; }
+        public string NomeEspecie { get; set; }
         public string Raca { get; set; }
         public int? Idade { get; set; }
         public int TamanhoAnimalId { get; set; }

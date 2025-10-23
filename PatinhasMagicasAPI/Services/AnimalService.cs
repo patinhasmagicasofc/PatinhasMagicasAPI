@@ -72,6 +72,8 @@ namespace PatinhasMagicasAPI.Services
                 Nome = animal.Nome,
                 Raca = animal.Raca,
                 Idade = animal.Idade,
+                EspecieId = animal.EspecieId,
+                NomeEspecie = animal.Especie.Nome,
                 TamanhoAnimalId = animal.TamanhoAnimalId,
                 NomeTamanhoAnimal = animal.TamanhoAnimal?.Nome,
                 UsuarioId = animal.UsuarioId,
