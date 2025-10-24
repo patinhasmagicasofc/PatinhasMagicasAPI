@@ -119,10 +119,48 @@ namespace PatinhasMagicasAPI.Services
             };
         }
 
-        public async Task<IEnumerable<AgendamentoOutputDTO>> ListarAsync()
+        public async Task<IEnumerable<AgendamentoDetalhesDTO>> GetAllAsync()
         {
-            var lista = await _agendamentoRepository.GetAllAsync();
-            return _mapper.Map<IEnumerable<AgendamentoOutputDTO>>(lista);
+            var agendamentos = await _agendamentoRepository.GetAllAsync();
+
+            var agendamentoDetalhesDTOs = new List<AgendamentoDetalhesDTO>();
+
+            foreach (var agendamento in agendamentos)
+            {
+                var pedido = agendamento.Pedido;
+
+                var pagamento = pedido?.Pagamentos?
+                    .Where(p => p.StatusPagamento != null && p.StatusPagamento.Nome == "Pago")
+                    .OrderByDescending(p => p.DataPagamento)
+                    .FirstOrDefault()
+                    ?? pedido?.Pagamentos?.OrderByDescending(p => p.DataPagamento).FirstOrDefault();
+
+                var tipoPagamento = pagamento?.TipoPagamento?.Nome ?? "Não informado";
+                var dataConfirmacao = pagamento?.DataPagamento ?? pedido?.DataPedido;
+
+                var agendamentoDetalhesDTO =  new AgendamentoDetalhesDTO
+                {
+                    Id = agendamento.Id,
+                    DataAgendamento = agendamento.DataAgendamento,
+                    DataConfirmacao = dataConfirmacao ?? default(DateTime),
+                    Status = agendamento.StatusAgendamento?.Nome,
+                    TipoPagamento = tipoPagamento,
+                    ValorTotal = agendamento.AgendamentoServicos.Sum(s => s.Preco),
+                    Animal = new AnimalOutputDTO { 
+                        Id = agendamento.Animal.Id, 
+                        Nome = agendamento.Animal.Nome, 
+                        NomeEspecie = agendamento.Animal.Especie.Nome, 
+                        NomeTamanhoAnimal = agendamento.Animal.TamanhoAnimal.Nome,
+                        NomeUsuario = agendamento.Animal.Usuario.Nome
+                    },
+                    Servicos = agendamento.AgendamentoServicos.Select(s => new ServicoOutputDTO { Id = s.Servico.Id, Nome = s.Servico.Nome, TipoServicoNome = s.Servico.TipoServico.Nome, Preco = s.Preco }).ToList()
+                };
+
+                agendamentoDetalhesDTOs.Add(agendamentoDetalhesDTO);
+            }
+
+            return agendamentoDetalhesDTOs;
+
         }
 
         public async Task<AgendamentoOutputDTO> BuscarPorIdAsync(int id)

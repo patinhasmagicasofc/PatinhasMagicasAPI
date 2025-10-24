@@ -21,15 +21,15 @@ namespace PatinhasMagicasAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PedidoOutputDTO>>> GetAll()
+        public async Task<ActionResult<IEnumerable<AgendamentoDetalhesDTO>>> GetAll()
         {
-            //var pedidos = await _pedidoRepository.GetAllAsync();
+            var agendamentos = await _agendamentoService.GetAllAsync();
 
             //if (!pedidos.Any())
             //    return NotFound();
 
             //return Ok(pedidosDTO);
-            return Ok();
+            return Ok(agendamentos);
         }
 
         [HttpGet("{id}")]

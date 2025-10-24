@@ -50,10 +50,24 @@ namespace PatinhasMagicasAPI.Repositories
         public async Task<List<Agendamento>> GetAllAsync()
         {
             return await _context.Agendamentos
-                                 .Include(a => a.StatusAgendamento)
-                                 .ToListAsync();
+                                  .Include(a => a.Animal)
+                                      .ThenInclude(an => an.TamanhoAnimal)
+                                  .Include(a => a.Animal)
+                                      .ThenInclude(an => an.Especie)
+                                  .Include(a => a.Animal)
+                                      .ThenInclude(an => an.Usuario)
+                                  .Include(a => a.AgendamentoServicos)
+                                      .ThenInclude(asrv => asrv.Servico)
+                                          .ThenInclude(s => s.TipoServico)
+                                  .Include(a => a.StatusAgendamento)
+                                  .Include(a => a.Pedido)
+                                      .ThenInclude(p => p.Pagamentos)
+                                          .ThenInclude(pg => pg.TipoPagamento)
+                                  .Include(a => a.Pedido)
+                                      .ThenInclude(p => p.Pagamentos)
+                                          .ThenInclude(pg => pg.StatusPagamento)
+                                  .ToListAsync();
         }
-
 
         public async Task UpdateAsync(Agendamento agendamento)
         {

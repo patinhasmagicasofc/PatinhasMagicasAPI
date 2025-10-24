@@ -17,7 +17,7 @@ namespace PatinhasMagicasAPI.Controllers
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProdutoOutputDTO>>> GetProdutos()
-        {
+       {
             var produtoOutputDTOs = await _produtoService.GetAllAsync();
             if (!produtoOutputDTOs.Any())
                 return Ok(new { success = true, message = "Nenhum usuario encontrado!", produtos = new List<ProdutoOutputDTO>() });

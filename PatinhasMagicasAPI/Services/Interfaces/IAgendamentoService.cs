@@ -6,8 +6,7 @@ namespace PatinhasMagicasAPI.Services.Interfaces
     {
         Task<AgendamentoOutputDTO> CriarAgendamentoAsync(AgendamentoCreateDTO agendamentoCreateDTO);
         Task<AgendamentoDetalhesDTO> GetByIdAsync(int id);
-        Task<IEnumerable<AgendamentoOutputDTO>> ListarAsync();
-        Task<AgendamentoOutputDTO> BuscarPorIdAsync(int id);
+        Task<IEnumerable<AgendamentoDetalhesDTO>> GetAllAsync();
         Task DeletarAsync(int id);
     }
 }
