@@ -19,7 +19,7 @@ namespace PatinhasMagicasAPI.Controllers
             _usuarioService = usuarioService;
         }
 
-        [HttpPost("login")]
+        [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginUsuarioInputDTO loginUsuarioInputDTO)
         {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Services.Interfaces;
 
@@ -36,6 +37,7 @@ namespace PatinhasMagicasAPI.Controllers
             return Ok(produtoOutputDTO);
         }
 
+        [Authorize(Roles = "Administrador,Funcionario")]
         [HttpPost]
         public async Task<ActionResult<ProdutoOutputDTO>> Post(ProdutoInputDTO produtoInputDTO)
         {
@@ -46,6 +48,7 @@ namespace PatinhasMagicasAPI.Controllers
             return Ok(new { success = true, message = "Produto cadastrado com sucesso!", produtoInputDTO });
         }
 
+        [Authorize(Roles = "Administrador,Funcionario")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduto(int id, [FromBody] ProdutoInputDTO produtoInputDTO  )
         {
@@ -55,6 +58,7 @@ namespace PatinhasMagicasAPI.Controllers
             return Ok(new { success = true, message = "Produto atualizado com sucesso!", produtoInputDTO });
         }
 
+        [Authorize(Roles = "Administrador,Funcionario")]
         [HttpPut("inativar/{id}")]
         public async Task<IActionResult> InativarProduto(int id)
         {
@@ -62,6 +66,7 @@ namespace PatinhasMagicasAPI.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Administrador,Funcionario")]
         [HttpPut("reativar/{id}")]
         public async Task<IActionResult> ReativarProduto(int id)
         {
