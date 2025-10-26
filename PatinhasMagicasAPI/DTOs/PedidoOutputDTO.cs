@@ -4,8 +4,6 @@
     {
         public int Id { get; set; }
         public DateTime DataPedido { get; set; }
-        public int ClienteId { get; set; }
-        public string NomeCliente { get; set; }
         public int UsuarioId { get; set; }
         public string NomeUsuario { get; set; }
         public int StatusPedidoId { get; set; }

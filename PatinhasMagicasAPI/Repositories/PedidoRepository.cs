@@ -48,6 +48,18 @@ namespace PatinhasMagicasAPI.Repositories
                            .AsQueryable();
         }
 
+        public async Task<List<Pedido>> GetPedidosByUsuarioId(int id)
+        {
+            return await _context.Pedidos
+                    .Include(p => p.ItensPedido)
+                        .ThenInclude(i => i.Produto)
+                    .Include(p => p.Usuario)
+                    .Include(p => p.StatusPedido)
+                    .Where(p => p.UsuarioId == id)
+                    .ToListAsync();
+        }
+
+
         public async Task<Pedido> GetByIdAsync(int id)
         {
             return await _context.Pedidos.Include(p => p.Usuario).ThenInclude(p => p.Endereco)

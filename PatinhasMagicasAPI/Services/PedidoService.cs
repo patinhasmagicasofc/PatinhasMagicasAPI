@@ -18,11 +18,44 @@ namespace PatinhasMagicasAPI.Services
             _pagamentoRepository = pagamentoRepository;
             _mapper = mapper;
         }
+
         public async Task<PedidoOutputDTO> GetByIdAsync(int id)
         {
             var pedido = await _pedidoRepository.GetByIdAsync(id);
 
-            return _mapper.Map<PedidoOutputDTO>(pedido);
+            var pedidoOutputDTO = Map(pedido);
+
+            ///return _mapper.Map<PedidoOutputDTO>(pedido);
+            return pedidoOutputDTO;
+        }
+
+        public async Task<List<PedidoOutputDTO>> GetPedidosByUsuarioId(int id)
+        {
+            var pedidos = await _pedidoRepository.GetPedidosByUsuarioId(id);
+
+            if (pedidos == null || !pedidos.Any())
+                return new List<PedidoOutputDTO>();
+
+            var pedidosDto = pedidos.Select(p => new PedidoOutputDTO
+            {
+                Id = p.Id,
+                DataPedido = p.DataPedido,
+                UsuarioId = p.UsuarioId,
+                NomeUsuario = p.Usuario.Nome,
+                StatusPedidoId = p.StatusPedidoId,
+                StatusPedido = p.StatusPedido.Nome,
+                StatusPagamento = p.Pagamentos.FirstOrDefault()?.StatusPagamento?.Nome ?? "Indisponivel",
+                ValorPedido = p.ItensPedido.Sum(i => (decimal?)(i.Quantidade * i.PrecoUnitario)) ?? 0,
+
+                ItemPedidoOutputDTOs = p.ItensPedido.Select(i => new ItemPedidoOutputDTO
+                {
+                    Produto = i.Produto.Nome,
+                    Quantidade = i.Quantidade,
+                    PrecoUnitario = i.PrecoUnitario
+                }).ToList()
+            }).ToList();
+
+            return pedidosDto;
         }
 
         //public async Task AtualizarStatusPedidoAsync(int pedidoId)
@@ -96,11 +129,29 @@ namespace PatinhasMagicasAPI.Services
                 DataPedido = p.DataPedido,
                 StatusPedidoId = p.StatusPedidoId,
                 StatusPedido = p.StatusPedido.Nome,
-                NomeCliente = p.Usuario?.Nome,
+                NomeUsuario = p.Usuario?.Nome,
                 ValorPedido = GetValorPedido(p),
                 FormaPagamento = GetFormaPagamento(p),
                 StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault()
             }).ToList();
+
+            return pedidosDTO;
+        }
+
+        private PedidoOutputDTO Map(Pedido p)
+        {
+            var pedidosDTO = new PedidoOutputDTO
+            {
+                Id = p.Id,
+                UsuarioId = p.UsuarioId,
+                DataPedido = p.DataPedido,
+                StatusPedidoId = p.StatusPedidoId,
+                StatusPedido = p.StatusPedido.Nome,
+                NomeUsuario = p.Usuario?.Nome,
+                ValorPedido = GetValorPedido(p),
+                FormaPagamento = GetFormaPagamento(p),
+                StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault()
+            };
 
             return pedidosDTO;
         }

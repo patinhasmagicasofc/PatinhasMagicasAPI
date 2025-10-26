@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
@@ -39,13 +40,24 @@ namespace PatinhasMagicasAPI.Controllers
                 DataPedido = p.DataPedido,
                 StatusPedidoId = p.StatusPedidoId,
                 StatusPedido = p.StatusPedido.Nome,
-                NomeCliente = p.Usuario?.Nome,
+                NomeUsuario = p.Usuario?.Nome,
                 ValorPedido = _pedidoService.GetValorPedido(p),
                 FormaPagamento = _pedidoService.GetFormaPagamento(p),
                 StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault()
             }).ToList();
 
             return Ok(pedidosDTO);
+        }
+
+        [HttpGet("Usuario/{usuarioId}")]
+        public async Task<ActionResult<IEnumerable<PedidoOutputDTO>>> GetPedidosByUsuarioId(int usuarioId)
+        {
+            var pedidos = await _pedidoService.GetPedidosByUsuarioId(usuarioId);
+
+            if (pedidos == null || !pedidos.Any())
+                return NotFound(new { mensagem = "Nenhum pedido encontrado para este usuário." });
+
+            return Ok(pedidos);
         }
 
 
