@@ -51,7 +51,13 @@ namespace PatinhasMagicasAPI.Services
                 {
                     Produto = i.Produto.Nome,
                     Quantidade = i.Quantidade,
-                    PrecoUnitario = i.PrecoUnitario
+                    PrecoUnitario = i.PrecoUnitario,
+
+                    ProdutoOutputDTO = new ProdutoOutputDTO
+                    {
+                        UrlImagem = i.Produto.UrlImagem
+                    }
+
                 }).ToList()
             }).ToList();
 
@@ -150,7 +156,21 @@ namespace PatinhasMagicasAPI.Services
                 NomeUsuario = p.Usuario?.Nome,
                 ValorPedido = GetValorPedido(p),
                 FormaPagamento = GetFormaPagamento(p),
-                StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault()
+                StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault(),
+
+                ItemPedidoOutputDTOs = p.ItensPedido.Select(i => new ItemPedidoOutputDTO
+                {
+                    Produto = i.Produto.Nome,
+                    Quantidade = i.Quantidade,
+                    PrecoUnitario = i.PrecoUnitario,
+
+                    ProdutoOutputDTO = new ProdutoOutputDTO
+                    {
+                        UrlImagem = i.Produto.UrlImagem
+                    }
+
+                }).ToList()
+
             };
 
             return pedidosDTO;
