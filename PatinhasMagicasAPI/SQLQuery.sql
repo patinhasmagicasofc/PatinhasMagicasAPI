@@ -124,6 +124,12 @@ CREATE TABLE Servico (
 -- 6️⃣ TAMANHO E ANIMAIS
 -- ========================================================
 
+
+CREATE TABLE Especie (
+    IdEspecie INT PRIMARY KEY IDENTITY,
+    nome VARCHAR(50) NOT NULL
+);
+
 CREATE TABLE TamanhoAnimal (
     IdTamanhoAnimal INT PRIMARY KEY IDENTITY,
     tamanho VARCHAR(20) NOT NULL
@@ -132,9 +138,9 @@ CREATE TABLE TamanhoAnimal (
 CREATE TABLE Animal (
     IdAnimal INT PRIMARY KEY IDENTITY,
     nome VARCHAR(100) NOT NULL,
-    especie VARCHAR(50) NOT NULL,
     raca VARCHAR(100),
     idade INT,
+    IdEspecie INT NOT NULL FOREIGN KEY REFERENCES Especie(IdEspecie),
     IdTamanhoAnimal INT NOT NULL FOREIGN KEY REFERENCES TamanhoAnimal(IdTamanhoAnimal),
     IdUsuario INT NOT NULL FOREIGN KEY REFERENCES Usuario(IdUsuario)
 );

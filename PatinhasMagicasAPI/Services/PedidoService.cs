@@ -46,6 +46,22 @@ namespace PatinhasMagicasAPI.Services
                 StatusPedido = p.StatusPedido.Nome,
                 StatusPagamento = p.Pagamentos.FirstOrDefault()?.StatusPagamento?.Nome ?? "Indisponivel",
                 ValorPedido = p.ItensPedido.Sum(i => (decimal?)(i.Quantidade * i.PrecoUnitario)) ?? 0,
+                UsuarioOutputDTO = new UsuarioOutputDTO
+                {
+                    Nome = p.Usuario.Nome,
+                    Email = p.Usuario.Email,
+                    Endereco = new EnderecoOutputDTO
+                    {
+                        Logradouro = p.Usuario.Endereco.Logradouro,
+                        Numero = p.Usuario.Endereco.Numero,
+                        Cidade = p.Usuario.Endereco.Cidade,
+                        Estado = p.Usuario.Endereco.Estado,
+                        CEP = p.Usuario.Endereco.CEP,
+                        Complemento = p.Usuario.Endereco.Complemento,
+                        Bairro = p.Usuario.Endereco.Bairro,
+                    }
+
+                },
 
                 ItemPedidoOutputDTOs = p.ItensPedido.Select(i => new ItemPedidoOutputDTO
                 {
@@ -57,6 +73,7 @@ namespace PatinhasMagicasAPI.Services
                     {
                         UrlImagem = i.Produto.UrlImagem
                     }
+
 
                 }).ToList()
             }).ToList();

@@ -27,6 +27,23 @@ namespace PatinhasMagicasAPI.Repositories
             return agendamento;
         }
 
+        public async Task<List<Agendamento>> GetAgendamentosByUsuarioIdAsync(int usuarioId)
+        {
+            return await _context.Agendamentos
+                .Include(a => a.Animal)
+                    .ThenInclude(an => an.Especie)
+                .Include(a => a.Animal)
+                    .ThenInclude(an => an.Usuario)
+                .Include(a => a.AgendamentoServicos)
+                    .ThenInclude(asv => asv.Servico)
+                .Include(a => a.StatusAgendamento)
+                .Include(a => a.Pedido)
+                    .ThenInclude(p => p.Pagamentos)
+                .Where(a => a.Animal.UsuarioId == usuarioId)
+                .OrderByDescending(a => a.DataAgendamento)
+                .ToListAsync();
+        }
+
         public async Task<Agendamento> GetByIdAsync(int id)
         {
             return await _context.Agendamentos

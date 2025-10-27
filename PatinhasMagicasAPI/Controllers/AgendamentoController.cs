@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Models;
 using PatinhasMagicasAPI.Services.Interfaces;
@@ -19,6 +20,14 @@ namespace PatinhasMagicasAPI.Controllers
         {
             _agendamentoService = agendamentoService;
         }
+
+        [HttpGet("usuario/{usuarioId}")]
+        public async Task<ActionResult<IEnumerable<AgendamentoDetalhesDTO>>> GetAgendamentosByUsuario(int usuarioId)
+        {
+            var agendamentos = await _agendamentoService.GetAgendamentosByUsuarioAsync(usuarioId);
+            return Ok(agendamentos);
+        }
+
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AgendamentoDetalhesDTO>>> GetAll()

@@ -67,14 +67,16 @@ namespace PatinhasMagicasAPI.Services
         {
             //var usuario = _mapper.Map<Usuario>(usuarioUpdateDTO);
 
+            var tipoUsuarioId = usuarioUpdateDTO.TipoUsuarioId ?? await GetTipoUsuarioIdAsync(0);
+
             var usuario = new Usuario
             {
                 Id = id,
                 Nome = usuarioUpdateDTO.Nome,
-                Ddd = usuarioUpdateDTO.Ddd.Value,
+                Ddd = usuarioUpdateDTO.Ddd,
                 Email = usuarioUpdateDTO.Email,
                 Telefone = usuarioUpdateDTO.Telefone,
-                TipoUsuarioId = usuarioUpdateDTO.TipoUsuarioId.Value
+                TipoUsuarioId = tipoUsuarioId,
             };
 
             usuario.Id = id;

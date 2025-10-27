@@ -4,6 +4,7 @@ namespace PatinhasMagicasAPI.Interfaces
 {
     public interface IAgendamentoRepository
     {
+        Task<List<Agendamento>> GetAgendamentosByUsuarioIdAsync(int usuarioId);
         Task AddAsync(Agendamento agendamento);
         Task<Agendamento> Add(Agendamento agendamento);
         Task<List<Agendamento>> GetAllAsync();

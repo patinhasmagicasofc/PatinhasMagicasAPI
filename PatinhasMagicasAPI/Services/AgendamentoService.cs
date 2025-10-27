@@ -31,6 +31,54 @@ namespace PatinhasMagicasAPI.Services
             _mapper = mapper;
         }
 
+        public async Task<IEnumerable<AgendamentoDetalhesDTO>> GetAgendamentosByUsuarioAsync(int usuarioId)
+        {
+            var agendamentos = await _agendamentoRepository.GetAgendamentosByUsuarioIdAsync(usuarioId);
+
+            var agendamentoDetalhesDTOs = new List<AgendamentoDetalhesDTO>();
+
+            foreach (var agendamento in agendamentos)
+            {
+                var pedido = agendamento.Pedido;
+
+                var pagamento = pedido?.Pagamentos?
+                    .Where(p => p.StatusPagamento != null && p.StatusPagamento.Nome == "Pago")
+                    .OrderByDescending(p => p.DataPagamento)
+                    .FirstOrDefault()
+                    ?? pedido?.Pagamentos?.OrderByDescending(p => p.DataPagamento).FirstOrDefault();
+
+                var tipoPagamento = pagamento?.TipoPagamento?.Nome ?? "Não informado";
+                var dataConfirmacao = pagamento?.DataPagamento ?? pedido?.DataPedido;
+
+                var agendamentoDetalhesDTO = new AgendamentoDetalhesDTO
+                {
+                    Id = agendamento.Id,
+                    DataAgendamento = agendamento.DataAgendamento,
+                    DataConfirmacao = dataConfirmacao ?? default(DateTime),
+                    Status = agendamento.StatusAgendamento?.Nome,
+                    TipoPagamento = tipoPagamento,
+                    ValorTotal = agendamento.AgendamentoServicos.Sum(s => s.Preco),
+                    Animal = new AnimalOutputDTO
+                    {
+                        Id = agendamento.Animal.Id,
+                        Nome = agendamento.Animal.Nome,
+                        NomeEspecie = agendamento.Animal.Especie.Nome,
+                        NomeUsuario = agendamento.Animal.Usuario.Nome
+                    },
+                    Servicos = agendamento.AgendamentoServicos.Select(s => new ServicoOutputDTO
+                    {
+                        Id = s.Servico.Id,
+                        Nome = s.Servico.Nome,
+                        Preco = s.Preco
+                    }).ToList()
+                };
+
+                agendamentoDetalhesDTOs.Add(agendamentoDetalhesDTO);
+            }
+
+            return agendamentoDetalhesDTOs;
+        }
+
         public async Task<AgendamentoOutputDTO> CriarAgendamentoAsync(AgendamentoCreateDTO agendamentoCreateDTO)
         {
 
@@ -138,7 +186,7 @@ namespace PatinhasMagicasAPI.Services
                 var tipoPagamento = pagamento?.TipoPagamento?.Nome ?? "Não informado";
                 var dataConfirmacao = pagamento?.DataPagamento ?? pedido?.DataPedido;
 
-                var agendamentoDetalhesDTO =  new AgendamentoDetalhesDTO
+                var agendamentoDetalhesDTO = new AgendamentoDetalhesDTO
                 {
                     Id = agendamento.Id,
                     DataAgendamento = agendamento.DataAgendamento,
@@ -146,10 +194,11 @@ namespace PatinhasMagicasAPI.Services
                     Status = agendamento.StatusAgendamento?.Nome,
                     TipoPagamento = tipoPagamento,
                     ValorTotal = agendamento.AgendamentoServicos.Sum(s => s.Preco),
-                    Animal = new AnimalOutputDTO { 
-                        Id = agendamento.Animal.Id, 
-                        Nome = agendamento.Animal.Nome, 
-                        NomeEspecie = agendamento.Animal.Especie.Nome, 
+                    Animal = new AnimalOutputDTO
+                    {
+                        Id = agendamento.Animal.Id,
+                        Nome = agendamento.Animal.Nome,
+                        NomeEspecie = agendamento.Animal.Especie.Nome,
                         NomeTamanhoAnimal = agendamento.Animal.TamanhoAnimal.Nome,
                         NomeUsuario = agendamento.Animal.Usuario.Nome
                     },

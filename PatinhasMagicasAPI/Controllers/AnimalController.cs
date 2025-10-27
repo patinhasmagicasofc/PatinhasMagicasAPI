@@ -26,7 +26,7 @@ namespace PatinhasMagicasAPI.Controllers
         [HttpGet("usuario/{usuarioId}")]
         public async Task<ActionResult<IEnumerable<AnimalOutputDTO>>> GetAnimaisPorUsuario(int usuarioId)
         {
-            var list = await _service.GetAllAsync();
+            var list = await _service.GetAllByUsuarioId(usuarioId);
             return Ok(list);
         }
 

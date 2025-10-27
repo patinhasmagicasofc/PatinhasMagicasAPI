@@ -54,6 +54,7 @@ namespace PatinhasMagicasAPI.Repositories
                     .Include(p => p.ItensPedido)
                         .ThenInclude(i => i.Produto)
                     .Include(p => p.Usuario)
+                        .ThenInclude(u => u.Endereco)
                     .Include(p => p.StatusPedido)
                     .Where(p => p.UsuarioId == id)
                     .ToListAsync();
