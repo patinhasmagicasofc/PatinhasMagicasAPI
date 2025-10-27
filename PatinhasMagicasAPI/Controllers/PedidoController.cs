@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Interfaces;
-using PatinhasMagicasAPI.Models;
 using PatinhasMagicasAPI.Services;
-
 
 namespace PatinhasMagicasAPI.Controllers
 {
@@ -16,109 +13,103 @@ namespace PatinhasMagicasAPI.Controllers
     [ApiController]
     public class PedidoController : ControllerBase
     {
-        private readonly IPedidoRepository _pedidoRepository;
         private readonly PedidoService _pedidoService;
+        private readonly IPedidoRepository _pedidoRepository;
 
-        public PedidoController(IPedidoRepository pedidoRepository, PedidoService pedidoService)
+        public PedidoController(PedidoService pedidoService, IPedidoRepository pedidoRepository)
         {
-            _pedidoRepository = pedidoRepository;
             _pedidoService = pedidoService;
+            _pedidoRepository = pedidoRepository;
         }
 
+        // --- GET TODOS OS PEDIDOS ---
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PedidoOutputDTO>>> GetAll()
         {
-            var pedidos = await _pedidoRepository.GetAllAsync();
+            //var pedidos = await _pedidoRepository.GetAllAsync();
+            //if (!pedidos.Any())
+            //    return NotFound(new { message = "Nenhum pedido encontrado." });
 
-            if (!pedidos.Any())
-                return NotFound();
-
-            var pedidosDTO = pedidos.Select(p => new PedidoOutputDTO
-            {
-                Id = p.Id,
-                UsuarioId = p.UsuarioId,
-                DataPedido = p.DataPedido,
-                StatusPedidoId = p.StatusPedidoId,
-                StatusPedido = p.StatusPedido.Nome,
-                NomeUsuario = p.Usuario?.Nome,
-                ValorPedido = _pedidoService.GetValorPedido(p),
-                FormaPagamento = _pedidoService.GetFormaPagamento(p),
-                StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault()
-            }).ToList();
-
-            return Ok(pedidosDTO);
+            //var pedidosDTO = _pedidoService.Map(pedidos); // Se quiser manter método Map no service ou usar AutoMapper direto
+            return Ok();
         }
 
+        // --- GET PEDIDOS POR USUÁRIO ---
         [HttpGet("Usuario/{usuarioId}")]
         public async Task<ActionResult<IEnumerable<PedidoOutputDTO>>> GetPedidosByUsuarioId(int usuarioId)
         {
             var pedidos = await _pedidoService.GetPedidosByUsuarioId(usuarioId);
-
             if (pedidos == null || !pedidos.Any())
-                return NotFound(new { mensagem = "Nenhum pedido encontrado para este usuário." });
+                return NotFound(new { message = "Nenhum pedido encontrado para este usuário." });
 
             return Ok(pedidos);
         }
 
-
+        // --- GET PEDIDOS PAGINADOS / DASHBOARD ---
         [HttpGet("paged")]
-        public async Task<ActionResult<IEnumerable<PedidoOutputDTO>>> GetAll([FromQuery] PedidoFiltroDTO filtro)
+        public async Task<ActionResult<DashboardPedidoDTO>> GetPedidosPaginados([FromQuery] PedidoFiltroDTO filtro)
         {
             var dashboardPedido = await _pedidoService.GetPedidosPaginados(filtro);
+
             if (!dashboardPedido.PedidoOutputDTO.Any())
-                return Ok(new { success = true, message = "Nenhum pedido encontrado!", pedidos = new List<PedidoOutputDTO>() });
+                return Ok(new
+                {
+                    success = true,
+                    message = "Nenhum pedido encontrado!",
+                    pedidos = new List<PedidoOutputDTO>()
+                });
 
             return Ok(dashboardPedido);
         }
 
+        // --- GET PEDIDO POR ID ---
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetById(int id)
+        public async Task<ActionResult<PedidoOutputDTO>> GetById(int id)
         {
             var pedido = await _pedidoService.GetByIdAsync(id);
-
             if (pedido == null)
-                return NotFound();
+                return NotFound(new { message = "Pedido não encontrado." });
 
-           
             return Ok(pedido);
         }
 
+        // --- POST CRIAR PEDIDO ---
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] PedidoInputDTO pedidoInputDTO)
         {
-
             var pedidoOutputDTO = await _pedidoService.CreatePedidoAsync(pedidoInputDTO);
-
-            return Ok(new { success = true, message = "Pedido cadastrado com sucesso !", pedidoId = pedidoOutputDTO.Id });
+            return Ok(new
+            {
+                success = true,
+                message = "Pedido cadastrado com sucesso!",
+                pedidoId = pedidoOutputDTO.Id
+            });
         }
 
+        // --- PUT ATUALIZAR PEDIDO ---
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] PedidoInputDTO pedidoInputDTO)
         {
             var pedido = await _pedidoRepository.GetByIdAsync(id);
-
             if (pedido == null)
-                return NotFound();
+                return NotFound(new { message = "Pedido não encontrado." });
 
-            pedido = new Pedido
-            {
-                Id = id,
-                DataPedido = pedidoInputDTO.DataPedido,
-                StatusPedidoId = pedidoInputDTO.StatusPedidoId,
-                UsuarioId = pedidoInputDTO.UsuarioId
-            };
+            // Atualiza propriedades
+            pedido.DataPedido = pedidoInputDTO.DataPedido;
+            pedido.StatusPedidoId = pedidoInputDTO.StatusPedidoId;
+            pedido.UsuarioId = pedidoInputDTO.UsuarioId;
 
             await _pedidoRepository.UpdateAsync(pedido);
-
             return NoContent();
         }
 
+        // --- DELETE PEDIDO ---
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
             var pedido = await _pedidoRepository.GetByIdAsync(id);
             if (pedido == null)
-                return NotFound();
+                return NotFound(new { message = "Pedido não encontrado." });
 
             await _pedidoRepository.DeleteAsync(id);
             return NoContent();

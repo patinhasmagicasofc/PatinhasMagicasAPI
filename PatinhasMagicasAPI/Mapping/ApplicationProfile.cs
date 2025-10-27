@@ -9,6 +9,14 @@ namespace PatinhasMagicasAPI.Mapping
     {
         public ApplicationProfile()
         {
+            // Pedido -> PedidoOutputDTO
+            CreateMap<Pedido, PedidoOutputDTO>()
+                .ForMember(dest => dest.NomeUsuario, opt => opt.MapFrom(src => src.Usuario.Nome))
+                .ForMember(dest => dest.ValorPedido, opt => opt.MapFrom(src => src.ItensPedido.Sum(i => i.PrecoUnitario * i.Quantidade)))
+                .ForMember(dest => dest.StatusPagamento, opt => opt.MapFrom(src => src.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault() ?? "Indisponivel"))
+                .ForMember(dest => dest.FormaPagamento, opt => opt.MapFrom(src => src.Pagamentos.Select(p => p.TipoPagamento.Nome).FirstOrDefault() ?? "Pendente"))
+                .ForMember(dest => dest.ItemPedidoOutputDTOs, opt => opt.MapFrom(src => src.ItensPedido))
+                .ForMember(dest => dest.UsuarioOutputDTO, opt => opt.MapFrom(src => src.Usuario));
 
             CreateMap<Pedido, PedidoOutputDTO>()
                 .ForMember(dest => dest.NomeUsuario,
