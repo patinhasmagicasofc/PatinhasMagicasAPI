@@ -13,10 +13,11 @@ namespace PatinhasMagicasAPI.Repositories
             _context = context;
         }
 
-        public async Task AddAsync(Pagamento pagamento)
+        public async Task<Pagamento> AddAsync(Pagamento pagamento)
         {
-            _context.Pagamentos.AddAsync(pagamento);
+            await _context.Pagamentos.AddAsync(pagamento);
             await _context.SaveChangesAsync();
+            return pagamento;
         }
 
         public async Task<List<Pagamento>> GetAllAsync()

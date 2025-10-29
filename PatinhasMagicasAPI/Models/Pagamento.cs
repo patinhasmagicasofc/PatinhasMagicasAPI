@@ -18,9 +18,9 @@ namespace PatinhasMagicasAPI.Models
         [StringLength(255, ErrorMessage = "A observação deve ter no máximo 255 caracteres.")]
         public string? Observacao { get; set; }
 
-        [Required(ErrorMessage = "O status do pagamento é obrigatório.")]
-        [Range(1, int.MaxValue, ErrorMessage = "StatusPagamentoId deve ser um valor válido.")]
-        public int StatusPagamentoId { get; set; }
+        //[Required(ErrorMessage = "O status do pagamento é obrigatório.")]
+        //[Range(1, int.MaxValue, ErrorMessage = "StatusPagamentoId deve ser um valor válido.")]
+        public int? StatusPagamentoId { get; set; }
         public StatusPagamento? StatusPagamento { get; set; }
 
         [Required(ErrorMessage = "O tipo de pagamento é obrigatório.")]

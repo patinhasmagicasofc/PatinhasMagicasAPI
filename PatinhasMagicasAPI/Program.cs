@@ -43,15 +43,18 @@ builder.Services.AddScoped<IAnimalRepository, AnimalRepository>();
 builder.Services.AddScoped<IAgendamentoServicoRepository, AgendamentoServicoRepository>();
 builder.Services.AddScoped<IServicoTamanhoRepository, ServicoTamanhoRepository>();
 builder.Services.AddScoped<IEspecieRepository, EspecieRepository>();
-//builder.Services.AddScoped<IStatusPagamentoRepository, StatusPagamentoRepository>();
+builder.Services.AddScoped<IStatusPagamentoRepository, StatusPagamentoRepository>();
 //builder.Services.AddScoped<IStatusPedidoRepository, StatusPedidoRepository>();
 
 
 // Services
+builder.Services.AddScoped<IStatusPagamentoService, StatusPagamentoService>();
+builder.Services.AddScoped<ITipoPagamentoService, TipoPagamentoService>();
 builder.Services.AddScoped<IServicoService, ServicoService>();
 builder.Services.AddScoped<IEnderecoService, EnderecoService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IPagamentoService, PagamentoService>();
 builder.Services.AddScoped<PedidoService, PedidoService>();
 builder.Services.AddScoped<IProdutoService, ProdutoService>();
 builder.Services.AddScoped<ITamanhoAnimalService, TamanhoAnimalService>();

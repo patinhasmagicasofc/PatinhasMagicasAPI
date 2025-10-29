@@ -13,6 +13,7 @@ namespace PatinhasMagicasAPI.Services
         private readonly IServicoTamanhoRepository _servicoTamanhoRepository;
         private readonly IAnimalRepository _animalRepository;
         private readonly IAgendamentoServicoRepository _agendamentoServicoRepository;
+        private readonly IPagamentoService _pagamentoService;
         private readonly IMapper _mapper;
 
         public AgendamentoService(
@@ -21,6 +22,7 @@ namespace PatinhasMagicasAPI.Services
             IServicoTamanhoRepository servicoTamanhoRepository,
             IAnimalRepository animalRepository,
             IAgendamentoServicoRepository agendamentoServicoRepository,
+            IPagamentoService pagamentoService,
             IMapper mapper)
         {
             _pedidoRepository = pedidoRepository;
@@ -28,6 +30,7 @@ namespace PatinhasMagicasAPI.Services
             _servicoTamanhoRepository = servicoTamanhoRepository;
             _animalRepository = animalRepository;
             _agendamentoServicoRepository = agendamentoServicoRepository;
+            _pagamentoService = pagamentoService;
             _mapper = mapper;
         }
 
@@ -108,6 +111,16 @@ namespace PatinhasMagicasAPI.Services
                 DataCadastro = DateTime.Now
             });
 
+            //Cria o pagamento relacionado
+            var pagamento = new Pagamento
+            {
+                Valor = servicoTamanho.Preco,
+                TipoPagamentoId = agendamentoCreateDTO.TipoPagamentoId ?? 0,
+                PedidoId  = pedido.Id,
+            };
+
+            var novoPagamento = await _pagamentoService.CriarPagamentoAsync(pagamento);
+
             // Criar AgendamentoServico
             var agendamentoServico = new AgendamentoServico
             {
@@ -115,6 +128,8 @@ namespace PatinhasMagicasAPI.Services
                 ServicoId = agendamentoCreateDTO.ServicoId,
                 Preco = servicoTamanho.Preco
             };
+
+            //Criar Pagamento
 
             await _agendamentoServicoRepository.AddAsync(agendamentoServico);
 
