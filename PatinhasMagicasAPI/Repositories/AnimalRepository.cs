@@ -54,6 +54,7 @@ namespace PatinhasMagicasAPI.Repositories
             return await _context.Animais
                 .Include(a => a.TamanhoAnimal)
                 .Include(a => a.Usuario)
+                .Include(a => a.Especie)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
 
