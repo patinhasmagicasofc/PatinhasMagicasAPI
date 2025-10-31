@@ -19,7 +19,7 @@ var secretKey = configuration["Jwt:Key"] ?? throw new ArgumentNullException("JWT
 
 // Add services to the container
 builder.Services.AddDbContext<PatinhasMagicasDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // AutoMapper
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<ApplicationProfile>());

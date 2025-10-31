@@ -37,17 +37,20 @@ namespace PatinhasMagicasAPI.Data
             // -------------------------------
             modelBuilder.Entity<Agendamento>()
                 .Property(a => a.DataCadastro)
-                .HasDefaultValueSql("GETDATE()")
+                .HasDefaultValueSql("NOW()")
+                //.HasDefaultValueSql("GETDATE()")
                 .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<Pedido>()
                 .Property(p => p.DataPedido)
-                .HasDefaultValueSql("GETDATE()")
+                .HasDefaultValueSql("NOW()")
+                //.HasDefaultValueSql("GETDATE()")
                 .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<Pagamento>()
                 .Property(p => p.DataPagamento)
-                .HasDefaultValueSql("GETDATE()")
+                .HasDefaultValueSql("NOW()")
+                //.HasDefaultValueSql("GETDATE()")
                 .ValueGeneratedOnAdd();
 
             // -------------------------------

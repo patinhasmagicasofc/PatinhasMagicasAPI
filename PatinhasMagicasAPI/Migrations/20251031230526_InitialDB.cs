@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -15,9 +16,9 @@ namespace PatinhasMagicasAPI.Migrations
                 name: "Categorias",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nome = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -28,9 +29,9 @@ namespace PatinhasMagicasAPI.Migrations
                 name: "Especies",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nome = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -41,9 +42,9 @@ namespace PatinhasMagicasAPI.Migrations
                 name: "StatusAgendamento",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nome = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -54,9 +55,9 @@ namespace PatinhasMagicasAPI.Migrations
                 name: "StatusPagamento",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nome = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -67,9 +68,9 @@ namespace PatinhasMagicasAPI.Migrations
                 name: "StatusPedido",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nome = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -80,9 +81,9 @@ namespace PatinhasMagicasAPI.Migrations
                 name: "TamanhoAnimal",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nome = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -93,9 +94,9 @@ namespace PatinhasMagicasAPI.Migrations
                 name: "TipoPagamento",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nome = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -106,9 +107,9 @@ namespace PatinhasMagicasAPI.Migrations
                 name: "TipoServico",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nome = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -119,9 +120,9 @@ namespace PatinhasMagicasAPI.Migrations
                 name: "TiposUsuario",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nome = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -132,18 +133,18 @@ namespace PatinhasMagicasAPI.Migrations
                 name: "Produtos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    EspecieId = table.Column<int>(type: "int", nullable: false),
-                    Preco = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
-                    Marca = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    UrlImagem = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    Codigo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Descricao = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    DescricaoDetalhada = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Validade = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CategoriaId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nome = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    EspecieId = table.Column<int>(type: "integer", nullable: false),
+                    Preco = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
+                    Marca = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    UrlImagem = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    Codigo = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    Descricao = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    DescricaoDetalhada = table.Column<string>(type: "text", nullable: true),
+                    Validade = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CategoriaId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -166,13 +167,13 @@ namespace PatinhasMagicasAPI.Migrations
                 name: "Servicos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Descricao = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    DescricaoDetalhada = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TempoEstimadoMinutos = table.Column<int>(type: "int", nullable: true),
-                    TipoServicoId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nome = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Descricao = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    DescricaoDetalhada = table.Column<string>(type: "text", nullable: true),
+                    TempoEstimadoMinutos = table.Column<int>(type: "integer", nullable: true),
+                    TipoServicoId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -189,17 +190,17 @@ namespace PatinhasMagicasAPI.Migrations
                 name: "Usuarios",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    CPF = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Senha = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Ddd = table.Column<int>(type: "int", nullable: false),
-                    Telefone = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Ativo = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
-                    TipoUsuarioId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nome = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    CPF = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Senha = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Ddd = table.Column<int>(type: "integer", nullable: false),
+                    Telefone = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
+                    DataCadastro = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Ativo = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
+                    TipoUsuarioId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -216,11 +217,11 @@ namespace PatinhasMagicasAPI.Migrations
                 name: "ServicoTamanho",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Preco = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
-                    ServicoId = table.Column<int>(type: "int", nullable: false),
-                    TamanhoAnimalId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Preco = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
+                    ServicoId = table.Column<int>(type: "integer", nullable: false),
+                    TamanhoAnimalId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -243,14 +244,14 @@ namespace PatinhasMagicasAPI.Migrations
                 name: "Animais",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Raca = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Idade = table.Column<int>(type: "int", nullable: true),
-                    EspecieId = table.Column<int>(type: "int", nullable: false),
-                    TamanhoAnimalId = table.Column<int>(type: "int", nullable: false),
-                    UsuarioId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nome = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Raca = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Idade = table.Column<int>(type: "integer", nullable: true),
+                    EspecieId = table.Column<int>(type: "integer", nullable: false),
+                    TamanhoAnimalId = table.Column<int>(type: "integer", nullable: false),
+                    UsuarioId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -279,16 +280,16 @@ namespace PatinhasMagicasAPI.Migrations
                 name: "Enderecos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Logradouro = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Numero = table.Column<int>(type: "int", maxLength: 7, nullable: false),
-                    Bairro = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Cidade = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Estado = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
-                    CEP = table.Column<string>(type: "nvarchar(9)", maxLength: 9, nullable: false),
-                    Complemento = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    UsuarioId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Logradouro = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Numero = table.Column<int>(type: "integer", maxLength: 7, nullable: false),
+                    Bairro = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Cidade = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Estado = table.Column<string>(type: "character varying(2)", maxLength: 2, nullable: false),
+                    CEP = table.Column<string>(type: "character varying(9)", maxLength: 9, nullable: false),
+                    Complemento = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    UsuarioId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -305,11 +306,11 @@ namespace PatinhasMagicasAPI.Migrations
                 name: "Pedidos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DataPedido = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
-                    UsuarioId = table.Column<int>(type: "int", nullable: false),
-                    StatusPedidoId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DataPedido = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
+                    UsuarioId = table.Column<int>(type: "integer", nullable: false),
+                    StatusPedidoId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -332,13 +333,13 @@ namespace PatinhasMagicasAPI.Migrations
                 name: "Agendamentos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DataAgendamento = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
-                    PedidoId = table.Column<int>(type: "int", nullable: false),
-                    AnimalId = table.Column<int>(type: "int", nullable: false),
-                    StatusAgendamentoId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DataAgendamento = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DataCadastro = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
+                    PedidoId = table.Column<int>(type: "integer", nullable: false),
+                    AnimalId = table.Column<int>(type: "integer", nullable: false),
+                    StatusAgendamentoId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -367,12 +368,12 @@ namespace PatinhasMagicasAPI.Migrations
                 name: "ItensPedido",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Quantidade = table.Column<int>(type: "int", nullable: false),
-                    PrecoUnitario = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
-                    ProdutoId = table.Column<int>(type: "int", nullable: false),
-                    PedidoId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Quantidade = table.Column<int>(type: "integer", nullable: false),
+                    PrecoUnitario = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
+                    ProdutoId = table.Column<int>(type: "integer", nullable: false),
+                    PedidoId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -395,14 +396,14 @@ namespace PatinhasMagicasAPI.Migrations
                 name: "Pagamentos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DataPagamento = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
-                    Valor = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
-                    Observacao = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    StatusPagamentoId = table.Column<int>(type: "int", nullable: false),
-                    TipoPagamentoId = table.Column<int>(type: "int", nullable: false),
-                    PedidoId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DataPagamento = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
+                    Valor = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
+                    Observacao = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    StatusPagamentoId = table.Column<int>(type: "integer", nullable: true),
+                    TipoPagamentoId = table.Column<int>(type: "integer", nullable: false),
+                    PedidoId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -431,12 +432,12 @@ namespace PatinhasMagicasAPI.Migrations
                 name: "AgendamentoServico",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Preco = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
-                    AgendamentoId = table.Column<int>(type: "int", nullable: false),
-                    ServicoId = table.Column<int>(type: "int", nullable: false),
-                    ServicoTamanhoId = table.Column<int>(type: "int", nullable: true)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Preco = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
+                    AgendamentoId = table.Column<int>(type: "integer", nullable: false),
+                    ServicoId = table.Column<int>(type: "integer", nullable: false),
+                    ServicoTamanhoId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
