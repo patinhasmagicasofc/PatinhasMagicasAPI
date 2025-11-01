@@ -45,6 +45,9 @@ namespace PatinhasMagicasAPI.Services
 
             _mapper.Map(produtoInputDTO, produtoExiste);
 
+            var teste  = produtoInputDTO.Validade;
+            var teste2 = produtoExiste.Validade;
+
             await _produtoRepository.UpdateAsync(produtoExiste);
         }
 

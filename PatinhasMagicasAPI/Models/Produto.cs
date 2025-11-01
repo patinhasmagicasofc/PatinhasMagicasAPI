@@ -36,7 +36,7 @@ namespace PatinhasMagicasAPI.Models
 
         public string? DescricaoDetalhada { get; set; }
 
-        public DateTime? Validade { get; set; }
+        public DateOnly? Validade { get; set; }
 
         [Required(ErrorMessage = "O tipo de categoria é obrigatório.")]
         [Range(1, int.MaxValue, ErrorMessage = "CategoriaId deve ser um valor válido.")]

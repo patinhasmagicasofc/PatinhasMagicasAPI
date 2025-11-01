@@ -10,7 +10,7 @@
         public string? Codigo { get; set; }
         public string? Descricao { get; set; }
         public string? DescricaoDetalhada { get; set; }
-        public DateTime? Validade { get; set; }
+        public DateOnly? Validade { get; set; }
         public int? CategoriaId { get; set; }
         public string? CategoriaNome { get; set; }
         public string? EspecieId { get; set; }
