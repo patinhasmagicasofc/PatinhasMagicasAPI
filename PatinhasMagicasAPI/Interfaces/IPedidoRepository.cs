@@ -12,5 +12,6 @@ namespace PatinhasMagicasAPI.Interfaces
         Task<Pedido> GetByIdAsync(int id);
         Task UpdateAsync(Pedido pedido);
         Task DeleteAsync(int id);
+        Task<bool> ExistsAsync(int? id);
     }
 }

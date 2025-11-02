@@ -26,8 +26,8 @@ namespace PatinhasMagicasAPI.Controllers
             if (!statusList.Any())
                 return NotFound();
 
-            var statusDTOs = statusList.Select(s => new StatusAgendamentoInputDTO
-            {
+            var statusDTOs = statusList.Select(s => new StatusAgendamentoOutputDTO
+            {   Id = s.Id,
                 Nome = s.Nome
             }).ToList();
 

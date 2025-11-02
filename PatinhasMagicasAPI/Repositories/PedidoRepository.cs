@@ -20,6 +20,14 @@ namespace PatinhasMagicasAPI.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<bool> ExistsAsync(int? id)
+        {
+            if (id == null || id <= 0)
+                return false;
+
+            return await _context.Pedidos.AnyAsync(p => p.Id == id);
+        }
+
         public async Task<Pedido> Add(Pedido pedido)
         {
             await _context.AddAsync(pedido);

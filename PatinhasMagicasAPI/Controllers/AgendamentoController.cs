@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using PatinhasMagicasAPI.DTOs;
+using PatinhasMagicasAPI.Models;
 using PatinhasMagicasAPI.Services.Interfaces;
 
 namespace PatinhasMagicasAPI.Controllers
@@ -64,22 +65,9 @@ namespace PatinhasMagicasAPI.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] AgendamentoInputDTO agendamentoInputDTO)
         {
-            //var pedido = await _agendamentoService.GetByIdAsync(id);
+            await _agendamentoService.UpdateAsync(id, agendamentoInputDTO);
 
-            //if (pedido == null)
-            //    return NotFound();
-
-            //pedido = new Pedido
-            //{
-            //    Id = id,
-            //    DataPedido = pedidoInputDTO.DataPedido,
-            //    StatusPedidoId = pedidoInputDTO.StatusPedidoId,
-            //    UsuarioId = pedidoInputDTO.UsuarioId
-            //};
-
-            //await _pedidoRepository.UpdateAsync(pedido);
-
-            return NoContent();
+            return Ok(new { success = true, message = "Agendamento atualizado com sucesso!"});
         }
 
         [HttpDelete("{id}")]

@@ -59,6 +59,7 @@ namespace PatinhasMagicasAPI.Services
                     DataAgendamento = agendamento.DataAgendamento,
                     DataConfirmacao = dataConfirmacao ?? default(DateTime),
                     Status = agendamento.StatusAgendamento?.Nome,
+                    PedidoId = agendamento.PedidoId,
                     TipoPagamento = tipoPagamento,
                     ValorTotal = agendamento.AgendamentoServicos.Sum(s => s.Preco),
                     Animal = new AnimalOutputDTO
@@ -175,6 +176,7 @@ namespace PatinhasMagicasAPI.Services
                 DataAgendamento = agendamento.DataAgendamento,
                 DataConfirmacao = dataConfirmacao ?? default(DateTime),
                 Status = agendamento.StatusAgendamento?.Nome,
+                PedidoId = agendamento.PedidoId,
                 TipoPagamento = tipoPagamento,
                 ValorTotal = agendamento.AgendamentoServicos.Sum(s => s.Preco),
                 Animal = new AnimalOutputDTO { Id = agendamento.Animal.Id, Nome = agendamento.Animal.Nome, NomeEspecie = agendamento.Animal.Especie.Nome, NomeTamanhoAnimal = agendamento.Animal.TamanhoAnimal.Nome },
@@ -227,11 +229,26 @@ namespace PatinhasMagicasAPI.Services
 
         }
 
-        public async Task<AgendamentoOutputDTO> BuscarPorIdAsync(int id)
+        public async Task UpdateAsync(int id, AgendamentoInputDTO agendamentoInputDTO)
         {
+
             var agendamento = await _agendamentoRepository.GetByIdAsync(id);
-            return _mapper.Map<AgendamentoOutputDTO>(agendamento);
+            if (agendamento == null)
+                throw new KeyNotFoundException("Agendamento não encontrado.");
+
+            // Validações de regra de negócio
+            if (agendamentoInputDTO.DataAgendamento < DateTime.Now)
+                throw new ArgumentException("A data do agendamento deve ser futura.");
+
+            if (!await _pedidoRepository.ExistsAsync(agendamentoInputDTO.PedidoId))
+                throw new ArgumentException("Pedido informado não existe.");
+
+            // Mapeia as propriedades atualizadas
+            _mapper.Map(agendamentoInputDTO, agendamento);
+
+            await _agendamentoRepository.UpdateAsync(agendamento);
         }
+
 
         public async Task DeletarAsync(int id)
         {
