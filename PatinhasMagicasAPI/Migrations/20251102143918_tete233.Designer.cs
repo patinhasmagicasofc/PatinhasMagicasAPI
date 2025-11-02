@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PatinhasMagicasAPI.Data;
@@ -11,9 +12,11 @@ using PatinhasMagicasAPI.Data;
 namespace PatinhasMagicasAPI.Migrations
 {
     [DbContext(typeof(PatinhasMagicasDbContext))]
-    partial class PatinhasMagicasDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251102143918_tete233")]
+    partial class tete233
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,13 +37,11 @@ namespace PatinhasMagicasAPI.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("DataAgendamento")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("NOW()");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("DataCadastro")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW()");
 
                     b.Property<int>("PedidoId")

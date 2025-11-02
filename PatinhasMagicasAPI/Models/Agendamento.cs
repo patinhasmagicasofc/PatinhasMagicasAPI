@@ -11,7 +11,7 @@ namespace PatinhasMagicasAPI.Models
         public DateTime DataAgendamento { get; set; }
 
         [Required(ErrorMessage = "A data de cadastro é obrigatória.")]
-        public DateTime DataCadastro { get; set; } = DateTime.Now;
+        public DateTime DataCadastro { get; set; }
 
         [Required(ErrorMessage = "O PedidoId é obrigatório.")]
         [Range(1, int.MaxValue, ErrorMessage = "PedidoId deve ser um valor válido.")]

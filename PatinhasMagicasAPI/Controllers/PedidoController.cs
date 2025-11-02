@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
 using PatinhasMagicasAPI.Services;
+using PatinhasMagicasAPI.Services.Interfaces;
 
 
 namespace PatinhasMagicasAPI.Controllers
@@ -17,9 +17,9 @@ namespace PatinhasMagicasAPI.Controllers
     public class PedidoController : ControllerBase
     {
         private readonly IPedidoRepository _pedidoRepository;
-        private readonly PedidoService _pedidoService;
+        private readonly IPedidoService _pedidoService;
 
-        public PedidoController(IPedidoRepository pedidoRepository, PedidoService pedidoService)
+        public PedidoController(IPedidoRepository pedidoRepository, IPedidoService pedidoService)
         {
             _pedidoRepository = pedidoRepository;
             _pedidoService = pedidoService;
@@ -28,25 +28,12 @@ namespace PatinhasMagicasAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PedidoOutputDTO>>> GetAll()
         {
-            var pedidos = await _pedidoRepository.GetAllAsync();
+            var pedidoOutputDTOs = await _pedidoService.GetAllAsync();
 
-            if (!pedidos.Any())
+            if (!pedidoOutputDTOs.Any())
                 return NotFound();
 
-            var pedidosDTO = pedidos.Select(p => new PedidoOutputDTO
-            {
-                Id = p.Id,
-                UsuarioId = p.UsuarioId,
-                DataPedido = p.DataPedido,
-                StatusPedidoId = p.StatusPedidoId,
-                StatusPedido = p.StatusPedido.Nome,
-                NomeUsuario = p.Usuario?.Nome,
-                ValorPedido = _pedidoService.GetValorPedido(p),
-                FormaPagamento = _pedidoService.GetFormaPagamento(p),
-                StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault()
-            }).ToList();
-
-            return Ok(pedidosDTO);
+            return Ok(pedidoOutputDTOs);
         }
 
         [HttpGet("Usuario/{usuarioId}")]
@@ -84,9 +71,8 @@ namespace PatinhasMagicasAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] PedidoInputDTO pedidoInputDTO)
+        public async Task<ActionResult> Post([FromBody] PedidoCompletoInputDTO pedidoInputDTO)
         {
-
             var pedidoOutputDTO = await _pedidoService.CreatePedidoAsync(pedidoInputDTO);
 
             return Ok(new { success = true, message = "Pedido cadastrado com sucesso !", pedidoId = pedidoOutputDTO.Id });
@@ -103,8 +89,7 @@ namespace PatinhasMagicasAPI.Controllers
             pedido = new Pedido
             {
                 Id = id,
-                DataPedido = pedidoInputDTO.DataPedido,
-                StatusPedidoId = pedidoInputDTO.StatusPedidoId,
+                StatusPedidoId = pedidoInputDTO.StatusPedidoId ?? 0,
                 UsuarioId = pedidoInputDTO.UsuarioId
             };
 

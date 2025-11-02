@@ -35,22 +35,46 @@ namespace PatinhasMagicasAPI.Data
             // -------------------------------
             // Default Values para datas
             // -------------------------------
-            modelBuilder.Entity<Agendamento>()
-                .Property(a => a.DataCadastro)
-                .HasDefaultValueSql("NOW()")
-                //.HasDefaultValueSql("GETDATE()")
-                .ValueGeneratedOnAdd();
+            //modelBuilder.Entity<Agendamento>()
+            //    .Property(a => a.DataCadastro)
+            //    .HasDefaultValueSql("NOW()")
+            //    //.HasDefaultValueSql("GETDATE()")
+            //    .ValueGeneratedOnAdd();
+
+            //modelBuilder.Entity<Pedido>()
+            //    .Property(p => p.DataPedido)
+            //    .HasDefaultValueSql("NOW()")
+            //    //.HasDefaultValueSql("GETDATE()")
+            //    .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<Pedido>()
                 .Property(p => p.DataPedido)
+                .HasColumnType("timestamp without time zone")
                 .HasDefaultValueSql("NOW()")
-                //.HasDefaultValueSql("GETDATE()")
                 .ValueGeneratedOnAdd();
+
+            //modelBuilder.Entity<Pagamento>()
+            //    .Property(p => p.DataPagamento)
+            //    .HasDefaultValueSql("NOW()")
+            //    //.HasDefaultValueSql("GETDATE()")
+            //    .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<Pagamento>()
                 .Property(p => p.DataPagamento)
+                .HasColumnType("timestamp without time zone")
                 .HasDefaultValueSql("NOW()")
-                //.HasDefaultValueSql("GETDATE()")
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Agendamento>()
+                .Property(p => p.DataCadastro)
+                .HasColumnType("timestamp without time zone")
+                .HasDefaultValueSql("NOW()")
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Agendamento>()
+                .Property(p => p.DataAgendamento)
+                .HasColumnType("timestamp without time zone")
+                .HasDefaultValueSql("NOW()")
                 .ValueGeneratedOnAdd();
 
             // -------------------------------

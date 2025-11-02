@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PatinhasMagicasAPI.Data;
@@ -11,9 +12,11 @@ using PatinhasMagicasAPI.Data;
 namespace PatinhasMagicasAPI.Migrations
 {
     [DbContext(typeof(PatinhasMagicasDbContext))]
-    partial class PatinhasMagicasDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251102145338_tete233d")]
+    partial class tete233d
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

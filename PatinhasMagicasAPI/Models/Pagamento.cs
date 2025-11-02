@@ -9,7 +9,7 @@ namespace PatinhasMagicasAPI.Models
         public int Id { get; set; }
 
         [Required(ErrorMessage = "A data de pagamento é obrigatória.")]
-        public DateTime DataPagamento { get; set; } = DateTime.Now;
+        public DateTime DataPagamento { get; set; }
 
         [Required(ErrorMessage = "O valor é obrigatório.")]
         [Column(TypeName = "decimal(10,2)")]

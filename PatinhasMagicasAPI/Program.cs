@@ -55,7 +55,7 @@ builder.Services.AddScoped<IEnderecoService, EnderecoService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IPagamentoService, PagamentoService>();
-builder.Services.AddScoped<PedidoService, PedidoService>();
+builder.Services.AddScoped<IPedidoService, PedidoService>();
 builder.Services.AddScoped<IProdutoService, ProdutoService>();
 builder.Services.AddScoped<ITamanhoAnimalService, TamanhoAnimalService>();
 builder.Services.AddScoped<IAnimalService, AnimalService>();

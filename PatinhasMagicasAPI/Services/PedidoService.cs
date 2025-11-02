@@ -1,22 +1,57 @@
 ﻿using AutoMapper;
+using Humanizer;
 using Microsoft.EntityFrameworkCore;
 using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
+using PatinhasMagicasAPI.Repositories;
+using PatinhasMagicasAPI.Services.Interfaces;
 
 namespace PatinhasMagicasAPI.Services
 {
-    public class PedidoService
+    public class PedidoService : IPedidoService
     {
         private readonly IPedidoRepository _pedidoRepository;
         private readonly IPagamentoRepository _pagamentoRepository;
+        private readonly IPagamentoService _pagamentoService;
+        private readonly IItemPedidoRepository _itemPedidoRepository;
         private readonly IMapper _mapper;
 
-        public PedidoService(IPedidoRepository pedidoRepository, IPagamentoRepository pagamentoRepository, IMapper mapper)
+        public PedidoService(IPedidoRepository pedidoRepository, 
+                             IPagamentoRepository pagamentoRepository, 
+                             IPagamentoService pagamentoService,
+                             IItemPedidoRepository itemPedidoRepository,
+                             IMapper mapper)
         {
             _pedidoRepository = pedidoRepository;
             _pagamentoRepository = pagamentoRepository;
+            _pagamentoService = pagamentoService;
+            _itemPedidoRepository = itemPedidoRepository;
             _mapper = mapper;
+        }
+
+        public async Task<IEnumerable<PedidoOutputDTO>> GetAllAsync()
+        {
+            var pedidos = await _pedidoRepository.GetAllAsync();
+
+            var pedidosDTO = pedidos.Select(p => new PedidoOutputDTO
+            {
+                Id = p.Id,
+                UsuarioId = p.UsuarioId,
+                DataPedido = p.DataPedido,
+                StatusPedidoId = p.StatusPedidoId,
+                StatusPedido = p.StatusPedido.Nome,
+                NomeUsuario = p.Usuario?.Nome,
+                ValorPedido = GetValorPedido(p),
+                FormaPagamento = GetFormaPagamento(p),
+                StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault()
+            }).ToList();
+
+            return pedidosDTO;
+            //var pedidos = await _pedidoRepository.GetAllAsync();
+            //var pedidoOutputDTO = Map(pedidos);
+            /////return _mapper.Map<List<PedidoOutputDTO>>(pedidos);
+            //return null;
         }
 
         public async Task<PedidoOutputDTO> GetByIdAsync(int id)
@@ -210,63 +245,72 @@ namespace PatinhasMagicasAPI.Services
             return query.Where(p => p.StatusPedido.Nome == status);
         }
 
-        public async Task<PedidoOutputDTO> CreatePedidoAsync(PedidoInputDTO pedidoInputDTO)
+        public async Task<PedidoOutputDTO> CreatePedidoAsync(PedidoCompletoInputDTO pedidoInputDTO)
         {
-            var pedido = _mapper.Map<Pedido>(pedidoInputDTO);
             // Adiciona o pedido ao repositório
-
-            //var pagamento = await _pagamentoRepository.GetByIdAsync(pedido.Id);
-
-            //var teste = await _pagamentoRepository.ExistsByPedidoId(pedido.Id);
-
-            //if (teste == null)
-            pedido.StatusPedidoId = 1; // Define o status inicial do pedido (ex: AguardandoPagamento)
-
-            if (!pedido.Pagamentos.Any())
-                pedido.StatusPedidoId = 1; // Define o status inicial do pedido (ex: AguardandoPagamento)
+            var pedido = new Pedido
+            {
+                UsuarioId = pedidoInputDTO.UsuarioId,
+                StatusPedidoId = pedidoInputDTO.StatusPedidoId ?? 1,
+                DataPedido = DateTime.Now
+            };
 
             await _pedidoRepository.AddAsync(pedido);
 
+            foreach (var itemPedidoInputDTO in pedidoInputDTO.ItensPedido)
+            {
+                var itemPedido = new ItemPedido
+                {
+                    PedidoId = pedido.Id,
+                    ProdutoId = itemPedidoInputDTO.ProdutoId,
+                    Quantidade = itemPedidoInputDTO.Quantidade,
+                    PrecoUnitario = itemPedidoInputDTO.PrecoUnitario
+                };
+
+                await _itemPedidoRepository.AddAsync(itemPedido);
+            }
+
+            //Cria o pagamento relacionado
+            var valorTotal = pedidoInputDTO.ItensPedido.Sum(i => i.Quantidade * i.PrecoUnitario);
+            var pagamento = new Pagamento
+            {
+                PedidoId = pedido.Id,
+                TipoPagamentoId = pedidoInputDTO.TipoPagamentoId,
+                Valor = valorTotal,
+                DataPagamento = DateTime.Now
+            };
+
+            var novoPagamento = await _pagamentoService.CriarPagamentoAsync(pagamento);
+
             var pedidoOutputDTO = _mapper.Map<PedidoOutputDTO>(pedido);
 
-            //await _pedidoRepository.AddAsync(pedido);
-            //// Cria um pagamento associado ao pedido
-            //var pagamento = new Pagamento
-            //{
-            //    PedidoId = pedido.Id,
-            //    Valor = pedido.ItensPedido.Sum(i => i.PrecoUnitario * i.Quantidade), // Calcula o valor total do pedido
-            //    Data = DateTime.Now,
-            //    StatusPagamentoId = 1 // Define o status inicial do pagamento (ex: Pendente)
-            //};
-            //// Adiciona o pagamento ao repositório
-            //await _pagamentoRepository.AddAsync(pagamento);
             return pedidoOutputDTO;
         }
 
-        public decimal GetValorPedido(Pedido pedido)
+        private decimal GetValorPedido(Pedido pedido)
         {
             return pedido.ItensPedido.Sum(i => i.PrecoUnitario * i.Quantidade);
         }
 
-        public string GetFormaPagamento(Pedido pedido)
+        private string GetFormaPagamento(Pedido pedido)
         {
             var formaPagamento = pedido.Pagamentos.Select(p => p.TipoPagamento?.Nome).FirstOrDefault();
             return formaPagamento ?? "Pendente";
         }
 
-        public decimal GetTotalVendas(List<Pedido> pedidos)
+        private decimal GetTotalVendas(List<Pedido> pedidos)
         {
             var totalVendas = pedidos.Sum(p => p.ItensPedido.Sum(i => i.PrecoUnitario * i.Quantidade));
 
             return totalVendas;
         }
 
-        public int GetPedidosCancelados(List<Pedido> pedidos)
+        private int GetPedidosCancelados(List<Pedido> pedidos)
         {
             var totalPedidosCancelados = pedidos.Count(p => p.StatusPedido.Nome == "Cancelado");
             return totalPedidosCancelados;
         }
-        public int GetPedidosPendentes(List<Pedido> pedidos)
+        private int GetPedidosPendentes(List<Pedido> pedidos)
         {
             var totalPedidosPendentes = pedidos.Count(p => p.StatusPedido.Nome == "Pendente");
             return totalPedidosPendentes;
