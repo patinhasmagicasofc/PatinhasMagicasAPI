@@ -18,6 +18,9 @@ namespace PatinhasMagicasAPI.Mapping
                 .ForMember(dest => dest.ItemPedidoOutputDTOs,
                            opt => opt.MapFrom(src => src.ItensPedido));
 
+            CreateMap<Categoria, CategoriaOuputDTO>().ReverseMap();
+            CreateMap<CategoriaInputDTO, Categoria>();
+
             CreateMap<Agendamento, AgendamentoOutputDTO>().ReverseMap();
             CreateMap<AgendamentoInputDTO, Agendamento>();
 
