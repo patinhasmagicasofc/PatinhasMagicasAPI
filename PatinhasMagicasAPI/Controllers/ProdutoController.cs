@@ -17,6 +17,7 @@ namespace PatinhasMagicasAPI.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<ProdutoOutputDTO>>> GetProdutos()
        {
             var produtoOutputDTOs = await _produtoService.GetAllAsync();
@@ -28,6 +29,7 @@ namespace PatinhasMagicasAPI.Controllers
 
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ProdutoOutputDTO>> GetProduto(int id)
         {
             var produtoOutputDTO = await _produtoService.GetByIdAsync(id);
