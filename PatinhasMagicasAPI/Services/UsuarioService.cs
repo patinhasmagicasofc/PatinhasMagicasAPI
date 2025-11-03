@@ -65,8 +65,6 @@ namespace PatinhasMagicasAPI.Services
 
         public async Task UpdateAsync(int id, UsuarioUpdateDTO usuarioUpdateDTO)
         {
-            //var usuario = _mapper.Map<Usuario>(usuarioUpdateDTO);
-
             var tipoUsuarioId = usuarioUpdateDTO.TipoUsuarioId ?? await GetTipoUsuarioIdAsync(0);
 
             var usuario = new Usuario

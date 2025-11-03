@@ -48,20 +48,13 @@ namespace PatinhasMagicasAPI.Services
             }).ToList();
 
             return pedidosDTO;
-            //var pedidos = await _pedidoRepository.GetAllAsync();
-            //var pedidoOutputDTO = Map(pedidos);
-            /////return _mapper.Map<List<PedidoOutputDTO>>(pedidos);
-            //return null;
         }
 
         public async Task<PedidoOutputDTO> GetByIdAsync(int id)
         {
             var pedido = await _pedidoRepository.GetByIdAsync(id);
 
-            var pedidoOutputDTO = Map(pedido);
-
-            ///return _mapper.Map<PedidoOutputDTO>(pedido);
-            return pedidoOutputDTO;
+            return Map(pedido);
         }
 
         public async Task<List<PedidoOutputDTO>> GetPedidosByUsuarioId(int id)
@@ -114,27 +107,6 @@ namespace PatinhasMagicasAPI.Services
 
             return pedidosDto;
         }
-
-        //public async Task AtualizarStatusPedidoAsync(int pedidoId)
-        //{
-        //    var pedido = await _pedidoRepository.GetByIdAsync(pedidoId);
-        //    if (pedido == null)
-        //        throw new Exception("Pedido não encontrado.");
-
-        //    var pagamentos = await _pagamentoRepository
-        //        .GetAllAsync(p => p.PedidoId == pedidoId && p.StatusPagamento == StatusPagamento.Aprovado);
-
-        //    var totalPago = pagamentos.Sum(p => p.Valor);
-
-        //    if (totalPago >= pedido.ValorTotal)
-        //        pedido.StatusPedido.Nome == "Pago";
-        //    else if (totalPago > 0)
-        //        pedido.StatusPedido.Nome == "ParcialmentePago";
-        //    else
-        //        pedido.StatusPedido.Nome == "AguardandoPagamento";
-
-        //    await _pedidoRepository.UpdateAsync(pedido);
-        //}
 
         public async Task<DashboardPedidoDTO> GetPedidosPaginados(PedidoFiltroDTO filtro)
         {
@@ -209,6 +181,30 @@ namespace PatinhasMagicasAPI.Services
                 FormaPagamento = GetFormaPagamento(p),
                 StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault(),
 
+                UsuarioOutputDTO = p.Usuario != null ? new UsuarioOutputDTO
+                {
+                    Id = p.Usuario.Id,
+                    Nome = p.Usuario.Nome,
+                    CPF = p.Usuario.CPF,
+                    Email = p.Usuario.Email,
+                    Ddd = p.Usuario.Ddd,
+                    Telefone = p.Usuario.Telefone,
+                    TipoUsuarioId = p.Usuario.TipoUsuarioId,
+                    DataCadastro = p.Usuario.DataCadastro,
+                    Ativo = p.Usuario.Ativo,
+                    Endereco = p.Usuario.Endereco != null ? new EnderecoOutputDTO
+                    {
+                        Id = p.Usuario.Endereco.Id,
+                        Logradouro = p.Usuario.Endereco.Logradouro,
+                        Numero = p.Usuario.Endereco.Numero,
+                        Complemento = p.Usuario.Endereco.Complemento,
+                        Bairro = p.Usuario.Endereco.Bairro,
+                        Cidade = p.Usuario.Endereco.Cidade,
+                        Estado = p.Usuario.Endereco.Estado,
+                        CEP = p.Usuario.Endereco.CEP
+                    } : null
+                } : null,
+
                 ItemPedidoOutputDTOs = p.ItensPedido.Select(i => new ItemPedidoOutputDTO
                 {
                     Produto = i.Produto.Nome,
@@ -217,6 +213,10 @@ namespace PatinhasMagicasAPI.Services
 
                     ProdutoOutputDTO = new ProdutoOutputDTO
                     {
+                        Id = i.Produto.Id,
+                        Nome = i.Produto.Nome,
+                        Codigo = i.Produto.Codigo,
+                        Preco = i.Produto.Preco,
                         UrlImagem = i.Produto.UrlImagem
                     }
 
