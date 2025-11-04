@@ -232,25 +232,20 @@ INSERT INTO TipoPagamento(Nome) VALUES
 ('Cartão de Crédito'),
 ('Cartão de Débito'),
 ('PIX'),
-('Dinheiro'),
-('Boleto Bancário'),
-('Transferência Bancária'),
-('Carteira Digital');
+('Dinheiro');
 
 -- StatusPagamento
 INSERT INTO StatusPagamento (Nome) VALUES
 ('Pendente'),
+('Em Processamento'),
 ('Aprovado'),
 ('Recusado'),
-('Em Processamento'),
-('Estornado'),
 ('Cancelado'),
-('Concluído');
+('Estornado');
 
 -- StatusPedido
 INSERT INTO StatusPedido (Nome) VALUES
 ('Pendente'),
-('Aguardando Pagamento'),
 ('Pagamento Aprovado'),
 ('Em Preparação'),
 ('Enviado'),
