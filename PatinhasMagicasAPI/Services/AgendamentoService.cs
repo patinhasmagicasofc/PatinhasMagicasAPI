@@ -38,9 +38,7 @@ namespace PatinhasMagicasAPI.Services
         {
             var agendamentos = await _agendamentoRepository.GetAgendamentosByUsuarioIdAsync(usuarioId);
 
-            var agendamentoDetalhesDTOs = new List<AgendamentoDetalhesDTO>();
-
-            foreach (var agendamento in agendamentos)
+            return agendamentos.Select(agendamento =>
             {
                 var pedido = agendamento.Pedido;
 
@@ -53,11 +51,11 @@ namespace PatinhasMagicasAPI.Services
                 var tipoPagamento = pagamento?.TipoPagamento?.Nome ?? "Não informado";
                 var dataConfirmacao = pagamento?.DataPagamento ?? pedido?.DataPedido;
 
-                var agendamentoDetalhesDTO = new AgendamentoDetalhesDTO
+                return new AgendamentoDetalhesDTO
                 {
                     Id = agendamento.Id,
                     DataAgendamento = agendamento.DataAgendamento,
-                    DataConfirmacao = dataConfirmacao ?? default(DateTime),
+                    DataConfirmacao = dataConfirmacao ?? DateTime.MinValue, // evita null
                     Status = agendamento.StatusAgendamento?.Nome,
                     PedidoId = agendamento.PedidoId,
                     TipoPagamento = tipoPagamento,
@@ -76,11 +74,7 @@ namespace PatinhasMagicasAPI.Services
                         Preco = s.Preco
                     }).ToList()
                 };
-
-                agendamentoDetalhesDTOs.Add(agendamentoDetalhesDTO);
-            }
-
-            return agendamentoDetalhesDTOs;
+            }).ToList();
         }
 
         public async Task<AgendamentoOutputDTO> CriarAgendamentoAsync(AgendamentoCreateDTO agendamentoCreateDTO)

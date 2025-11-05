@@ -64,6 +64,8 @@ namespace PatinhasMagicasAPI.Repositories
                     .Include(p => p.Usuario)
                         .ThenInclude(u => u.Endereco)
                     .Include(p => p.StatusPedido)
+                    .Include(p => p.Pagamentos).ThenInclude(p => p.StatusPagamento)
+                    .Include(p => p.Pagamentos).ThenInclude(pg => pg.TipoPagamento)
                     .Where(p => p.UsuarioId == id)
                     .ToListAsync();
         }
@@ -74,6 +76,7 @@ namespace PatinhasMagicasAPI.Repositories
             return await _context.Pedidos.Include(p => p.Usuario).ThenInclude(p => p.Endereco)
                                          .Include(p => p.ItensPedido).ThenInclude(p => p.Produto)
                                          .Include(p => p.Pagamentos).ThenInclude(p => p.StatusPagamento)
+                                         .Include(p => p.Pagamentos).ThenInclude(pg => pg.TipoPagamento)
                                          .Include(p => p.StatusPedido).FirstOrDefaultAsync(p => p.Id == id);
         }
 

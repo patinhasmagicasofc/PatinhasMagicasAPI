@@ -9,6 +9,7 @@ namespace PatinhasMagicasAPI.Services.Interfaces
         Task<List<PedidoOutputDTO>> GetPedidosByUsuarioId(int id);
         Task<DashboardPedidoDTO> GetPedidosPaginados(PedidoFiltroDTO filtro);
         Task<PedidoOutputDTO> CreatePedidoAsync(PedidoCompletoInputDTO pedidoInputDTO);
+        Task Update(int id, PedidoUpdateDTO dto);
     }
 }
 

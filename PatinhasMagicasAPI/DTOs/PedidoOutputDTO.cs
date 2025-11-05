@@ -10,6 +10,7 @@
         public string StatusPedido { get; set; }
         public string StatusPagamento { get; set; }
         public string FormaPagamento { get; set; }
+        public int? TipoPagamentoId { get; set; }
         public decimal ValorPedido { get; set; }
         public UsuarioOutputDTO? UsuarioOutputDTO { get; set; }
         public List<ItemPedidoOutputDTO>? ItemPedidoOutputDTOs { get; set; }

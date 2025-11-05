@@ -39,6 +39,10 @@ namespace PatinhasMagicasAPI.Repositories
                 .Include(a => a.StatusAgendamento)
                 .Include(a => a.Pedido)
                     .ThenInclude(p => p.Pagamentos)
+                        .ThenInclude(pg => pg.TipoPagamento)
+                .Include(a => a.Pedido)
+                    .ThenInclude(p => p.Pagamentos)
+                        .ThenInclude(pg => pg.StatusPagamento)
                 .Where(a => a.Animal.UsuarioId == usuarioId)
                 .OrderByDescending(a => a.DataAgendamento)
                 .ToListAsync();

@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using Humanizer;
 using Microsoft.EntityFrameworkCore;
 using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
-using PatinhasMagicasAPI.Repositories;
 using PatinhasMagicasAPI.Services.Interfaces;
 
 namespace PatinhasMagicasAPI.Services
@@ -43,6 +41,7 @@ namespace PatinhasMagicasAPI.Services
                 StatusPedido = p.StatusPedido.Nome,
                 NomeUsuario = p.Usuario?.Nome,
                 ValorPedido = GetValorPedido(p),
+                TipoPagamentoId = GetFormaPagamentoId(p),
                 FormaPagamento = GetFormaPagamento(p),
                 StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault()
             }).ToList();
@@ -72,6 +71,7 @@ namespace PatinhasMagicasAPI.Services
                 NomeUsuario = p.Usuario.Nome,
                 StatusPedidoId = p.StatusPedidoId,
                 StatusPedido = p.StatusPedido.Nome,
+                FormaPagamento = p.Pagamentos.FirstOrDefault()?.TipoPagamento?.Nome ?? "Indisponível",
                 StatusPagamento = p.Pagamentos.FirstOrDefault()?.StatusPagamento?.Nome ?? "Indisponivel",
                 ValorPedido = p.ItensPedido.Sum(i => (decimal?)(i.Quantidade * i.PrecoUnitario)) ?? 0,
                 UsuarioOutputDTO = p.Usuario is null ? null : new UsuarioOutputDTO
@@ -161,6 +161,7 @@ namespace PatinhasMagicasAPI.Services
                 NomeUsuario = p.Usuario?.Nome,
                 ValorPedido = GetValorPedido(p),
                 FormaPagamento = GetFormaPagamento(p),
+                TipoPagamentoId = GetFormaPagamentoId(p),
                 StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault()
             }).ToList();
 
@@ -179,6 +180,7 @@ namespace PatinhasMagicasAPI.Services
                 NomeUsuario = p.Usuario?.Nome,
                 ValorPedido = GetValorPedido(p),
                 FormaPagamento = GetFormaPagamento(p),
+                TipoPagamentoId = GetFormaPagamentoId(p),
                 StatusPagamento = p.Pagamentos.Select(p => p.StatusPagamento.Nome).FirstOrDefault(),
 
                 UsuarioOutputDTO = p.Usuario != null ? new UsuarioOutputDTO
@@ -298,6 +300,13 @@ namespace PatinhasMagicasAPI.Services
             return formaPagamento ?? "Pendente";
         }
 
+        private int? GetFormaPagamentoId(Pedido pedido)
+        {
+            return pedido?.Pagamentos?
+                .Select(p => p.TipoPagamento?.Id)
+                .FirstOrDefault(id => id.HasValue);
+        }
+
         private decimal GetTotalVendas(List<Pedido> pedidos)
         {
             var totalVendas = pedidos.Sum(p => p.ItensPedido.Sum(i => i.PrecoUnitario * i.Quantidade));
@@ -316,5 +325,16 @@ namespace PatinhasMagicasAPI.Services
             return totalPedidosPendentes;
         }
 
+        public async Task Update(int id, PedidoUpdateDTO dto)
+        {
+            var pedido = await _pedidoRepository.GetByIdAsync(id);
+            if (pedido == null)
+                throw new ArgumentException("Pedido informado não existe.");
+
+            pedido.StatusPedidoId = dto.StatusPedidoId;
+
+            await _pedidoRepository.UpdateAsync(pedido);
+
+        }
     }
 }

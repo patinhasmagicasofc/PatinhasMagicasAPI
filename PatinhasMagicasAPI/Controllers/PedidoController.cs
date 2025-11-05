@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Humanizer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using PatinhasMagicasAPI.DTOs;
@@ -79,24 +80,16 @@ namespace PatinhasMagicasAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, [FromBody] PedidoInputDTO pedidoInputDTO)
+        public async Task<ActionResult> Put(int id, [FromBody] PedidoUpdateDTO pedidoUpdateDTO)
         {
-            var pedido = await _pedidoRepository.GetByIdAsync(id);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            if (pedido == null)
-                return NotFound();
-
-            pedido = new Pedido
-            {
-                Id = id,
-                StatusPedidoId = pedidoInputDTO.StatusPedidoId ?? 0,
-                UsuarioId = pedidoInputDTO.UsuarioId
-            };
-
-            await _pedidoRepository.UpdateAsync(pedido);
+            await _pedidoService.Update(id, pedidoUpdateDTO);
 
             return NoContent();
         }
+
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
