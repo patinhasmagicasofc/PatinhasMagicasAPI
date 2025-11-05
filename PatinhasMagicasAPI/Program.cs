@@ -44,7 +44,7 @@ builder.Services.AddScoped<IAgendamentoServicoRepository, AgendamentoServicoRepo
 builder.Services.AddScoped<IServicoTamanhoRepository, ServicoTamanhoRepository>();
 builder.Services.AddScoped<IEspecieRepository, EspecieRepository>();
 builder.Services.AddScoped<IStatusPagamentoRepository, StatusPagamentoRepository>();
-//builder.Services.AddScoped<IStatusPedidoRepository, StatusPedidoRepository>();
+builder.Services.AddScoped<IStatusPedidoRepository, StatusPedidoRepository>();
 
 
 // Services
@@ -65,7 +65,7 @@ builder.Services.AddHttpClient<CepService>();
 // CORS
 builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
 {
-    builder.WithOrigins("http://127.0.0.1:5500", "https://magicaspatinhas.netlify.app/", "http://localhost:5260")
+    builder.WithOrigins("http://127.0.0.1:5500", "https://magicaspatinhas.netlify.app", "http://localhost:5260")
            .AllowAnyMethod()
            .AllowAnyHeader()
            .AllowCredentials();
@@ -135,7 +135,6 @@ app.UseRouting();
 app.UseCors("MyPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
