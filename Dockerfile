@@ -3,17 +3,17 @@
 # ================================
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
-# Define o diretório de trabalho dentro do container
+# Define o diretï¿½rio de trabalho dentro do container
 WORKDIR /src
 
-# Copia a solução e os projetos
+# Copia a soluï¿½ï¿½o e os projetos
 COPY PatinhasMagicasAPI.sln ./
-COPY PatinhasMagicasAPI/*.csproj ./SimuQuestAPI/
+COPY PatinhasMagicasAPI/*.csproj ./PatinhasMagicasAPI/
 
-# Restaura dependências
+# Restaura dependï¿½ncias
 RUN dotnet restore
 
-# Copia todo o código do projeto
+# Copia todo o cï¿½digo do projeto
 COPY PatinhasMagicasAPI/. ./PatinhasMagicasAPI/
 
 # Build em Release
@@ -33,8 +33,8 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-# Expondo a porta padrão
+# Expondo a porta padrï¿½o
 EXPOSE 5000
 
-# Comando para rodar a aplicação
+# Comando para rodar a aplicaï¿½ï¿½o
 ENTRYPOINT ["dotnet", "PatinhasMagicasAPI.dll"]
