@@ -124,11 +124,11 @@ var app = builder.Build();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
 // Swagger
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 
 // Pipeline
 app.UseRouting();
