@@ -46,7 +46,6 @@ builder.Services.AddScoped<IEspecieRepository, EspecieRepository>();
 builder.Services.AddScoped<IStatusPagamentoRepository, StatusPagamentoRepository>();
 builder.Services.AddScoped<IStatusPedidoRepository, StatusPedidoRepository>();
 
-
 // Services
 builder.Services.AddScoped<IStatusPagamentoService, StatusPagamentoService>();
 builder.Services.AddScoped<ITipoPagamentoService, TipoPagamentoService>();
@@ -62,14 +61,21 @@ builder.Services.AddScoped<IAnimalService, AnimalService>();
 builder.Services.AddScoped<IAgendamentoService, AgendamentoService>();
 builder.Services.AddHttpClient<CepService>();
 
-// CORS
-builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+// ✅ CORS — corrigido
+builder.Services.AddCors(options =>
 {
-    builder.WithOrigins("http://127.0.0.1:5500", "https://magicaspatinhas.netlify.app", "http://localhost:5260")
-           .AllowAnyMethod()
-           .AllowAnyHeader()
-           .AllowCredentials();
-}));
+    options.AddPolicy("MyPolicy", policy =>
+    {
+        policy.WithOrigins(
+            "https://magicaspatinhas.netlify.app", // sem barra no final!
+            "http://127.0.0.1:5500",
+            "http://localhost:5260"
+        )
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials();
+    });
+});
 
 // JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -95,7 +101,6 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "PatinhasMagicasAPI", Version = "v1" });
 
-    // Definição do esquema JWT
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -120,17 +125,14 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Middleware de tratamento de erro
+// Middleware de erro
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
 // Swagger
-//if (app.Environment.IsDevelopment())
-//{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-//}
+app.UseSwagger();
+app.UseSwaggerUI();
 
-// Pipeline
+// ✅ ORDEM CORRETA DO PIPELINE
 app.UseRouting();
 app.UseCors("MyPolicy");
 app.UseAuthentication();
