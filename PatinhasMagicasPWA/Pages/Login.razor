@@ -1,18 +1,24 @@
 ﻿@page "/Login"
+@using PatinhasMagicasPWA.DTOs
+@using PatinhasMagicasPWA.Services
+@inject AuthService AuthService
 
 <h3>Login</h3>
 
-<input @bind="email" placeholder="Email" />
-<input type="password" @bind="senha" placeholder="Senha" />
+<input @bind="login.Email" placeholder="Email" />
+<input type="password" @bind="login.Senha" placeholder="Senha" />
 
 <button @onclick="FazerLogin">Entrar</button>
 
 @code {
-    string email;
-    string senha;
+    LoginDTO login = new();
 
     async Task FazerLogin()
     {
-        // chamar sua API aqui
+        var result = await AuthService.Login(login);
+
+        if (result)
+        {
+        }
     }
 }
