@@ -3,12 +3,57 @@
 @using PatinhasMagicasPWA.Services
 @inject AuthService AuthService
 
-<h3>Login</h3>
+<main>
+    <div id="container-logo">
+        <img src="./img/logo.png" alt="Patinhas Mágicas" />
+    </div>
 
-<input @bind="login.Email" placeholder="Email" />
-<input type="password" @bind="login.Senha" placeholder="Senha" />
+    <!-- frase login -->
+    <div id="container-frase-login">
+        <ul>
+            <li>
+                <p>Tudo para seu</p>
+                <p>Melhor amigo!</p>
+            </li>
+        </ul>
+    </div>
 
-<button @onclick="FazerLogin">Entrar</button>
+    <!-- login -->
+    <div id="container-login">
+        <!-- form -->
+        <form>
+            <div class="title">
+                <ul>
+                    <li>
+                        <p>Login</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="container-form">
+                <ul>
+                    <li>
+                        <p>Email</p>
+                    </li>
+                </ul>
+                <input @bind="login.Email" placeholder="Email" />
+            </div>
+
+            <div class="container-form">
+                <ul>
+                    <li>
+                        <p>Senha</p>
+                    </li>
+                </ul>
+                <input type="password" @bind="login.Senha" placeholder="Senha" />
+            </div>
+        </form>
+
+        <div class="entrar-recuperar">
+            <button @onclick="FazerLogin">Entrar</button>
+            <a href="#">Recuperar senha</a>
+        </div>
+    </div>
+</main>
 
 @code {
     LoginDTO login = new();

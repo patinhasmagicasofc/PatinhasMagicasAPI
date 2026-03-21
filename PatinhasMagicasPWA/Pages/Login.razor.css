@@ -1,0 +1,97 @@
+﻿main {
+    height: 100vh;
+    width: 100%;
+    background-image: url('/img/bg-login.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    align-items: center;
+    justify-content: center;
+
+    #container-logo {
+        display: flex;
+        justify-content: center;
+        align-items: start;
+        padding: 1em;
+        padding: 2em 0;
+
+        img {
+            width: 100px;
+        }
+    }
+
+    #container-frase-login {
+        display: flex;
+        justify-content: center;
+        padding: 1em 0;
+
+        p {
+            font-size: var(--fs-title-up);
+            font-weight: var(--fw-title);
+            color: var(--clr-black-gray);
+        }
+
+            p:nth-child(2) {
+                color: var(--clr-primary-dark);
+            }
+    }
+
+    #container-login {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 2em 2.5em;
+        gap: 2em;
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+
+            .title {
+                p {
+                    color: var(--clr-primary-dark);
+                    font-size: var(--fs-sub-title);
+                    font-weight: var(--fw-title);
+                }
+            }
+
+            .container-form {
+                display: flex;
+                flex-direction: column;
+                gap: 0.7em;
+
+                p {
+                    color: var(--clr-black-gray);
+                    font-weight: var(--fw-title);
+                }
+
+                input {
+                    border: 1px solid var(--clr-gray-light);
+                    padding: 0.8em;
+                    border-radius: 2em;
+                }
+            }
+        }
+
+        .entrar-recuperar {
+            display: flex;
+            gap: 1em;
+            flex-direction: column;
+            align-items: end;
+
+            button {
+                background-color: var(--clr-primary-light);
+                border: none;
+                padding: 0.8em 2.5em;
+                border-radius: 2em;
+            }
+
+            a {
+                color: var(--clr-gray);
+                text-decoration: underline;
+            }
+        }
+    }
+}
