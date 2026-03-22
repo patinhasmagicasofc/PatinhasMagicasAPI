@@ -1,0 +1,87 @@
+﻿main {
+    height: 100vh;
+    width: 100%;
+    background-image: url('/img/bg-cadastro.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    align-items: center;
+    justify-content: center;
+
+
+    #container-title-logo {
+        display: flex;
+        justify-content: space-between;
+        padding: 2em;
+        align-items: center;
+
+        p {
+            color: var(--clr-primary-dark);
+            font-size: var(--fs-title);
+            font-weight: var(--fw-title);
+        }
+
+        img {
+            width: 100px;
+        }
+    }
+
+    #cont-form {
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+            padding: 0 2em;
+
+            ul {
+                display: flex;
+                flex-direction: column;
+                gap: 1em;
+
+                li {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5em;
+
+                    p {
+                        color: var(--clr-black-gray);
+                    }
+
+                    input {
+                        padding: 0.8em;
+                        border-radius: 2em;
+                        border: 1px solid var(--clr-gray-light);
+                        color: var(--clr-text-muted);
+                    }
+
+                    select {
+                        padding: 0.8em;
+                        border-radius: 2em;
+                        border: 1px solid var(--clr-gray-light);
+                        color: var(--clr-text-muted);
+                    }
+                }
+            }
+
+            .btn-cadastrar {
+                display: flex;
+                flex-direction: column;
+                gap: 1em;
+                align-items: end;
+
+                button {
+                    padding: 0.8em 2em;
+                    border-radius: 2em;
+                    background-color: var(--clr-primary-dark);
+                    border: none;
+                    color: var(--clr-black-gray);
+                }
+
+                a {
+                    color: var(--clr-black-gray);
+                }
+            }
+        }
+    }
+}

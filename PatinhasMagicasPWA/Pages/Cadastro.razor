@@ -1,0 +1,80 @@
+﻿@page "/Cadastro"
+
+
+<main>
+    <div id="container-title-logo">
+        <ul>
+            <li>
+                <p>Cadastro</p>
+            </li>
+        </ul>
+        <img src="./img/logo.png" alt="Patinhas Mágicas" />
+    </div>
+
+    <div id="cont-form">
+        <form>
+            <ul>
+                <li>
+                    <p>Nome</p>
+                    <input type="text"
+                           name="nome"
+                           placeholder="Digite seu nome"
+                           required />
+                </li>
+
+                <li>
+                    <p>Sobrenome</p>
+                    <input type="text"
+                           name="sobrenome"
+                           placeholder="Digite seu sobrenome"
+                           required />
+                </li>
+
+                <li>
+                    <p>Data de nascimento</p>
+                    <input type="date" name="dataNascimento" required />
+                </li>
+
+                <li>
+                    <p>Gênero</p>
+                    <select name="genero" required>
+                        <option value="">Selecione</option>
+                        <option value="feminino">Feminino</option>
+                        <option value="masculino">Masculino</option>
+                        <option value="outro">Outro</option>
+                        <option value="prefiro_nao_dizer">Prefiro não dizer</option>
+                    </select>
+                </li>
+
+                <li>
+                    <p>Email</p>
+                    <input type="email"
+                           name="email"
+                           placeholder="Digite seu email"
+                           required />
+                </li>
+
+                <li>
+                    <p>Senha</p>
+                    <input type="password"
+                           name="senha"
+                           placeholder="Digite sua senha"
+                           required />
+                </li>
+
+                <li>
+                    <p>Confirme sua senha</p>
+                    <input type="password"
+                           name="confirmarSenha"
+                           placeholder="Digite novamente"
+                           required />
+                </li>
+            </ul>
+
+            <div class="btn-cadastrar">
+                <button>Cadastrar</button>
+                <a href="#">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</main>
