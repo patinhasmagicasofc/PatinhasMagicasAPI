@@ -1,6 +1,7 @@
 @page "/Cadastro"
 @layout NoMenuLayout
 @inject NavigationManager Navigation
+@inject UsuarioService UsuarioService
 
 <main class="login-page">
     <div id="container-title-logo">
@@ -18,46 +19,61 @@
                 <li>
                     <p>Nome</p>
                     <input type="text"
+                           @bind="usuario.Nome"
                            name="nome"
                            placeholder="Digite seu nome"
                            required />
                 </li>
 
                 <li>
-                    <p>Sobrenome</p>
+                    <p>CPF</p>
                     <input type="text"
-                           name="sobrenome"
-                           placeholder="Digite seu sobrenome"
+                           @bind="usuario.CPF"
+                           name="cpf"
+                           placeholder="Digite CPF"
                            required />
                 </li>
 
-                <li>
+                @* <li>
                     <p>Data de nascimento</p>
-                    <input type="date" name="dataNascimento" required />
-                </li>
-
-                <li>
-                    <p>Genero</p>
-                    <select name="genero" required>
-                        <option value="">Selecione</option>
-                        <option value="feminino">Feminino</option>
-                        <option value="masculino">Masculino</option>
-                        <option value="outro">Outro</option>
-                        <option value="prefiro_nao_dizer">Prefiro nao dizer</option>
-                    </select>
-                </li>
+                    <input type="date"                         
+                           @bind="usuario.da"
+                           name="dataNascimento" 
+                           required />
+                </li> *@
 
                 <li>
                     <p>Email</p>
                     <input type="email"
+                           @bind="usuario.Email"
                            name="email"
                            placeholder="Digite seu email"
+                           required />
+                </li>
+
+                
+                <li>
+                    <p>DDD</p>
+                    <input type="text"
+                           @bind="usuario.Ddd"
+                           name="text"
+                           placeholder="Digite seu email"
+                           required />
+                </li>
+                
+                <li>
+                    <p>Telefone</p>
+                    <input type="text"
+                           @bind="usuario.Telefone"
+                           name="telefone"
+                           placeholder="Digite seu telefone"
                            required />
                 </li>
 
                 <li>
                     <p>Senha</p>
                     <input type="password"
+                           @bind="usuario.Senha"
                            name="senha"
                            placeholder="Digite sua senha"
                            required />
@@ -81,8 +97,20 @@
 </main>
 
 @code {
+
+    UsuarioDTO usuario = new();
     private void VoltarParaAuth()
     {
         Navigation.NavigateTo("/");
+    }
+
+    async Task Cadastrar()
+    {
+        var result = await UsuarioService.Login(usuario);
+        
+
+        if (result)
+        {
+        }
     }
 }
