@@ -1,0 +1,106 @@
+﻿main {
+    min-height: 100vh;
+
+    #hero-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2em;
+        gap: 2em;
+
+        .img-hero {
+            img {
+                width: 350px;
+                border-radius: 4em;
+            }
+        }
+
+        .info-hero {
+            display: flex;
+            flex-direction: column;
+            gap: 2em;
+            width: 100%;
+
+            ul {
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                gap: 1em;
+
+                .title {
+                    p {
+                        color: var(--clr-black-gray);
+                        font-size: var(--fs-title-t);
+                        font-weight: var(--fw-title);
+                    }
+
+                        p:nth-child(2) {
+                            color: var(--clr-primary-dark);
+                        }
+                }
+
+                .info {
+                    p {
+                        color: var(--clr-gray);
+                        font-size: var(--fs-normal);
+                    }
+                }
+            }
+
+            .btn-hero {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5em;
+
+                button {
+                    background-color: var(--clr-primary-dark);
+                    border: none;
+                    width: 100%;
+                    padding: 0.8em;
+                    border-radius: 2em;
+                    color: var(--clr-beige-soft);
+                }
+
+                a {
+                    color: var(--clr-primary-dark);
+                }
+            }
+        }
+    }
+
+    #feature-section {
+
+        .cards-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1em;
+            padding: 1em;
+
+            .card-details {
+                display: flex;
+                align-items: center;
+                gap: 1em;
+                background: var(--clr-white);
+                padding: 1em;
+                border-radius: 1em;
+                flex-direction: column;
+                text-align: center;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+
+                .icon-card {
+                    span {
+                        font-size: 24px;
+                        color: var(--clr-accent-blue);
+                    }
+                }
+
+                .details-title {
+                    p {
+                        max-width: 140px;
+                    }
+                }
+            }
+        }
+    }
+}

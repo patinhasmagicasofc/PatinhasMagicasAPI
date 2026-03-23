@@ -113,6 +113,7 @@ body {
     --clr-text-light: #ffffff;
     /* ===== tamanhos ===== */
     --fs-title-up: clamp(48px, 6vw, 100px);
+    --fs-title-t: clamp(42px, 6vw, 100px);
     --fs-title: clamp(32px, 5vw, 64px);
     --fs-sub-title: clamp(20px, 3vw, 32px);
     --fs-sub: clamp(18px, 3vw, 32px);

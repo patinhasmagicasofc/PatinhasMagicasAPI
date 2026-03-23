@@ -2,8 +2,84 @@
 
 <PageTitle>Home</PageTitle>
 
-<button @onclick="FazerLogin">Login</button>
-<button @onclick="Cadastrar">Cadastresse</button>
+@* <button @onclick="FazerLogin">Login</button>
+<button @onclick="Cadastrar">Cadastresse</button> *@
+
+<main>
+    <section id="hero-section">
+        <div class="img-hero">
+            <img src="./img/hero-pets.jpg" alt="Pets" />
+        </div>
+        <div class="info-hero">
+            <ul>
+                <li class="title">
+                    <p>Tudo para seu</p>
+                    <p>Melhor Amigo!</p>
+                </li>
+                <li class="info">
+                    <p>
+                        Desde rações premium até o banho mais relaxante da cidade.
+                        Encontre tudo o que o seu pet precisa em um só lugar.
+                    </p>
+                </li>
+            </ul>
+            <div class="btn-hero">
+                <button>Ver Produtos</button>
+                <a href="#">Nossos Serviços →</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="feature-section">
+        <div class="cards-details">
+            <div class="card-details">
+                <div class="icon-card">
+                    <span class="material-symbols-outlined">local_shipping</span>
+                </div>
+                <div class="details-title">
+                    <p>Entrega Rápida</p>
+                </div>
+            </div>
+
+            <div class="card-details">
+                <div class="icon-card">
+                    <span class="material-symbols-outlined">bathtub</span>
+                </div>
+                <div class="details-title">
+                    <p>Banho & Tosa</p>
+                </div>
+            </div>
+
+            <div class="card-details">
+                <div class="icon-card">
+                    <span class="material-symbols-outlined">storefront</span>
+                </div>
+                <div class="details-title">
+                    <p>Pet Shop Completo</p>
+                </div>
+            </div>
+
+            <div class="card-details">
+                <div class="icon-card">
+                    <span class="material-symbols-outlined">favorite</span>
+                </div>
+                <div class="details-title">
+                    <p>Atendimento Especial</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="product-section"></section>
+
+    <section class="service-section"></section>
+
+    <section class="banner-section"></section>
+
+    <section class="testimonials-section"></section>
+
+    <section class="contact-section"></section>
+</main>
 
 @code {
 
