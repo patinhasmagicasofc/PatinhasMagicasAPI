@@ -10,6 +10,7 @@
     font-size: clamp(16px, 3vw, 32px);
 }
 
+
     /* --- Reset global para ignorar o Bootstrap --- */
     *,
     *::before,
@@ -38,49 +39,6 @@ body {
     font-family: "Lexend", sans-serif;
 }
 
-.loading-progress {
-    position: relative;
-    display: block;
-    width: 8rem;
-    height: 8rem;
-    margin: 20vh auto 1rem auto;
-}
-
-.loading-progress circle {
-    fill: none;
-    stroke: #e9ecef;
-    stroke-width: 0.6rem;
-    transform-origin: 50% 50%;
-    transform: rotate(-90deg);
-}
-
-.loading-progress circle:last-child {
-    stroke: var(--clr-primary, #ff7a00);
-    stroke-dasharray: calc(3.1416 * 40%);
-    stroke-dashoffset: calc(3.1416 * 40% * 0.75);
-    animation: loading-progress-spinner 1.2s linear infinite;
-}
-
-.loading-progress-text {
-    text-align: center;
-    font-size: 1rem;
-    color: #6c757d;
-}
-
-.loading-progress-text:after {
-    content: "Carregando...";
-}
-
-@keyframes loading-progress-spinner {
-    0% {
-        transform: rotate(-90deg);
-    }
-
-    100% {
-        transform: rotate(270deg);
-    }
-}
-
 :root {
     /* ===== neutros ===== */
     --clr-black: #000000;
@@ -94,9 +52,11 @@ body {
     --clr-transparent: transparent;
     /* ===== cor principal (laranja pet) ===== */
     --clr-primary: #ff7a00;
+    --clr-primary-transparent: #ffb67152;
     --clr-primary-dark: #e66b00;
     --clr-primary-light: #ffa94d;
     --clr-primary-soft: #fff1e6;
+    --clr-primary-soft-one: #fff9f4;
     /* ===== fundo/bege ===== */
     --clr-beige: #ffe0c2;
     --clr-beige-light: #fff5eb;
@@ -122,23 +82,7 @@ body {
     --fw-title: 700;
     --fw-sub: 600;
     --fw-regular: 400;
-}
-
-#blazor-error-ui {
-    background: #fff3cd;
-    bottom: 0;
-    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
-    display: none;
-    left: 0;
-    padding: 0.75rem 1.25rem;
-    position: fixed;
-    width: 100%;
-    z-index: 1000;
-}
-
-#blazor-error-ui .dismiss {
-    cursor: pointer;
-    position: absolute;
-    right: 0.75rem;
-    top: 0.5rem;
+    /* ===== shadow ===== */
+    --shadow-soft: 0 0 0 1px rgba(0, 0, 0, 0.02), 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 10px 15px -3px rgba(0, 0, 0, 0.03);
+    --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
 }
