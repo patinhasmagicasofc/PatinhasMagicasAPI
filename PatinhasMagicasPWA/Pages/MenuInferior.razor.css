@@ -3,9 +3,14 @@
     background: var(--clr-white);
     border-top: 1px solid var(--clr-primary-soft);
     padding: 0.5em 0;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    backdrop-filter: blur(10px);
     display: flex;
     justify-content: space-around;
-    text-align: center;
+    align-items: center;
 
     .menu-item {
         display: flex;
