@@ -7,6 +7,7 @@ using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Models;
 using PatinhasMagicasAPI.Services;
 using PatinhasMagicasAPI.Services.Interfaces;
+using System.Security.Claims;
 
 
 namespace PatinhasMagicasAPI.Controllers
@@ -35,6 +36,22 @@ namespace PatinhasMagicasAPI.Controllers
                 return NotFound();
 
             return Ok(pedidoOutputDTOs);
+        }
+
+        [HttpGet("meus")]
+        public async Task<ActionResult<IEnumerable<PedidoOutputDTO>>> GetMeusPedidos()
+        {
+            var usuarioId = GetUsuarioIdLogado();
+
+            if (usuarioId is null)
+                return Unauthorized(new { message = "Usuario autenticado nao identificado no token." });
+
+            var pedidos = await _pedidoService.GetPedidosByUsuarioId(usuarioId.Value);
+
+            if (pedidos == null || !pedidos.Any())
+                return NotFound(new { mensagem = "Nenhum pedido encontrado para o usuario logado." });
+
+            return Ok(pedidos);
         }
 
         [HttpGet("Usuario/{usuarioId}")]
@@ -100,6 +117,15 @@ namespace PatinhasMagicasAPI.Controllers
 
             await _pedidoRepository.DeleteAsync(id);
             return NoContent();
+        }
+
+        private int? GetUsuarioIdLogado()
+        {
+            var usuarioIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            return int.TryParse(usuarioIdClaim, out var usuarioId)
+                ? usuarioId
+                : null;
         }
     }
 }

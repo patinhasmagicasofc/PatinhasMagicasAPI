@@ -7,12 +7,24 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(sp => new HttpClient
+builder.Services.AddScoped<TokenStorageService>();
+builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<AuthTokenHandler>();
+
+builder.Services.AddScoped(sp =>
 {
-    BaseAddress = new Uri("http://localhost:5260/")
+    var handler = sp.GetRequiredService<AuthTokenHandler>();
+    handler.InnerHandler = new HttpClientHandler();
+
+    return new HttpClient(handler)
+    {
+        BaseAddress = new Uri("http://localhost:5260/")
+    };
 });
 
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<ProdutoService>();
+builder.Services.AddScoped<AgendamentoService>();
 
 await builder.Build().RunAsync();
