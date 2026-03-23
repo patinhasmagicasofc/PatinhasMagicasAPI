@@ -72,7 +72,7 @@ builder.Services.AddCors(options =>
             "http://localhost:5260",
             "https://localhost:7072",
             "http://localhost:5158",
-            "https://kpbcgnlm-7072.brs.devtunnels.ms"
+            "https://ghfjstnh-7072.brs.devtunnels.ms"
         )
         .AllowAnyMethod()
         .AllowAnyHeader()
