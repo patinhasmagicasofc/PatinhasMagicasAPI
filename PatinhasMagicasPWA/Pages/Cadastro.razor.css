@@ -34,6 +34,12 @@
             gap: 1em;
             padding: 0 2em;
 
+            .mensagem-geral {
+                margin: 0;
+                color: #b42318;
+                font-weight: 600;
+            }
+
             ul {
                 display: flex;
                 flex-direction: column;
@@ -53,6 +59,7 @@
                         border-radius: 2em;
                         border: 1px solid var(--clr-gray-light);
                         color: var(--clr-text-muted);
+                        width: 100%;
                     }
 
                     select {
@@ -60,6 +67,11 @@
                         border-radius: 2em;
                         border: 1px solid var(--clr-gray-light);
                         color: var(--clr-text-muted);
+                    }
+
+                    ::deep .validation-message {
+                        color: #b42318;
+                        font-size: 0.9rem;
                     }
                 }
             }
@@ -76,6 +88,10 @@
                     background-color: var(--clr-primary-dark);
                     border: none;
                     color: var(--clr-black-gray);
+                }
+
+                button:disabled {
+                    opacity: 0.7;
                 }
 
                 a {

@@ -1,4 +1,4 @@
-﻿main {
+main {
     height: 100vh;
     width: 100%;
     background-image: url('/img/bg-login.png');
@@ -8,6 +8,58 @@
     background-attachment: scroll;
     align-items: center;
     justify-content: center;
+    position: relative;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+
+    &.saindo {
+        opacity: 0.65;
+        transform: scale(0.985);
+    }
+
+    .loading-overlay {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.55);
+        backdrop-filter: blur(6px);
+        z-index: 1000;
+        animation: overlay-fade-in 0.2s ease;
+    }
+
+    .loading-card {
+        min-width: 220px;
+        padding: 1.5em;
+        border-radius: 1.5em;
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.9em;
+
+        img {
+            width: 72px;
+            animation: logo-float 1.2s ease-in-out infinite;
+        }
+
+        p {
+            margin: 0;
+            color: var(--clr-primary-dark);
+            font-weight: var(--fw-title);
+            text-align: center;
+        }
+    }
+
+    .loading-spinner {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 3px solid rgba(0, 0, 0, 0.12);
+        border-top-color: var(--clr-primary-dark);
+        animation: spinner-rotate 0.85s linear infinite;
+    }
 
     #container-logo {
         display: flex;
@@ -32,9 +84,9 @@
             color: var(--clr-black-gray);
         }
 
-            p:nth-child(2) {
-                color: var(--clr-primary-dark);
-            }
+        p:nth-child(2) {
+            color: var(--clr-primary-dark);
+        }
     }
 
     #container-login {
@@ -73,25 +125,69 @@
                     border-radius: 2em;
                 }
             }
-        }
 
-        .entrar-recuperar {
-            display: flex;
-            gap: 1em;
-            flex-direction: column;
-            align-items: end;
-
-            button {
-                background-color: var(--clr-primary-light);
-                border: none;
-                padding: 0.8em 2.5em;
-                border-radius: 2em;
+            .mensagem-erro {
+                color: #b42318;
+                font-size: 0.95rem;
+                margin: 0;
             }
 
-            a {
-                color: var(--clr-gray);
-                text-decoration: underline;
+            .entrar-recuperar {
+                display: flex;
+                gap: 1em;
+                flex-direction: column;
+                align-items: end;
+
+                button {
+                    background-color: var(--clr-primary-light);
+                    border: none;
+                    padding: 0.8em 2.5em;
+                    border-radius: 2em;
+                }
+
+                button:disabled {
+                    opacity: 0.7;
+                }
+
+                a {
+                    color: var(--clr-gray);
+                    text-decoration: underline;
+                }
             }
         }
+    }
+}
+
+@keyframes overlay-fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes spinner-rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes logo-float {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-4px);
+    }
+
+    100% {
+        transform: translateY(0);
     }
 }

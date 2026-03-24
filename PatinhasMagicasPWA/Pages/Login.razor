@@ -1,9 +1,20 @@
-﻿@page "/Login"
+@page "/Login"
 @layout NoMenuLayout
 @inject NavigationManager Navigation
 @inject AuthService AuthService
 
-<main>
+<main class="@(navegando ? "saindo" : string.Empty)">
+    @if (navegando)
+    {
+        <div class="loading-overlay">
+            <div class="loading-card">
+                <img src="./img/logo.png" alt="Patinhas Magicas" />
+                <div class="loading-spinner"></div>
+                <p>Preparando sua experiencia...</p>
+            </div>
+        </div>
+    }
+
     <div id="container-logo">
         <img src="./img/logo.png" alt="Patinhas Mágicas" />
     </div>
@@ -21,7 +32,7 @@
     <!-- login -->
     <div id="container-login">
         <!-- form -->
-        <form>
+        <form @onsubmit="FazerLogin" @onsubmit:preventDefault>
             <div class="title">
                 <ul>
                     <li>
@@ -46,22 +57,47 @@
                 </ul>
                 <input type="password" @bind="login.Senha" placeholder="Senha" />
             </div>
-        </form>
 
-        <div class="entrar-recuperar">
-            <button @onclick="FazerLogin">Entrar</button>
-            <a href="#">Recuperar senha</a>
-        </div>
+            @if (!string.IsNullOrWhiteSpace(mensagemErro))
+            {
+                <p class="mensagem-erro">@mensagemErro</p>
+            }
+
+            <div class="entrar-recuperar">
+                <button type="submit" disabled="@carregando">
+                    @(carregando ? "Entrando..." : "Entrar")
+                </button>
+                <a href="#">Recuperar senha</a>
+            </div>
+        </form>
     </div>
 </main>
 
 @code {
-    LoginDTO login = new();
+    private LoginDTO login = new();
+    private string? mensagemErro;
+    private bool carregando;
+    private bool navegando;
 
-    async Task FazerLogin()
+    private async Task FazerLogin()
     {
+        if (carregando)
+            return;
 
-        if (await AuthService.Login(login))
+        mensagemErro = null;
+        carregando = true;
+
+        var resultado = await AuthService.Login(login);
+
+        if (resultado.Sucesso)
+        {
+            navegando = true;
+            await Task.Delay(450);
             Navigation.NavigateTo("/home");
+            return;
+        }
+
+        carregando = false;
+        mensagemErro = resultado.Mensagem;
     }
 }

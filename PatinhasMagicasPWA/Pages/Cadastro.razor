@@ -1,5 +1,6 @@
 @page "/Cadastro"
 @layout NoMenuLayout
+@using System.ComponentModel.DataAnnotations
 @inject NavigationManager Navigation
 @inject UsuarioService UsuarioService
 
@@ -14,103 +15,139 @@
     </div>
 
     <div id="cont-form">
-        <form>
+        <EditForm Model="@usuario" OnValidSubmit="Cadastrar">
+            <DataAnnotationsValidator />
+
+            @if (!string.IsNullOrWhiteSpace(mensagemGeral))
+            {
+                <p class="mensagem-geral">@mensagemGeral</p>
+            }
+
             <ul>
                 <li>
                     <p>Nome</p>
-                    <input type="text"
-                           @bind="usuario.Nome"
-                           name="nome"
-                           placeholder="Digite seu nome"
-                           required />
+                    <InputText @bind-Value="usuario.Nome" placeholder="Digite seu nome" />
+                    <ValidationMessage For="@(() => usuario.Nome)" />
                 </li>
 
                 <li>
                     <p>CPF</p>
-                    <input type="text"
-                           @bind="usuario.CPF"
-                           name="cpf"
-                           placeholder="Digite CPF"
-                           required />
+                    <InputText @bind-Value="usuario.CPF" placeholder="Digite CPF no formato 999.999.999-99" />
+                    <ValidationMessage For="@(() => usuario.CPF)" />
                 </li>
-
-                @* <li>
-                    <p>Data de nascimento</p>
-                    <input type="date"                         
-                           @bind="usuario.da"
-                           name="dataNascimento" 
-                           required />
-                </li> *@
 
                 <li>
                     <p>Email</p>
-                    <input type="email"
-                           @bind="usuario.Email"
-                           name="email"
-                           placeholder="Digite seu email"
-                           required />
+                    <InputText @bind-Value="usuario.Email" type="email" placeholder="Digite seu email" />
+                    <ValidationMessage For="@(() => usuario.Email)" />
                 </li>
 
-                
                 <li>
                     <p>DDD</p>
-                    <input type="text"
-                           @bind="usuario.Ddd"
-                           name="text"
-                           placeholder="Digite seu email"
-                           required />
+                    <InputText @bind-Value="usuario.Ddd" placeholder="Digite o DDD" />
+                    <ValidationMessage For="@(() => usuario.Ddd)" />
                 </li>
-                
+
                 <li>
                     <p>Telefone</p>
-                    <input type="text"
-                           @bind="usuario.Telefone"
-                           name="telefone"
-                           placeholder="Digite seu telefone"
-                           required />
+                    <InputText @bind-Value="usuario.Telefone" placeholder="Digite seu telefone" />
+                    <ValidationMessage For="@(() => usuario.Telefone)" />
                 </li>
 
                 <li>
                     <p>Senha</p>
-                    <input type="password"
-                           @bind="usuario.Senha"
-                           name="senha"
-                           placeholder="Digite sua senha"
-                           required />
+                    <InputText @bind-Value="usuario.Senha" type="password" placeholder="Digite sua senha" />
+                    <ValidationMessage For="@(() => usuario.Senha)" />
                 </li>
 
                 <li>
                     <p>Confirme sua senha</p>
-                    <input type="password"
-                           name="confirmarSenha"
-                           placeholder="Digite novamente"
-                           required />
+                    <InputText @bind-Value="usuario.ConfirmarSenha" type="password" placeholder="Digite novamente" />
+                    <ValidationMessage For="@(() => usuario.ConfirmarSenha)" />
                 </li>
             </ul>
 
             <div class="btn-cadastrar">
-                <button type="submit">Cadastrar</button>
-                <button type="button" @onclick="VoltarParaAuth">Cancelar</button>
+                <button type="submit" disabled="@carregando">
+                    @(carregando ? "Cadastrando..." : "Cadastrar")
+                </button>
+                <button type="button" @onclick="VoltarParaAuth" disabled="@carregando">Cancelar</button>
             </div>
-        </form>
+        </EditForm>
     </div>
 </main>
 
 @code {
+    private CadastroUsuarioForm usuario = new();
+    private string? mensagemGeral;
+    private bool carregando;
 
-    UsuarioDTO usuario = new();
     private void VoltarParaAuth()
     {
         Navigation.NavigateTo("/");
     }
 
-    async Task Cadastrar()
+    private async Task Cadastrar()
     {
-        var result = await UsuarioService.Cadastrar(usuario);
-        
+        if (carregando)
+            return;
+
+        carregando = true;
+        mensagemGeral = null;
+
+        var usuarioDto = new UsuarioDTO
+        {
+            Nome = usuario.Nome!,
+            CPF = usuario.CPF!,
+            Email = usuario.Email!,
+            Senha = usuario.Senha!,
+            Ddd = int.Parse(usuario.Ddd!),
+            Telefone = usuario.Telefone!,
+            TipoUsuarioId = null
+        };
+
+        var result = await UsuarioService.Cadastrar(usuarioDto);
+
+        carregando = false;
 
         if (result)
         {
+            Navigation.NavigateTo("/Login");
+            return;
         }
+
+        mensagemGeral = "Nao foi possivel concluir o cadastro.";
+    }
+
+    private class CadastroUsuarioForm
+    {
+        [Required(ErrorMessage = "O nome e obrigatorio.")]
+        [StringLength(150, ErrorMessage = "O nome deve ter no maximo 150 caracteres.")]
+        public string? Nome { get; set; }
+
+        [Required(ErrorMessage = "O CPF e obrigatorio.")]
+        [RegularExpression(@"^\d{3}\.\d{3}\.\d{3}-\d{2}$", ErrorMessage = "Formato de CPF invalido. Use 999.999.999-99.")]
+        public string? CPF { get; set; }
+
+        [Required(ErrorMessage = "O e-mail e obrigatorio.")]
+        [EmailAddress(ErrorMessage = "O e-mail informado nao e valido.")]
+        [StringLength(50, ErrorMessage = "O e-mail deve ter no maximo 50 caracteres.")]
+        public string? Email { get; set; }
+
+        [Required(ErrorMessage = "O DDD e obrigatorio.")]
+        [RegularExpression(@"^\d{2}$", ErrorMessage = "O DDD deve ter 2 digitos.")]
+        public string? Ddd { get; set; }
+
+        [Required(ErrorMessage = "O telefone e obrigatorio.")]
+        [RegularExpression(@"^\d{8,10}$", ErrorMessage = "O telefone deve ter entre 8 e 10 digitos.")]
+        public string? Telefone { get; set; }
+
+        [Required(ErrorMessage = "A senha e obrigatoria.")]
+        [StringLength(50, MinimumLength = 6, ErrorMessage = "A senha deve ter entre 6 e 50 caracteres.")]
+        public string? Senha { get; set; }
+
+        [Required(ErrorMessage = "Confirme sua senha.")]
+        [Compare(nameof(Senha), ErrorMessage = "As senhas nao coincidem.")]
+        public string? ConfirmarSenha { get; set; }
     }
 }
