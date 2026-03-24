@@ -14,7 +14,7 @@ public class UsuarioService
         _tokenStorageService = tokenStorageService;
     }
 
-        public async Task<bool> Login(UsuarioDTO usuario)
+        public async Task<bool> Cadastrar(UsuarioDTO usuario)
         {
             var response = await _http.PostAsJsonAsync("api/usuario", usuario);
 

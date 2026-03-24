@@ -1,5 +1,6 @@
 ﻿@page "/Login"
 @layout NoMenuLayout
+@inject NavigationManager Navigation
 @inject AuthService AuthService
 
 <main>
@@ -59,10 +60,8 @@
 
     async Task FazerLogin()
     {
-        var result = await AuthService.Login(login);
 
-        if (result)
-        {
-        }
+        if (await AuthService.Login(login))
+            Navigation.NavigateTo("/home");
     }
 }
