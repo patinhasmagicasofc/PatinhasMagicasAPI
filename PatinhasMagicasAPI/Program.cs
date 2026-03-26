@@ -67,11 +67,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("MyPolicy", policy =>
     {
         policy.WithOrigins(
-            "https://magicaspatinhas.netlify.app", // sem barra no final!
-            "http://127.0.0.1:5500",
-            "http://localhost:5260",
-            "https://localhost:7072",
-            "http://localhost:5158",
+            "https://magicaspatinhas.netlify.app",
+            "http://localhost:5176",
+            "https://localhost:7203",
             "https://ghfjstnh-7072.brs.devtunnels.ms"
         )
         .AllowAnyMethod()

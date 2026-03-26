@@ -14,6 +14,7 @@ namespace PatinhasMagicasPWA.Services
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var token = await _tokenStorageService.GetToken();
+            token = SanitizeToken(token);
 
             if (!string.IsNullOrWhiteSpace(token))
             {
@@ -21,6 +22,16 @@ namespace PatinhasMagicasPWA.Services
             }
 
             return await base.SendAsync(request, cancellationToken);
+        }
+
+        private static string? SanitizeToken(string? token)
+        {
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                return null;
+            }
+
+            return token.Trim().Trim('"');
         }
     }
 }

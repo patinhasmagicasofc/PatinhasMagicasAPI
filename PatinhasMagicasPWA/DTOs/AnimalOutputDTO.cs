@@ -1,6 +1,6 @@
 ﻿namespace PatinhasMagicasPWA.DTOs
 {
-    public class AnimalDTO
+    public class AnimalOutputDTO
     {
         public int Id { get; set; }
         public string Nome { get; set; }

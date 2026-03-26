@@ -14,7 +14,7 @@ namespace PatinhasMagicasPWA.Services
 
         public async Task<List<AgendamentoDTO>> GetAll()
         {
-            var response = await _http.GetFromJsonAsync<List<AgendamentoDTO>>("api/agendamento");
+            var response = await _http.GetFromJsonAsync<List<AgendamentoDTO>>("api/agendamento/meus");
 
             return response;
         }

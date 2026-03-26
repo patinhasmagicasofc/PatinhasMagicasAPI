@@ -1,22 +1,22 @@
-﻿.status--pending {
+﻿.status--pendente {
     background-color: #fff8e3;
     color: #c76a00;
 }
 
 /* Finalizado */
-.status--finished {
+.status--concluido {
     background-color: #ebffdd;
     color: #2f6b08;
 }
 
 /* Cancelado */
-.status--canceled {
+.status--cancelado {
     background-color: #ffdcdc;
     color: #b42318;
 }
 
 /* Técnico */
-.status--tech {
+.status--tecnico {
     background-color: #e8f1fd;
     color: #5e83e9;
 }

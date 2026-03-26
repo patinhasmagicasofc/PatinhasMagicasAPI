@@ -1,5 +1,6 @@
-﻿using PatinhasMagicasPWA.DTOs;
+using PatinhasMagicasPWA.DTOs;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace PatinhasMagicasPWA.Services
 {
@@ -31,7 +32,17 @@ namespace PatinhasMagicasPWA.Services
                     };
                 }
 
-                var token = await response.Content.ReadAsStringAsync();
+                var content = await response.Content.ReadAsStringAsync();
+                var token = ExtractToken(content);
+
+                if (string.IsNullOrWhiteSpace(token))
+                {
+                    return new LoginResultDTO
+                    {
+                        Sucesso = false,
+                        Mensagem = "A API respondeu ao login, mas nao retornou um token valido."
+                    };
+                }
 
                 await _tokenStorageService.SetToken(token);
 
@@ -53,6 +64,45 @@ namespace PatinhasMagicasPWA.Services
         public async Task Logout()
         {
             await _tokenStorageService.RemoveToken();
+        }
+
+        private static string? ExtractToken(string content)
+        {
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                return null;
+            }
+
+            try
+            {
+                var loginResponse = JsonSerializer.Deserialize<LoginResponseDTO>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                if (!string.IsNullOrWhiteSpace(loginResponse?.Data?.Token))
+                {
+                    return loginResponse.Data.Token.Trim();
+                }
+            }
+            catch (JsonException)
+            {
+            }
+
+            try
+            {
+                var rawToken = JsonSerializer.Deserialize<string>(content);
+
+                if (!string.IsNullOrWhiteSpace(rawToken))
+                {
+                    return rawToken.Trim();
+                }
+            }
+            catch (JsonException)
+            {
+            }
+
+            return content.Trim().Trim('"');
         }
     }
 }

@@ -21,7 +21,6 @@ namespace PatinhasMagicasAPI.Controllers
             _agendamentoService = agendamentoService;
         }
 
-        [AllowAnonymous]
         [HttpGet("meus")]
         public async Task<ActionResult<IEnumerable<AgendamentoDetalhesDTO>>> GetMeusAgendamentos()
         {
@@ -40,7 +39,6 @@ namespace PatinhasMagicasAPI.Controllers
             var agendamentos = await _agendamentoService.GetAgendamentosByUsuarioAsync(usuarioId);
             return Ok(agendamentos);
         }
-
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AgendamentoDetalhesDTO>>> GetAll()
