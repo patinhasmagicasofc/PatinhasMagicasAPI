@@ -1,0 +1,99 @@
+﻿@page "/CadastroAnimal"
+
+<main>
+
+    <!-- seta para voltar exemplo -->
+    <div class="header-page">
+        <ul>
+            <li>
+                <p>
+                    <span class="material-symbols-outlined">arrow_back</span>
+                    Agendamento
+                </p>
+            </li>
+        </ul>
+    </div>
+    <form class="card-form">
+        <ul>
+            <li>
+                <p class="title">Cadastro de Animal</p>
+            </li>
+        </ul>
+
+  
+        <div class="field">
+            <ul>
+                <li>
+                    <p class="label">Nome *</p>
+                    <input type="text"
+                           class="input-real"
+                           placeholder="Digite o nome do animal"
+                           required />
+                </li>
+            </ul>
+        </div>
+
+     
+        <div class="field">
+            <ul>
+                <li>
+                    <p class="label">Espécie *</p>
+                    <select class="input-select" required>
+                        <option value="">Selecione</option>
+                        <option>Cachorro</option>
+                        <option>Gato</option>
+                    </select>
+                </li>
+            </ul>
+        </div>
+
+  
+        <div class="field">
+            <ul>
+                <li>
+                    <p class="label">Raça</p>
+                    <input type="text"
+                           class="input-real"
+                           placeholder="Ex: Poodle, Siamês..." />
+                </li>
+            </ul>
+        </div>
+
+    
+        <div class="field">
+            <ul>
+                <li>
+                    <p class="label">Idade</p>
+                    <input type="number" class="input-real" placeholder="0" min="0" />
+                </li>
+            </ul>
+        </div>
+
+
+        <div class="field">
+            <ul>
+                <li>
+                    <p class="label">Tamanho *</p>
+                    <select class="input-select" required>
+                        <option value="">Selecione</option>
+                        <option>Pequeno</option>
+                        <option>Médio</option>
+                        <option>Grande</option>
+                    </select>
+                </li>
+            </ul>
+        </div>
+
+      
+        <div class="actions">
+            <button type="button" class="cancel">Cancelar cadastro</button>
+
+            <button type="submit" class="btn-primary">Cadastrar Animal</button>
+        </div>
+    </form>
+</main>
+
+
+@code {
+
+}

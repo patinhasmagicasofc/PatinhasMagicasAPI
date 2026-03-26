@@ -1,0 +1,76 @@
+﻿@page "/agendamentoServico"
+<main>
+
+    <!-- seta para voltar exemplo -->
+    <div class="header-page">
+        <ul>
+            <li>
+                <p>
+                    <span class="material-symbols-outlined">arrow_back</span>
+                    Agendamento
+                </p>
+            </li>
+        </ul>
+    </div>
+
+    <div class="card-form">
+        <ul>
+            <li>
+                <p class="title">Agendamento de Serviços</p>
+            </li>
+        </ul>
+
+        <div class="field">
+            <ul>
+                <li>
+                    <p class="label">Selecione seu Animal</p>
+                    <select class="input-select">
+                        <option>Rex (Cachorro - Grande)</option>
+                        <option>Luna (Gato - Pequeno)</option>
+                    </select>
+                </li>
+            </ul>
+        </div>
+
+        <div class="field">
+            <ul>
+                <li>
+                    <p class="label">Selecione o Serviço</p>
+                    <select class="input-select">
+                        <option>Banho Simples - R$ 90,00</option>
+                        <option>Tosa Completa - R$ 120,00</option>
+                    </select>
+                </li>
+            </ul>
+        </div>
+
+        <div class="field">
+            <ul>
+                <li>
+                    <p class="label">Data e Hora</p>
+                    <input type="datetime-local"
+                           id="dataAgendamento"
+                           class="input-real"
+                           required />
+                </li>
+            </ul>
+        </div>
+
+        <div class="field">
+            <ul>
+                <li>
+                    <p class="field-info">Clique abaixo para cadastrar um animal</p>
+                    <button class="btn-secondary">Cadastrar Animal</button>
+                </li>
+            </ul>
+        </div>
+
+        <div class="actions">
+            <button class="btn-primary">Avançar</button>
+        </div>
+    </div>
+</main>
+
+@code {
+
+}
