@@ -1,6 +1,8 @@
 ﻿@page "/ServicoAgendado"
+@inject AgendamentoService AgendamentoService
 
 <main>
+
     <div class="info-bg-service">
         <ul>
             <li>
@@ -8,7 +10,48 @@
             </li>
         </ul>
     </div>
-    <div class="card-service">
+
+    @foreach (var agendamento in agendamentos)
+    {
+        <div class="card-service">
+            <div class="icon-details">
+                <div class="icon-service">
+                    <span class="material-symbols-outlined">bathtub</span>
+                </div>
+                <div class="details-service">
+                    <div class="status-serviceType">
+                        <ul>
+                            <li>
+                                <p class="type-service-card">Banho Simples</p>
+                            </li>
+
+                            <li class="status-service">
+                                <p class="status--pending">Pendente</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="info-service">
+                        <ul>
+                            <li>
+                                <p>Animal: Rex</p>
+                                <p>
+                                    Data: @agendamento.DataAgendamento.ToString("dd/MM/yyyy, HH:mm")
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-service">
+                <button>Ver detalhes</button>
+            </div>
+        </div>
+
+
+    }
+
+    @*   <div class="card-service">
         <div class="icon-details">
             <div class="icon-service">
                 <span class="material-symbols-outlined">bathtub</span>
@@ -114,9 +157,17 @@
         <div class="btn-service">
             <button>Ver detalhes</button>
         </div>
-    </div>
+    </div> *@
+
+    <MenuInferior />
 
 </main>
 @code {
+    List<AgendamentoDTO> agendamentos = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        agendamentos = await AgendamentoService.GetAll() ?? new List<AgendamentoDTO>();
+    }
 
 }
