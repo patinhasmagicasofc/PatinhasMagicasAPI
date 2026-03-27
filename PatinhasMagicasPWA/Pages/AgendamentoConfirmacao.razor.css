@@ -1,0 +1,106 @@
+﻿main {
+    min-height: 100vh;
+    padding-top: 4em;
+    padding-bottom: 4em;
+    margin: 0 1em;
+
+    .background-confirmacao {
+        background-color: var(--clr-white);
+        box-shadow: var(--shadow-soft);
+        display: flex;
+        flex-direction: column;
+        gap: 2em;
+        border-radius: 2em;
+
+        .text-confirmacao {
+            padding: 1em;
+            border-top-right-radius: 2em;
+            border-top-left-radius: 2em;
+            background-color: var(--clr-accent-green-soft);
+
+            li {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5em;
+
+                p {
+                    color: var(--clr-accent-green);
+                    font-size: var(--fs-sub-title);
+                    font-weight: var(--fw-title);
+                }
+
+                    p:nth-child(2) {
+                        color: var(--clr-text-muted);
+                        font-size: var(--fs-normal);
+                        font-weight: var(--fw-regular);
+                    }
+            }
+        }
+
+        .detalhes-agendamento {
+            margin: 0 1em;
+
+            li {
+                display: flex;
+                flex-direction: column;
+                gap: 0.2em;
+
+                p:nth-child(1) {
+                    color: var(--clr-primary-dark);
+                    font-size: var(--fs-sub-title);
+                    font-weight: var(--fw-title);
+                }
+
+                p {
+                    color: var(--clr-black-gray);
+                }
+            }
+        }
+
+        .info-extra {
+            margin: 0 1em;
+
+            li {
+                display: flex;
+                flex-direction: column;
+                gap: 1em;
+
+                p {
+                    color: var(--clr-primary-dark);
+                }
+
+                    p:nth-child(2) {
+                        color: var(--clr-text-main);
+                    }
+            }
+        }
+
+        .btn-agendamento {
+            margin: 0 1em 1em;
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+
+            button {
+                background-color: var(--clr-primary);
+                border: none;
+                padding: 0.8em;
+                border-radius: 2em;
+                color: var(--clr-white);
+            }
+
+                button:nth-child(2) {
+                    background-color: var(--clr-primary-dark);
+                    border: none;
+                    padding: 0.8em;
+                    border-radius: 2em;
+                    color: var(--clr-white);
+                }
+        }
+
+        hr {
+            margin: 0 1em;
+            border: 1px solid var(--clr-primary-light);
+        }
+    }
+}
