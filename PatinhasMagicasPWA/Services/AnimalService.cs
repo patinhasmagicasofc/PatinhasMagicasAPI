@@ -12,7 +12,7 @@ namespace PatinhasMagicasPWA.Services
             _http = http;
         }
 
-        public async Task<List<AnimalDTO>> GetAll()
+        public async Task<List<AnimalDTO>> GetAllAnimalsAsync()
         {
             var response = await _http.GetFromJsonAsync<List<AnimalDTO>>("api/animal/meus");
 

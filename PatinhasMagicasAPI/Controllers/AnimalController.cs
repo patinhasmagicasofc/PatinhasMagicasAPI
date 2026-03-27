@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using PatinhasMagicasAPI.DTOs;
 using PatinhasMagicasAPI.Services.Interfaces;
+using System.Security.Claims;
 
 namespace PatinhasMagicasAPI.Controllers
 {
@@ -21,6 +22,26 @@ namespace PatinhasMagicasAPI.Controllers
         {
             var list = await _service.GetAllAsync();
             return Ok(list);
+        }
+        private int? GetUsuarioIdLogado()
+        {
+            var usuarioIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            return int.TryParse(usuarioIdClaim, out var usuarioId)
+                ? usuarioId
+                : null;
+        }
+
+        [HttpGet("meus")]
+        public async Task<ActionResult<IEnumerable<AgendamentoDetalhesDTO>>> GetMeusAgendamentos()
+        {
+            var usuarioId = GetUsuarioIdLogado();
+
+            if (usuarioId is null)
+                return Unauthorized(new { message = "Usuario autenticado nao identificado no token." });
+
+            var agendamentos = await _service.GetAllByUsuarioId(usuarioId.Value);
+            return Ok(agendamentos);
         }
 
         [HttpGet("usuario/{usuarioId}")]

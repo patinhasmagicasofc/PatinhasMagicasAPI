@@ -27,5 +27,8 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<ProdutoService>();
 builder.Services.AddScoped<AgendamentoService>();
+builder.Services.AddScoped<ServicoService>();
+builder.Services.AddScoped<AnimalService>();
+
 
 await builder.Build().RunAsync();

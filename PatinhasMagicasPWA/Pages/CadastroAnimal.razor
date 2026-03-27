@@ -1,4 +1,5 @@
 ﻿@page "/CadastroAnimal"
+@inject NavigationManager Navigation
 
 <main>
 
@@ -7,7 +8,7 @@
         <ul>
             <li>
                 <p>
-                    <span class="material-symbols-outlined">arrow_back</span>
+                    <span class="material-symbols-outlined" @onclick="() => Voltar()">arrow_back</span>
                 </p>
             </li>
         </ul>
@@ -19,7 +20,7 @@
             </li>
         </ul>
 
-  
+
         <div class="field">
             <ul>
                 <li>
@@ -32,21 +33,29 @@
             </ul>
         </div>
 
-     
+
         <div class="field">
             <ul>
                 <li>
                     <p class="label">Espécie *</p>
                     <select class="input-select" required>
-                        <option value="">Selecione</option>
-                        <option>Cachorro</option>
-                        <option>Gato</option>
+                        @if (especies.Count == 0)
+                        {
+                            <option disabled>Não há opções de espécies disponíveis</option>
+                        }
+                        else
+                        {
+                            @foreach (var especie in especies)
+                            {
+                                <option value="@especie.Id">@especie.Nome</option>
+                            }
+                        }
                     </select>
                 </li>
             </ul>
         </div>
 
-  
+
         <div class="field">
             <ul>
                 <li>
@@ -58,7 +67,7 @@
             </ul>
         </div>
 
-    
+
         <div class="field">
             <ul>
                 <li>
@@ -74,16 +83,23 @@
                 <li>
                     <p class="label">Tamanho *</p>
                     <select class="input-select" required>
-                        <option value="">Selecione</option>
-                        <option>Pequeno</option>
-                        <option>Médio</option>
-                        <option>Grande</option>
+                        @if (tamanhoAimals.Count == 0)
+                        {
+                            <option disabled>Não há opções de tamanho disponíveis</option>
+                        }
+                        else
+                        {
+                            @foreach (var tamanho in tamanhoAimals)
+                            {
+                                <option value="@tamanho.Id">@tamanho.Nome</option>
+                            }
+                        }
                     </select>
                 </li>
             </ul>
         </div>
 
-      
+
         <div class="actions">
             <button type="button" class="cancel">Cancelar cadastro</button>
 
@@ -94,5 +110,13 @@
 
 
 @code {
+    List<TamanhoAnimalDTO> tamanhoAimals = new();
+    List<EspecieOutputDTO> especies = new();
+
+
+    private void Voltar()
+    {
+        Navigation.NavigateTo("/home");
+    }
 
 }

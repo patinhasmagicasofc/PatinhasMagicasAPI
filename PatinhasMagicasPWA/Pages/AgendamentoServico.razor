@@ -1,4 +1,9 @@
 ﻿@page "/agendamentoServico"
+@inject NavigationManager Navigation
+@inject AnimalService AnimalService
+@inject ServicoService ServicoService
+@inject AgendamentoService AgendamentoService
+
 <main>
 
     <!-- seta para voltar exemplo -->
@@ -6,7 +11,7 @@
         <ul>
             <li>
                 <p>
-                    <span class="material-symbols-outlined">arrow_back</span>
+                    <span class="material-symbols-outlined" @onclick="() => Voltar()">arrow_back</span>
                 </p>
             </li>
         </ul>
@@ -23,9 +28,19 @@
             <ul>
                 <li>
                     <p class="label">Selecione seu Animal</p>
-                    <select class="input-select">
-                        <option>Rex (Cachorro - Grande)</option>
-                        <option>Luna (Gato - Pequeno)</option>
+                    <select class="input-select" @bind="selectedAnimalId" required>
+                        @if (animals.Count == 0)
+                        {
+                            <option disabled>Não há animais cadastrados</option>
+                        }
+                        else
+                        {
+                            @foreach (var animal in animals)
+                            {
+                                <option value="@animal.Id">@animal.Nome (@animal.NomeEspecie - @animal.NomeTamanhoAnimal)</option>
+                            }
+                        }
+
                     </select>
                 </li>
             </ul>
@@ -35,9 +50,18 @@
             <ul>
                 <li>
                     <p class="label">Selecione o Serviço</p>
-                    <select class="input-select">
-                        <option>Banho Simples - R$ 90,00</option>
-                        <option>Tosa Completa - R$ 120,00</option>
+                    <select class="input-select" @bind="selectedServicoId" required>
+                        @if (servicos == null || servicos.Count == 0)
+                        {
+                            <option disabled>Não há serviços disponíveis</option>
+                        }
+                        else
+                        {
+                            @foreach (var servico in servicos)
+                            {
+                                <option value="@(servico.Id ?? 0)">@servico.Nome - R$ @String.Format("{0:0.00}", servico.Preco)</option>
+                            }
+                        }
                     </select>
                 </li>
             </ul>
@@ -59,7 +83,7 @@
             <ul>
                 <li>
                     <p class="field-info">Clique abaixo para cadastrar um animal</p>
-                    <button class="btn-secondary">Cadastrar Animal</button>
+                    <button class="btn-secondary" @onclick="CadastrarAnimal">Cadastrar Animal</button>
                 </li>
             </ul>
         </div>
@@ -71,5 +95,84 @@
 </main>
 
 @code {
+    List<AnimalDTO> animals = new();
+    List<ServicoOutputDTO> servicos = new();
+
+    private int _selectedAnimalId;
+    int selectedServicoId;
+
+    int selectedAnimalId
+    {
+        get => _selectedAnimalId;
+        set
+        {
+            if (_selectedAnimalId != value)
+            {
+                _selectedAnimalId = value;
+                _ = OnAnimalChangedAsync();
+            }
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        animals = await AnimalService.GetAllAnimalsAsync();
+
+        if (animals != null && animals.Count > 0)
+        {
+            // já existe um animal selecionado por padrão — use ele para carregar os serviços
+            _selectedAnimalId = animals[0].Id;
+            await OnAnimalChangedAsync();
+
+            // preseleciona o primeiro serviço retornado, se houver
+            if (servicos != null && servicos.Count > 0)
+            {
+                selectedServicoId = servicos[0].Id ?? 0;
+            }
+        }
+        else
+        {
+            servicos = await ServicoService.GetAllServicosAsync();
+        }
+    }
+
+    private async Task OnAnimalChangedAsync()
+    {
+        // tenta obter os serviços já com o preço de acordo com o porte/id do animal
+        if (selectedAnimalId > 0)
+        {
+            var porAnimal = await ServicoService.GetServicosPorAnimalAsync(selectedAnimalId);
+            if (porAnimal != null)
+            {
+                servicos = porAnimal;
+                // pré-seleciona o primeiro serviço retornado, ou limpa se não houver
+                if (servicos.Count > 0)
+                {
+                    selectedServicoId = servicos[0].Id ?? 0;
+                }
+                else
+                {
+                    selectedServicoId = 0;
+                }
+
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+    }
+
+    private void Voltar()
+    {
+        Navigation.NavigateTo("/home");
+    }
+
+    private void CadastrarAnimal()
+    {
+        Navigation.NavigateTo("/CadastroAnimal");
+    }
+
+    private void AgendarServico()
+    {
+        Navigation.NavigateTo("/ServicoConfirmacao");
+    }
 
 }
