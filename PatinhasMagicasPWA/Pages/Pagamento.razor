@@ -1,0 +1,51 @@
+﻿@page "/pagamento"
+
+<main>
+    <p>
+        Forma de pagamento
+    </p>
+    <select class="input-select" id="payment">
+        <option value="">Selecione</option>
+        <option value="credito">Cartão de Crédito</option>
+        <option value="debito">Cartão de Débito</option>
+        <option value="pix">Pix</option>
+        <option value="dinheiro">Dinheiro</option>
+    </select>
+
+ 
+    <div class="payment-box" id="card-box">
+        <form>
+            <p>
+                Cartão de crédito/débito
+            </p>
+            <input type="text" placeholder="Número do cartão" />
+            <input type="text" placeholder="Nome no cartão" />
+
+            <div class="bass-line">
+                <input type="text" placeholder="Validade (MM/AA)" />
+                <input type="text" placeholder="CVV" />
+            </div>
+
+            <button id="pay-button" class="pay-btn">Pagar agora</button>
+        </form>
+    </div>
+
+  
+    <div class="payment-box" id="pix-box">
+        <p>Escaneie o QR Code ou copie o código Pix</p>
+        <p>
+            00020126580014BR.GOV.BCB.PIX0136pix-patinhasmagicas@email.com520400005303986540590.005802BR5920PatinhasMagicas6009Sao Paulo62070503***6304A1B2
+        </p>
+        <img src="./img/qr-code.png" alt="" />
+    </div>
+
+
+    <div class="payment-box" id="money-box">
+        <p>Instruções para pagamento via Dinheiro serão enviadas por e-mail.</p>
+    </div>
+
+</main>
+
+@code {
+
+}
