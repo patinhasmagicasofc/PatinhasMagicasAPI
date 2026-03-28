@@ -8,7 +8,9 @@
     background-attachment: scroll;
     align-items: center;
     justify-content: center;
-
+    padding-top: 5em;
+    padding-bottom: 4em;
+    margin: 0 1em;
 
     #container-title-logo {
         display: flex;
@@ -90,9 +92,9 @@
                     color: var(--clr-black-gray);
                 }
 
-                button:disabled {
-                    opacity: 0.7;
-                }
+                    button:disabled {
+                        opacity: 0.7;
+                    }
 
                 a {
                     color: var(--clr-black-gray);
