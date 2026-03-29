@@ -67,6 +67,9 @@ body {
     /* ===== apoio (verde suave igual imagem) ===== */
     --clr-accent-green: #0da808;
     --clr-accent-green-soft: #ebf6e9;
+    /* ===== apoio (vermelho suave igual imagem) ===== */
+    --clr-accent-red: #dd2222;
+    --clr-accent-red-soft: #f28b82;
     /* ===== gradientes ===== */
     --clr-gradient-main: linear-gradient(90deg, #ffe0c2, #ffffff);
     --clr-gradient-soft: linear-gradient(180deg, #fff5eb, #ffffff);

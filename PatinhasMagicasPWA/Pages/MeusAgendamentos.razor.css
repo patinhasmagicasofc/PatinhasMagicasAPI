@@ -22,8 +22,8 @@
 }
 
 main {
-    height: 100vh;
-    padding-top: 4em;
+    min-height: 100vh;
+    padding-top: 5em;
     padding-bottom: 4em;
     margin: 0 1em;
     display: flex;

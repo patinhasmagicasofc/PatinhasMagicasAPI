@@ -1,0 +1,147 @@
+﻿main {
+    min-height: 100vh;
+    padding-top: 5em;
+    padding-bottom: 4em;
+    margin: 0 1em;
+
+
+
+    .perfil-container {
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+
+            .perfil-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                .titulo {
+                    color: var(--clr-primary);
+                    font-size: var(--fs-sub-title);
+                    font-weight: var(--fw-sub);
+                    display: flex;
+                    align-items: center;
+                    gap: .5em;
+                }
+
+                .btn-sair {
+                    background: var(--clr-accent-red-soft);
+                    color: var(--clr-white);
+                    border: none;
+                    padding: 0.4em 1em;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    transition: 0.2s;
+
+                    &:hover {
+                        opacity: 0.85;
+                    }
+                }
+            }
+
+
+            .boas-vindas {
+                color: var(--clr-text-main);
+
+                p {
+                    font-size: var(--fs-normal);
+                }
+
+                strong {
+                    font-weight: var(--fw-sub);
+                }
+            }
+
+
+            .card-perfil {
+                background: var(--clr-white);
+                border-radius: 2em;
+                padding: 1em;
+                margin-top: 1.5em;
+                box-shadow: var(--shadow-soft);
+                border: 1px solid var(--clr-primary-soft);
+                display: flex;
+                flex-direction: column;
+                gap: 1em;
+
+                .secao-titulo {
+                    color: var(--clr-primary-dark);
+                    font-weight: var(--fw-sub);
+                    display: flex;
+                    align-items: center;
+                    gap: .5em;
+                }
+
+                label {
+                    color: var(--clr-text-muted);
+                    font-size: 0.9em;
+                }
+
+                input {
+                    width: 100%;
+                    padding: .8em;
+                    border-radius: 2em;
+                    border: 1px solid var(--clr-gray-lighter);
+                    background: var(--clr-cloud-white);
+                    transition: 0.2s;
+
+                    &:focus {
+                        outline: none;
+                        border-color: var(--clr-primary);
+                        background: var(--clr-white);
+                    }
+                }
+
+                .info-card {
+                    display: flex;
+                    flex-direction: column;
+                    gap: .5em;
+                }
+            }
+
+
+            .grid-2 {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1em;
+            }
+
+
+            .btn-acao-editar {
+                width: 100%;
+                padding: 1em;
+                background: var(--clr-primary);
+                color: var(--clr-white);
+                border: none;
+                border-radius: 2em;
+                cursor: pointer;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 1em;
+            }
+
+            .btn-acao-salvar {
+                width: 100%;
+                padding: 1em;
+                background: var(--clr-primary);
+                color: var(--clr-white);
+                border: none;
+                border-radius: 2em;
+                cursor: pointer;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 1em;
+            }
+
+            .voltar {
+                text-align: center;
+                color: var(--clr-text-muted);
+            }
+        }
+    }
+}

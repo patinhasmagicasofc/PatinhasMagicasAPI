@@ -1,0 +1,112 @@
+﻿@page "/editarPerfil"
+
+<main>
+    <div class="perfil-container">
+        <form>
+            <div class="perfil-header">
+                <p class="titulo">
+                    Meu Perfil <span class="material-symbols-outlined">pets</span>
+                </p>
+                <button type="button" class="btn-sair">Sair</button>
+            </div>
+
+            <p class="boas-vindas">
+                Olá, <strong>NAME NAME NAME NAME</strong>. Aqui você pode gerenciar
+                seus dados pessoais.
+            </p>
+
+            <div class="card-perfil">
+                <p class="secao-titulo">
+                    <span class="material-symbols-outlined">Person</span> Dados
+                    Pessoais
+                </p>
+                <div class="info-card">
+                    <label>Nome Completo</label>
+                    <input type="text" value="Nome" disabled />
+                </div>
+
+                <div class="info-card">
+                    <label>CPF (Não Editável)</label>
+                    <input type="text" value="111.111.111-11" disabled />
+                </div>
+
+                <div class="info-card">
+                    <label>E-mail</label>
+                    <input type="email" value="email@gmail.com" disabled />
+                </div>
+
+                <div class="grid-2">
+                    <div class="info-card">
+                        <label>DDD</label>
+                        <input type="text" value="11" disabled />
+                    </div>
+                    <div class="info-card">
+                        <label>Telefone</label>
+                        <input type="text" value="11111-1111" disabled />
+                    </div>
+                </div>
+
+                <button type="button" class="btn-acao-editar">
+                    <span class="material-symbols-outlined">edit</span>Editar Dados
+                </button>
+                <button type="button" class="btn-acao-salvar">
+                    <span class="material-symbols-outlined">save</span>Salvar Dados
+                </button>
+            </div>
+
+            <div class="card-perfil">
+                <p class="secao-titulo">
+                    <span class="material-symbols-outlined">home</span> Endereço
+                </p>
+                <div class="info-card">
+                    <label>CEP</label>
+                    <input type="text" value="00000-000" disabled />
+                </div>
+
+                <div class="info-card">
+                    <label>Rua/Avenida</label>
+                    <input type="text" value="Rua" disabled />
+                </div>
+
+                <div class="grid-2">
+                    <div class="info-card">
+                        <label>Bairro</label>
+                        <input type="text" value="Bairro" disabled />
+                    </div>
+                    <div class="info-card">
+                        <label>Cidade</label>
+                        <input type="text" value="Cidade" disabled />
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="info-card">
+                        <label>Estado (UF)</label>
+                        <input type="text" value="UF" disabled />
+                    </div>
+                    <div class="info-card">
+                        <label>Número</label>
+                        <input type="text" value="123" disabled />
+                    </div>
+                </div>
+                <div class="info-card">
+                    <label>Complemento (Opcional)</label>
+                    <input type="text" value="Apto, bloco, casa..." disabled />
+                </div>
+
+                <button type="button" class="btn-acao-editar">
+                    <span class="material-symbols-outlined">edit</span>Editar Endereço
+                </button>
+                <button type="button" class="btn-acao-salvar">
+                    <span class="material-symbols-outlined">save</span>Salvar Endereço
+                </button>
+            </div>
+
+            <a class="voltar">Voltar</a>
+        </form>
+    </div>
+</main>
+
+@code {
+
+}
