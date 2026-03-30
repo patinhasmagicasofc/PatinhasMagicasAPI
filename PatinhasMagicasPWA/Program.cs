@@ -29,6 +29,8 @@ builder.Services.AddScoped<ProdutoService>();
 builder.Services.AddScoped<AgendamentoService>();
 builder.Services.AddScoped<ServicoService>();
 builder.Services.AddScoped<AnimalService>();
+builder.Services.AddScoped<TamanhoAnimalService>();
+builder.Services.AddScoped<EspecieService>();
 
 
 await builder.Build().RunAsync();

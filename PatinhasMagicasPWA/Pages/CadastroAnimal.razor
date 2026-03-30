@@ -1,8 +1,23 @@
 ﻿@page "/CadastroAnimal"
 @inject NavigationManager Navigation
+@inject AnimalService AnimalService
+@inject EspecieService EspecieService
+@inject TamanhoAnimalService TamanhoAnimalService
 
 <main>
-    <form class="card-form">
+
+    <!-- seta para voltar exemplo -->
+    <div class="header-page">
+        <ul>
+            <li>
+                <p>
+                    <span class="material-symbols-outlined" @onclick="() => Voltar()">arrow_back</span>
+                </p>
+            </li>
+        </ul>
+    </div>
+    <EditForm class="card-form" Model="@animal" OnValidSubmit="Cadastrar">
+        <DataAnnotationsValidator />
         <ul>
             <li>
                 <p class="title">Cadastro de Animal</p>
@@ -18,6 +33,7 @@
                            class="input-real"
                            placeholder="Digite o nome do animal"
                            required />
+                    <ValidationMessage class="text-danger" For="@(() => animal.Nome)" />
                 </li>
             </ul>
         </div>
@@ -52,6 +68,7 @@
                     <input type="text"
                            class="input-real"
                            placeholder="Ex: Poodle, Siamês..." />
+                    <ValidationMessage class="text-danger" For="@(() => animal.Raca)" />
                 </li>
             </ul>
         </div>
@@ -62,6 +79,7 @@
                 <li>
                     <p class="label">Idade</p>
                     <input type="number" class="input-real" placeholder="0" min="0" />
+                    <ValidationMessage class="text-danger" For="@(() => animal.Idade)" />
                 </li>
             </ul>
         </div>
@@ -72,13 +90,13 @@
                 <li>
                     <p class="label">Tamanho *</p>
                     <select class="input-select" required>
-                        @if (tamanhoAimals.Count == 0)
+                        @if (tamanhoAnimals.Count == 0)
                         {
                             <option disabled>Não há opções de tamanho disponíveis</option>
                         }
                         else
                         {
-                            @foreach (var tamanho in tamanhoAimals)
+                            @foreach (var tamanho in tamanhoAnimals)
                             {
                                 <option value="@tamanho.Id">@tamanho.Nome</option>
                             }
@@ -94,13 +112,21 @@
 
             <button type="submit" class="btn-primary">Cadastrar Animal</button>
         </div>
-    </form>
+    </EditForm>
 </main>
 
 
 @code {
-    List<TamanhoAnimalDTO> tamanhoAimals = new();
+    AnimalDTO animal = new();
+    List<TamanhoAnimalDTO> tamanhoAnimals = new();
     List<EspecieOutputDTO> especies = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        tamanhoAnimals = await TamanhoAnimalService.GetAllAsync();
+
+        especies = await EspecieService.GetAllAsync();
+    }
 
 
     private void Voltar()
@@ -108,4 +134,17 @@
         Navigation.NavigateTo("/home");
     }
 
+    private async Task Cadastrar()
+    {
+        var result = await AnimalService.Cadastrar(animal);
+        if (result)
+        {
+            Navigation.NavigateTo("/home");
+        }
+        else
+        {
+
+        }
+    }
 }
+
