@@ -87,6 +87,20 @@
                 cursor: pointer;
             }
 
+            .confirm {
+                background: var(--clr-primary);
+                color: var(--clr-white);
+                border: none;
+                padding: 0.8em 1.4em;
+                border-radius: 2em;
+                cursor: pointer;
+                transition: 0.2s;
+
+                &:hover {
+                    background: var(--clr-primary-dark);
+                }
+            }
+
             .btn-primary {
                 background: var(--clr-primary);
                 color: var(--clr-white);
