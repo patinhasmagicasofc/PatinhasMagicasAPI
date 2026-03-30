@@ -3,6 +3,7 @@
 @using System.ComponentModel.DataAnnotations
 @inject NavigationManager Navigation
 @inject UsuarioService UsuarioService
+@inject IJSRuntime JS
 
 <main class="login-page">
     <div id="container-title-logo">
@@ -27,43 +28,43 @@
                 <li>
                     <p>Nome</p>
                     <InputText @bind-Value="usuario.Nome" placeholder="Digite seu nome" />
-                    <ValidationMessage For="@(() => usuario.Nome)" />
+                    <ValidationMessage class="text-danger" For="@(() => usuario.Nome)" />
                 </li>
 
                 <li>
                     <p>CPF</p>
-                    <InputText @bind-Value="usuario.CPF" placeholder="Digite CPF no formato 999.999.999-99" />
-                    <ValidationMessage For="@(() => usuario.CPF)" />
+                    <InputText id="cpfInput" @bind-Value="usuario.CPF" placeholder="Digite CPF no formato 999.999.999-99" />
+                    <ValidationMessage class="text-danger" For="@(() => usuario.CPF)" />
                 </li>
 
                 <li>
                     <p>Email</p>
                     <InputText @bind-Value="usuario.Email" type="email" placeholder="Digite seu email" />
-                    <ValidationMessage For="@(() => usuario.Email)" />
+                    <ValidationMessage class="text-danger" For="@(() => usuario.Email)" />
                 </li>
 
                 <li>
                     <p>DDD</p>
-                    <InputText @bind-Value="usuario.Ddd" placeholder="Digite o DDD" />
-                    <ValidationMessage For="@(() => usuario.Ddd)" />
+                    <InputNumber @bind-Value="usuario.Ddd" placeholder="Digite o DDD" />
+                    <ValidationMessage class="text-danger" For="@(() => usuario.Ddd)" />
                 </li>
 
                 <li>
                     <p>Telefone</p>
-                    <InputText @bind-Value="usuario.Telefone" placeholder="Digite seu telefone" />
-                    <ValidationMessage For="@(() => usuario.Telefone)" />
+                    <InputText @bind-Value="usuario.Telefone" type="tel" placeholder="Digite seu telefone" />
+                    <ValidationMessage class="text-danger" For="@(() => usuario.Telefone)" />
                 </li>
 
                 <li>
                     <p>Senha</p>
                     <InputText @bind-Value="usuario.Senha" type="password" placeholder="Digite sua senha" />
-                    <ValidationMessage For="@(() => usuario.Senha)" />
+                    <ValidationMessage class="text-danger" For="@(() => usuario.Senha)" />
                 </li>
 
                 <li>
                     <p>Confirme sua senha</p>
                     <InputText @bind-Value="usuario.ConfirmarSenha" type="password" placeholder="Digite novamente" />
-                    <ValidationMessage For="@(() => usuario.ConfirmarSenha)" />
+                    <ValidationMessage class="text-danger" For="@(() => usuario.ConfirmarSenha)" />
                 </li>
             </ul>
 
@@ -78,9 +79,17 @@
 </main>
 
 @code {
-    private CadastroUsuarioForm usuario = new();
+    private CadastroUsuarioDTO usuario = new();
     private string? mensagemGeral;
     private bool carregando;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("aplicarMascaraCPF", "cpfInput");
+        }
+    }
 
     private void VoltarParaAuth()
     {
@@ -101,7 +110,7 @@
             CPF = usuario.CPF!,
             Email = usuario.Email!,
             Senha = usuario.Senha!,
-            Ddd = int.Parse(usuario.Ddd!),
+            Ddd = usuario.Ddd!.Value,
             Telefone = usuario.Telefone!,
             TipoUsuarioId = null
         };
@@ -119,35 +128,4 @@
         mensagemGeral = "Nao foi possivel concluir o cadastro.";
     }
 
-    private class CadastroUsuarioForm
-    {
-        [Required(ErrorMessage = "O nome e obrigatorio.")]
-        [StringLength(150, ErrorMessage = "O nome deve ter no maximo 150 caracteres.")]
-        public string? Nome { get; set; }
-
-        [Required(ErrorMessage = "O CPF e obrigatorio.")]
-        [RegularExpression(@"^\d{3}\.\d{3}\.\d{3}-\d{2}$", ErrorMessage = "Formato de CPF invalido. Use 999.999.999-99.")]
-        public string? CPF { get; set; }
-
-        [Required(ErrorMessage = "O e-mail e obrigatorio.")]
-        [EmailAddress(ErrorMessage = "O e-mail informado nao e valido.")]
-        [StringLength(50, ErrorMessage = "O e-mail deve ter no maximo 50 caracteres.")]
-        public string? Email { get; set; }
-
-        [Required(ErrorMessage = "O DDD e obrigatorio.")]
-        [RegularExpression(@"^\d{2}$", ErrorMessage = "O DDD deve ter 2 digitos.")]
-        public string? Ddd { get; set; }
-
-        [Required(ErrorMessage = "O telefone e obrigatorio.")]
-        [RegularExpression(@"^\d{8,10}$", ErrorMessage = "O telefone deve ter entre 8 e 10 digitos.")]
-        public string? Telefone { get; set; }
-
-        [Required(ErrorMessage = "A senha e obrigatoria.")]
-        [StringLength(50, MinimumLength = 6, ErrorMessage = "A senha deve ter entre 6 e 50 caracteres.")]
-        public string? Senha { get; set; }
-
-        [Required(ErrorMessage = "Confirme sua senha.")]
-        [Compare(nameof(Senha), ErrorMessage = "As senhas nao coincidem.")]
-        public string? ConfirmarSenha { get; set; }
-    }
 }

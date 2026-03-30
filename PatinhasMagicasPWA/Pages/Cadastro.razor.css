@@ -103,3 +103,13 @@
         }
     }
 }
+
+
+
+::deep input {
+    padding: 0.8em;
+    border-radius: 2em;
+    border: 1px solid var(--clr-gray-light);
+    color: var(--clr-text-muted);
+    width: 100%;
+}

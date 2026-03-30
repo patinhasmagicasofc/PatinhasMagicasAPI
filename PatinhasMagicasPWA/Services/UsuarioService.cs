@@ -73,5 +73,33 @@ namespace PatinhasMagicasPWA.Services
 
             return content.Trim().Trim('"');
         }
+
+        public async Task<UsuarioOutputDTO?> GetByIdAsync(int id)
+        {
+            var response = await _http.GetAsync($"api/usuario/{id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return null;
+            }
+
+            return await response.Content.ReadFromJsonAsync<UsuarioOutputDTO>();
+        }
+
+        public async Task<bool> UpdateAsync(int id, UsuarioOutputDTO usuario)
+        {
+            var updatePayload = new
+            {
+                usuario.Nome,
+                usuario.Email,
+                usuario.Ddd,
+                usuario.Telefone,
+                usuario.TipoUsuarioId,
+                usuario.Ativo
+            };
+
+            var response = await _http.PutAsJsonAsync($"api/usuario/{id}", updatePayload);
+            return response.IsSuccessStatusCode;
+        }
     }
 }

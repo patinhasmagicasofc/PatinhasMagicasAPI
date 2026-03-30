@@ -1,112 +1,193 @@
-﻿@page "/editarPerfil"
+﻿@page "/perfil/editar"
+@inject NavigationManager Navigation
+@inject JwtService JwtService
+@inject UsuarioService UsuarioService
 
 <main>
-    <div class="perfil-container">
-        <form>
-            <div class="perfil-header">
-                <p class="titulo">
-                    Meu Perfil <span class="material-symbols-outlined">pets</span>
+    @if (usuario is null)
+    {
+        <p>Carregando perfil...</p>
+    }
+    else
+    {
+        <div class="perfil-container">
+            <form>
+                <div class="perfil-header">
+                    <p class="titulo">
+                        Meu Perfil <span class="material-symbols-outlined">pets</span>
+                    </p>
+                    <button type="button" class="btn-sair">Sair</button>
+                </div>
+
+                <p class="boas-vindas">
+                    Olá, <strong>@usuario.Nome</strong>. Aqui você pode gerenciar
+                    seus dados pessoais.
                 </p>
-                <button type="button" class="btn-sair">Sair</button>
-            </div>
 
-            <p class="boas-vindas">
-                Olá, <strong>NAME NAME NAME NAME</strong>. Aqui você pode gerenciar
-                seus dados pessoais.
-            </p>
+                @if (!string.IsNullOrWhiteSpace(mensagem))
+                {
+                    <p class="mensagem">@mensagem</p>
+                }
 
-            <div class="card-perfil">
-                <p class="secao-titulo">
-                    <span class="material-symbols-outlined">Person</span> Dados
-                    Pessoais
-                </p>
-                <div class="info-card">
-                    <label>Nome Completo</label>
-                    <input type="text" value="Nome" disabled />
-                </div>
-
-                <div class="info-card">
-                    <label>CPF (Não Editável)</label>
-                    <input type="text" value="111.111.111-11" disabled />
-                </div>
-
-                <div class="info-card">
-                    <label>E-mail</label>
-                    <input type="email" value="email@gmail.com" disabled />
-                </div>
-
-                <div class="grid-2">
+                <div class="card-perfil">
+                    <p class="secao-titulo">
+                        <span class="material-symbols-outlined">Person</span> Dados
+                        Pessoais
+                    </p>
                     <div class="info-card">
-                        <label>DDD</label>
-                        <input type="text" value="11" disabled />
+                        <label>Nome Completo</label>
+                        <input type="text" @bind="usuario.Nome" />
+                    </div>
+
+                    <div class="info-card">
+                        <label>CPF (Não Editável)</label>
+                        <input type="text" value="@usuario.CPF" disabled />
+                    </div>
+
+                    <div class="info-card">
+                        <label>E-mail</label>
+                        <input type="email" @bind="usuario.Email" />
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="info-card">
+                            <label>DDD</label>
+                            <input type="number" @bind="usuario.Ddd" min="11" max="99" />
+                        </div>
+                        <div class="info-card">
+                            <label>Telefone</label>
+                            <input type="text" @bind="usuario.Telefone" />
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn-acao-editar">
+                        <span class="material-symbols-outlined">edit</span>Editar Dados
+                    </button>
+                    <button type="button" class="btn-acao-salvar" @onclick="SalvarDados" disabled="@isSaving">
+                        <span class="material-symbols-outlined">save</span>Salvar Dados
+                    </button>
+                </div>
+
+                <div class="card-perfil">
+                    <p class="secao-titulo">
+                        <span class="material-symbols-outlined">home</span> Endereço
+                    </p>
+                    <div class="info-card">
+                        <label>CEP</label>
+                        <input type="text" value="@usuario.Endereco?.CEP" disabled />
+                    </div>
+
+                    <div class="info-card">
+                        <label>Rua/Avenida</label>
+                        <input type="text" value="@usuario.Endereco?.Logradouro" disabled />
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="info-card">
+                            <label>Bairro</label>
+                            <input type="text" value="@usuario.Endereco?.Bairro" disabled />
+                        </div>
+                        <div class="info-card">
+                            <label>Cidade</label>
+                            <input type="text" value="@usuario.Endereco?.Cidade" disabled />
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="info-card">
+                            <label>Estado (UF)</label>
+                            <input type="text" value="@usuario.Endereco?.Estado" disabled />
+                        </div>
+                        <div class="info-card">
+                            <label>Número</label>
+                            <input type="text" value="@usuario.Endereco?.Numero" disabled />
+                        </div>
                     </div>
                     <div class="info-card">
-                        <label>Telefone</label>
-                        <input type="text" value="11111-1111" disabled />
+                        <label>Complemento (Opcional)</label>
+                        <input type="text" value="@usuario.Endereco?.Complemento" disabled />
                     </div>
+
+                    <button type="button" class="btn-acao-editar">
+                        <span class="material-symbols-outlined">edit</span>Editar Endereço
+                    </button>
+                    <button type="button" class="btn-acao-salvar">
+                        <span class="material-symbols-outlined">save</span>Salvar Endereço
+                    </button>
                 </div>
 
-                <button type="button" class="btn-acao-editar">
-                    <span class="material-symbols-outlined">edit</span>Editar Dados
-                </button>
-                <button type="button" class="btn-acao-salvar">
-                    <span class="material-symbols-outlined">save</span>Salvar Dados
-                </button>
-            </div>
-
-            <div class="card-perfil">
-                <p class="secao-titulo">
-                    <span class="material-symbols-outlined">home</span> Endereço
-                </p>
-                <div class="info-card">
-                    <label>CEP</label>
-                    <input type="text" value="00000-000" disabled />
-                </div>
-
-                <div class="info-card">
-                    <label>Rua/Avenida</label>
-                    <input type="text" value="Rua" disabled />
-                </div>
-
-                <div class="grid-2">
-                    <div class="info-card">
-                        <label>Bairro</label>
-                        <input type="text" value="Bairro" disabled />
-                    </div>
-                    <div class="info-card">
-                        <label>Cidade</label>
-                        <input type="text" value="Cidade" disabled />
-                    </div>
-                </div>
-
-                <div class="grid-2">
-                    <div class="info-card">
-                        <label>Estado (UF)</label>
-                        <input type="text" value="UF" disabled />
-                    </div>
-                    <div class="info-card">
-                        <label>Número</label>
-                        <input type="text" value="123" disabled />
-                    </div>
-                </div>
-                <div class="info-card">
-                    <label>Complemento (Opcional)</label>
-                    <input type="text" value="Apto, bloco, casa..." disabled />
-                </div>
-
-                <button type="button" class="btn-acao-editar">
-                    <span class="material-symbols-outlined">edit</span>Editar Endereço
-                </button>
-                <button type="button" class="btn-acao-salvar">
-                    <span class="material-symbols-outlined">save</span>Salvar Endereço
-                </button>
-            </div>
-
-            <a class="voltar">Voltar</a>
-        </form>
-    </div>
+                <a class="voltar" @onclick="Voltar">Voltar</a>
+            </form>
+        </div>
+    }
 </main>
 
 @code {
+    [Parameter]
+    public int? id { get; set; }
 
+    private UsuarioOutputDTO? usuario;
+    private string mensagem = string.Empty;
+    private bool isSaving;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userIdString = await JwtService.GetUserIdAsync();
+
+        if (string.IsNullOrWhiteSpace(userIdString) && id.HasValue)
+        {
+            userIdString = id.Value.ToString();
+        }
+
+        if (!int.TryParse(userIdString, out var userId))
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        usuario = await UsuarioService.GetByIdAsync(userId);
+
+        if (usuario is null)
+        {
+            Navigation.NavigateTo("/login");
+        }
+    }
+
+    private async Task SalvarDados()
+    {
+        if (usuario is null)
+        {
+            return;
+        }
+
+        isSaving = true;
+        mensagem = string.Empty;
+
+        try
+        {
+            var updated = await UsuarioService.UpdateAsync(usuario.Id, usuario);
+
+            if (updated)
+            {
+                Navigation.NavigateTo("/profile");
+            }
+            else
+            {
+                mensagem = "Falha ao atualizar o perfil.";
+            }
+        }
+        catch
+        {
+            mensagem = "Erro ao salvar dados do perfil.";
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+
+    private void Voltar()
+    {
+        Navigation.NavigateTo("/profile");
+    }
 }

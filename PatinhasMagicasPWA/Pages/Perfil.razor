@@ -1,52 +1,85 @@
 ﻿@page "/perfil"
+@inject NavigationManager Navigation
+@inject JwtService JwtService
+@inject UsuarioService UsuarioService
 
 <main>
-    <section class="profile-header">
-        <div class="avatar"> <img src="./img/hero-pets.jpg" alt=""></div>
+    @if (usuario is null)
+    {
+        <p>Carregando perfil...</p>
+    }
+    else
+    {
+        <section class="profile-header">
+            <div class="avatar"> <img src="./img/hero-pets.jpg" alt=""></div>
 
-        <p>Nome</p>
-        <p>name@email.com</p>
+            <p>@usuario.Nome</p>
+            <p>@usuario.Email</p>
 
-    </section>
+        </section>
 
-    <section class="profile-menu">
-        <div class="menu-item">
-            <button>
-                <span class="material-symbols-outlined">person</span>
-                Alterar dados do perfil
-            </button>
-        </div>
+        <section class="profile-menu">
+            <div class="menu-item">
+                <button @onclick="IrParaEditar">
+                    <span class="material-symbols-outlined">person</span>
+                    Alterar dados do perfil
+                </button>
+            </div>
 
-        <div class="menu-item">
-            <button>
-                <span class="material-symbols-outlined">shopping_bag</span>
-                Meus pedidos
-            </button>
-        </div>
+            <div class="menu-item">
+                <button>
+                    <span class="material-symbols-outlined">shopping_bag</span>
+                    Meus pedidos
+                </button>
+            </div>
 
-        <div class="menu-item">
-            <button>
-                <span class="material-symbols-outlined">favorite</span>
-                Favoritos
-            </button>
-        </div>
+            <div class="menu-item">
+                <button>
+                    <span class="material-symbols-outlined">favorite</span>
+                    Favoritos
+                </button>
+            </div>
 
-        <div class="menu-item">
-            <button>
-                <span class="material-symbols-outlined">support_agent</span>
-                Suporte
-            </button>
-        </div>
+            <div class="menu-item">
+                <button>
+                    <span class="material-symbols-outlined">support_agent</span>
+                    Suporte
+                </button>
+            </div>
 
-        <div class="menu-item">
-            <button>
-                <span class="material-symbols-outlined">settings</span>
-                Configurações
-            </button>
-        </div>
-    </section>
+            <div class="menu-item">
+                <button>
+                    <span class="material-symbols-outlined">settings</span>
+                    Configurações
+                </button>
+            </div>
+        </section>
+    }
 </main>
 
 @code {
+    private UsuarioOutputDTO? usuario;
 
+    protected override async Task OnInitializedAsync()
+    {
+        var userIdString = await JwtService.GetUserIdAsync();
+
+        if (!int.TryParse(userIdString, out var userId))
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        usuario = await UsuarioService.GetByIdAsync(userId);
+
+        if (usuario is null)
+        {
+            Navigation.NavigateTo("/login");
+        }
+    }
+
+    private void IrParaEditar()
+    {
+        Navigation.NavigateTo("/perfil/editar");
+    }
 }
