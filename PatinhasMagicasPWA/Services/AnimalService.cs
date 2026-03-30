@@ -18,5 +18,20 @@ namespace PatinhasMagicasPWA.Services
 
             return response;
         }
+
+        public async Task<bool> Cadastrar(AnimalDTO animal)
+        {
+            var response = await _http.PostAsJsonAsync("api/animal", animal);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return false;
+            }
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            return true;
+        }
+
     }
 }
