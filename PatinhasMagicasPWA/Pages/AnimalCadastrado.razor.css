@@ -1,0 +1,38 @@
+﻿main {
+    min-height: 100vh;
+    padding-top: 5em;
+    padding-bottom: 4em;
+    margin: 0 1em;
+
+    .menu-card {
+        display: flex;
+        justify-content: space-between;
+        box-shadow: var(--shadow-soft);
+        padding: 1em;
+        border-radius: 2em;
+
+        img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 100%;
+        }
+
+        .info {
+            display: flex;
+            gap: 1em;
+
+            p {
+                color: var(--clr-text-main);
+            }
+        }
+
+        button {
+            background-color: var(--clr-primary);
+            border: none;
+            padding: 0 1em;
+            border-radius: 2em;
+            color: var(--clr-white);
+        }
+    }
+}

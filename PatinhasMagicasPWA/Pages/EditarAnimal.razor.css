@@ -6,6 +6,7 @@
     padding-top: 5em;
     padding-bottom: 4em;
     margin: 0 1em;
+
     form.card-form {
         background: var(--clr-white);
         border-radius: 1.5em;
@@ -49,7 +50,6 @@
                             box-shadow: 0 0 0 2px var(--clr-primary-transparent);
                         }
                     }
-
 
                     .input-select {
                         width: 100%;
