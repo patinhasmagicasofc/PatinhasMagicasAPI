@@ -1,0 +1,47 @@
+﻿@page "/MeusAnimais"
+@inject AnimalService AnimalService
+
+<main>
+    <div class="btn-novo-animal">
+        <p>Cadastre um novo animal</p>
+        <button>Cadastrar animal</button>
+    </div>
+
+    @if (animals.Count == 0)
+    {
+        <p>Você ainda não tem animais cadastrados.</p>
+    }
+    else if (animals.Count > 0)
+    {
+        @foreach (var animal in animals)
+        {
+
+            <div class="menu-card">
+
+                <div class="info">
+                    <img src="./img/grooming-dog.jpg" alt="Animal">
+                    <ul>
+                        <li>
+                            <p>@animal.Nome</p>
+                            <p>@animal.NomeEspecie</p>
+                            <p>@animal.Idade</p>
+                        </li>
+                    </ul>
+
+
+                </div>
+                <button>Ver detalhes</button>
+            </div>
+        }
+    }
+
+</main>
+
+@code {
+    List<AnimalDTO> animals = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        animals = await AnimalService.GetAllAnimalsAsync();
+    }
+}
