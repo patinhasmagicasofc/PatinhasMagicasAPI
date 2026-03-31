@@ -30,6 +30,30 @@ main {
     flex-direction: column;
     gap: 1em;
 
+    .btn-novo-agendamento {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-bottom: 3em;
+        text-align: center;
+        align-items: center;
+        gap: 0.5em;
+        margin: 1em !important;
+
+        p {
+            color: var(--clr-text-main);
+        }
+
+        button {
+            width: 100%;
+            background: linear-gradient(135deg, var(--clr-primary), var(--clr-primary-light));
+            border: none;
+            padding: 1em;
+            border-radius: 2em;
+            color: var(--clr-white);
+        }
+    }
+
     .info-bg-service {
         color: var(--clr-text-muted);
         padding: 1em 0;
