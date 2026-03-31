@@ -29,6 +29,7 @@
         box-shadow: var(--shadow-soft);
         padding: 1em;
         border-radius: 2em;
+        align-items: center;
 
         img {
             width: 60px;
@@ -50,6 +51,7 @@
             background-color: var(--clr-primary);
             border: none;
             padding: 0 1em;
+            height: 3em;
             border-radius: 2em;
             color: var(--clr-white);
         }
