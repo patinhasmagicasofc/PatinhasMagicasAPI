@@ -8,6 +8,7 @@
         public string NomeEspecie { get; set; }
         public string Raca { get; set; }
         public int? Idade { get; set; }
+        public string? FotoDataUrl { get; set; }
         public int TamanhoAnimalId { get; set; }
         public string NomeTamanhoAnimal { get; set; }
         public int UsuarioId { get; set; }

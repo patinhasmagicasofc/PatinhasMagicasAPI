@@ -1,0 +1,123 @@
+@page "/notificacoes"
+@inject JwtService JwtService
+@inject PushNotificationService PushNotificationService
+@inject DeviceFeedbackService DeviceFeedbackService
+
+<main>
+    <section class="notification-hero">
+        <p class="title">Notificacoes</p>
+        <p class="subtitle">Gerencie push e recursos do dispositivo em um unico lugar.</p>
+    </section>
+
+    <section class="notification-card">
+        <p class="section-title">Push</p>
+        <p class="section-text">Ative para receber confirmacoes de agendamento e avisos importantes.</p>
+
+        @if (!string.IsNullOrWhiteSpace(pushMessage))
+        {
+            <p class="feedback">@pushMessage</p>
+        }
+
+        <button class="primary" @onclick="AtivarPushAsync" disabled="@loading">
+            <span class="material-symbols-outlined">notifications_active</span>
+            Ativar notificacoes
+        </button>
+
+        <button class="secondary" @onclick="EnviarTestePushAsync" disabled="@loading">
+            <span class="material-symbols-outlined">send</span>
+            Enviar teste push
+        </button>
+    </section>
+
+    <section class="notification-card">
+        <p class="section-title">Vibracao</p>
+        <p class="section-text">Use vibracao curta em confirmacoes, aviso de erro ou feedback de acao no celular.</p>
+
+        <div class="button-group">
+            <button class="primary" @onclick="TestarVibracaoSucessoAsync">
+                <span class="material-symbols-outlined">done_all</span>
+                Testar sucesso
+            </button>
+
+            <button class="secondary" @onclick="TestarVibracaoAvisoAsync">
+                <span class="material-symbols-outlined">warning</span>
+                Testar aviso
+            </button>
+        </div>
+    </section>
+
+    <section class="notification-card">
+        <p class="section-title">Sugestao</p>
+        <p class="section-text">Vale usar vibracao em eventos curtos, como salvar foto do animal, confirmar agendamento ou falha importante. Evite vibrar em toda navegacao para nao cansar o usuario.</p>
+    </section>
+</main>
+
+<MenuInferior />
+
+@code {
+    private string pushMessage = string.Empty;
+    private bool loading;
+    private int? usuarioId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userIdString = await JwtService.GetUserIdAsync();
+        usuarioId = int.TryParse(userIdString, out var userId) ? userId : null;
+    }
+
+    private async Task AtivarPushAsync()
+    {
+        if (!usuarioId.HasValue)
+        {
+            pushMessage = "Usuario nao identificado.";
+            await DeviceFeedbackService.VibrateWarningAsync();
+            return;
+        }
+
+        loading = true;
+        var result = await PushNotificationService.SubscribeAsync(usuarioId.Value);
+        pushMessage = result.Message;
+        loading = false;
+
+        if (result.Success)
+        {
+            await DeviceFeedbackService.VibrateSuccessAsync();
+            return;
+        }
+
+        await DeviceFeedbackService.VibrateWarningAsync();
+    }
+
+    private async Task EnviarTestePushAsync()
+    {
+        if (!usuarioId.HasValue)
+        {
+            pushMessage = "Usuario nao identificado.";
+            await DeviceFeedbackService.VibrateWarningAsync();
+            return;
+        }
+
+        loading = true;
+        var result = await PushNotificationService.SendTestAsync(usuarioId.Value);
+        pushMessage = result.Message;
+        loading = false;
+
+        if (result.Success)
+        {
+            await DeviceFeedbackService.VibrateSuccessAsync();
+            return;
+        }
+
+        await DeviceFeedbackService.VibrateWarningAsync();
+    }
+
+    private Task TestarVibracaoSucessoAsync()
+    {
+        return DeviceFeedbackService.VibrateSuccessAsync().AsTask();
+    }
+
+    private Task TestarVibracaoAvisoAsync()
+    {
+        return DeviceFeedbackService.VibrateWarningAsync().AsTask();
+    }
+}

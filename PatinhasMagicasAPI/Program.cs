@@ -45,6 +45,7 @@ builder.Services.AddScoped<IServicoTamanhoRepository, ServicoTamanhoRepository>(
 builder.Services.AddScoped<IEspecieRepository, EspecieRepository>();
 builder.Services.AddScoped<IStatusPagamentoRepository, StatusPagamentoRepository>();
 builder.Services.AddScoped<IStatusPedidoRepository, StatusPedidoRepository>();
+builder.Services.AddScoped<IPushSubscriptionRepository, PushSubscriptionRepository>();
 
 // Services
 builder.Services.AddScoped<IStatusPagamentoService, StatusPagamentoService>();
@@ -59,7 +60,9 @@ builder.Services.AddScoped<IProdutoService, ProdutoService>();
 builder.Services.AddScoped<ITamanhoAnimalService, TamanhoAnimalService>();
 builder.Services.AddScoped<IAnimalService, AnimalService>();
 builder.Services.AddScoped<IAgendamentoService, AgendamentoService>();
+builder.Services.AddScoped<IPushNotificationService, PushNotificationService>();
 builder.Services.AddHttpClient<CepService>();
+builder.Services.Configure<PushNotificationOptions>(builder.Configuration.GetSection("PushNotifications"));
 
 // ✅ CORS — corrigido
 builder.Services.AddCors(options =>

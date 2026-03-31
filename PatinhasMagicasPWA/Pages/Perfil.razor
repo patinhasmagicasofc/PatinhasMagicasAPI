@@ -1,4 +1,4 @@
-﻿@page "/perfil"
+@page "/perfil"
 @inject NavigationManager Navigation
 @inject JwtService JwtService
 @inject UsuarioService UsuarioService
@@ -11,11 +11,9 @@
     else
     {
         <section class="profile-header">
-            <div class="avatar"> <img src="./img/hero-pets.jpg" alt=""></div>
-
+            <div class="avatar"><img src="./img/hero-pets.jpg" alt=""></div>
             <p>@usuario.Nome</p>
             <p>@usuario.Email</p>
-
         </section>
 
         <section class="profile-menu">
@@ -57,14 +55,14 @@
             <div class="menu-item">
                 <button>
                     <span class="material-symbols-outlined">settings</span>
-                    Configurações
+                    Configuracoes
                 </button>
             </div>
         </section>
     }
 </main>
 
-<MenuInferior/>
+<MenuInferior />
 
 @code {
     private UsuarioOutputDTO? usuario;

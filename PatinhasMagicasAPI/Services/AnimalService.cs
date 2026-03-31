@@ -57,6 +57,8 @@ namespace PatinhasMagicasAPI.Services
             entity.Nome = dto.Nome;
             entity.Raca = dto.Raca;
             entity.Idade = dto.Idade;
+            entity.FotoDataUrl = dto.FotoDataUrl;
+            entity.EspecieId = dto.EspecieId;
             entity.TamanhoAnimalId = dto.TamanhoAnimalId;
             entity.UsuarioId = dto.UsuarioId;
 
@@ -72,6 +74,7 @@ namespace PatinhasMagicasAPI.Services
                 Nome = animal.Nome,
                 Raca = animal.Raca,
                 Idade = animal.Idade ?? 0,
+                FotoDataUrl = animal.FotoDataUrl,
                 EspecieId = animal.EspecieId,
                 NomeEspecie = animal.Especie?.Nome,
                 TamanhoAnimalId = animal.TamanhoAnimalId,

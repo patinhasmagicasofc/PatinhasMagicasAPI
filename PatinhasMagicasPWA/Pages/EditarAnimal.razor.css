@@ -23,6 +23,63 @@
             text-align: center;
         }
 
+        .helper-text {
+            color: var(--clr-text-muted);
+            font-size: 0.95rem;
+            text-align: center;
+        }
+
+        .photo-card {
+            background: var(--clr-primary-soft-one);
+            border: 1px dashed var(--clr-primary-light);
+            border-radius: 1.2em;
+            padding: 1em;
+            display: flex;
+            flex-direction: column;
+            gap: .8em;
+
+            .animal-photo-preview {
+                width: 100%;
+                max-height: 220px;
+                object-fit: cover;
+                border-radius: 1em;
+            }
+
+            .animal-photo-placeholder {
+                min-height: 180px;
+                border-radius: 1em;
+                background: var(--clr-white);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: .5em;
+                color: var(--clr-text-muted);
+            }
+
+            .photo-note {
+                color: var(--clr-text-muted);
+                font-size: .85rem;
+            }
+
+            .photo-input::file-selector-button {
+                border: none;
+                border-radius: 2em;
+                padding: .8em 1em;
+                background: var(--clr-primary);
+                color: var(--clr-white);
+                cursor: pointer;
+                margin-right: .8em;
+            }
+
+            .photo-remove {
+                background: none;
+                border: none;
+                color: #c62828;
+                text-align: left;
+            }
+        }
+
         .field {
             ul {
                 li {
@@ -49,6 +106,12 @@
                             border: 1px solid var(--clr-primary);
                             box-shadow: 0 0 0 2px var(--clr-primary-transparent);
                         }
+
+                        &:disabled {
+                            cursor: not-allowed;
+                            opacity: 0.7;
+                            background: #f3f3f3;
+                        }
                     }
 
                     .input-select {
@@ -69,9 +132,25 @@
                             border: 1px solid var(--clr-primary);
                             box-shadow: 0 0 0 2px var(--clr-primary-transparent);
                         }
+
+                        &:disabled {
+                            cursor: not-allowed;
+                            opacity: 0.7;
+                            background-color: #f3f3f3;
+                            background-image: none;
+                        }
+                    }
+
+                    .validation-message {
+                        color: #c62828;
+                        font-size: 0.85rem;
                     }
                 }
             }
+        }
+
+        .form-message {
+            text-align: center;
         }
 
         .actions {
@@ -112,6 +191,12 @@
 
                 &:hover {
                     background: var(--clr-primary-dark);
+                }
+
+                &:disabled {
+                    cursor: not-allowed;
+                    opacity: 0.6;
+                    background: var(--clr-primary-light);
                 }
             }
         }

@@ -27,6 +27,7 @@ namespace PatinhasMagicasAPI.Data
         public DbSet<ServicoTamanho> ServicoTamanho { get; set; }
         public DbSet<AgendamentoServico> AgendamentoServico { get; set; }
         public DbSet<Especie> Especies { get; set; }
+        public DbSet<PushSubscription> PushSubscriptions { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -219,6 +220,16 @@ namespace PatinhasMagicasAPI.Data
                 .WithMany(s => s.AgendamentoServicos)
                 .HasForeignKey(asv => asv.ServicoId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<PushSubscription>()
+                .HasOne(subscription => subscription.Usuario)
+                .WithMany(usuario => usuario.PushSubscriptions)
+                .HasForeignKey(subscription => subscription.UsuarioId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<PushSubscription>()
+                .HasIndex(subscription => subscription.Endpoint)
+                .IsUnique();
 
         }
     }

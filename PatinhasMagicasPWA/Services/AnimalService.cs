@@ -33,5 +33,33 @@ namespace PatinhasMagicasPWA.Services
             return true;
         }
 
+        public async Task<bool> Editar(AnimalDTO animal)
+        {
+            var response = await _http.PutAsJsonAsync($"api/animal/{animal.Id}", animal);
+            if (!response.IsSuccessStatusCode)
+            {
+                return false;
+            }
+            var content = await response.Content.ReadAsStringAsync();
+            return true;
+
+        }
+
+        public async Task<bool> Delete(AnimalDTO animal)
+        {
+            var response = await _http.DeleteAsync($"api/animal/{animal.Id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                return false;
+            }
+            var content = await response.Content.ReadAsStringAsync();
+            return true;
+        }
+
+        public async Task<AnimalDTO> GetById(int id)
+        {
+            var response = await _http.GetFromJsonAsync<AnimalDTO>($"api/animal/{id}");
+            return response;
+        }
     }
 }

@@ -31,6 +31,10 @@ builder.Services.AddScoped<ServicoService>();
 builder.Services.AddScoped<AnimalService>();
 builder.Services.AddScoped<TamanhoAnimalService>();
 builder.Services.AddScoped<EspecieService>();
+builder.Services.AddScoped<EnderecoService>();
+builder.Services.AddScoped<CepService>();
+builder.Services.AddScoped<PushNotificationService>();
+builder.Services.AddScoped<DeviceFeedbackService>();
 
 
 await builder.Build().RunAsync();

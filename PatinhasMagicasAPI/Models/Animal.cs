@@ -17,6 +17,8 @@ namespace PatinhasMagicasAPI.Models
         [Range(0, 100, ErrorMessage = "A idade deve ser entre 0 e 100 anos.")]
         public int? Idade { get; set; }
 
+        public string? FotoDataUrl { get; set; }
+
         [Required(ErrorMessage = "A espécie é obrigatória.")]
         [Range(1, int.MaxValue, ErrorMessage = "EspecieId deve ser um valor válido.")]
         public int EspecieId { get; set; }

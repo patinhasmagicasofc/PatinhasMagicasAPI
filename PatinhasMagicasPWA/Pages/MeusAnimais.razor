@@ -1,5 +1,6 @@
 ﻿@page "/MeusAnimais"
 @inject AnimalService AnimalService
+@inject NavigationManager Navigation
 
 <main>
     <div class="btn-novo-animal">
@@ -19,7 +20,7 @@
             <div class="menu-card">
 
                 <div class="info">
-                    <img src="./img/grooming-dog.jpg" alt="Animal">
+                    <img src="@(string.IsNullOrWhiteSpace(animal.FotoDataUrl) ? "./img/grooming-dog.jpg" : animal.FotoDataUrl)" alt="Animal">
                     <ul>
                         <li>
                             <p>@animal.Nome</p>
@@ -30,7 +31,7 @@
 
 
                 </div>
-                <button>Ver detalhes</button>
+                <button @onclick="() => VerDetalhes(animal.Id)">Ver detalhes</button>
             </div>
         }
     }
@@ -43,5 +44,10 @@
     protected override async Task OnInitializedAsync()
     {
         animals = await AnimalService.GetAllAnimalsAsync();
+    }
+
+    private void VerDetalhes(int id)
+    {
+        Navigation.NavigateTo($"/animal/{id}");
     }
 }

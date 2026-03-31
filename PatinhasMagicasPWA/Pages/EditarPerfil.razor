@@ -1,7 +1,10 @@
-﻿@page "/perfil/editar"
+@page "/perfil/editar"
 @inject NavigationManager Navigation
 @inject JwtService JwtService
 @inject UsuarioService UsuarioService
+@inject EnderecoService EnderecoService
+@inject CepService CepService
+@inject AuthService AuthService
 
 <main>
     @if (usuario is null)
@@ -16,104 +19,180 @@
                     <p class="titulo">
                         Meu Perfil <span class="material-symbols-outlined">pets</span>
                     </p>
-                    <button type="button" class="btn-sair">Sair</button>
+                    <button type="button" class="btn-sair" @onclick="Sair">Sair</button>
                 </div>
 
                 <p class="boas-vindas">
-                    Olá, <strong>@usuario.Nome</strong>. Aqui você pode gerenciar
-                    seus dados pessoais.
+                    Ola, <strong>@usuario.Nome</strong>. Aqui voce pode gerenciar seus dados pessoais.
                 </p>
 
-                @if (!string.IsNullOrWhiteSpace(mensagem))
-                {
-                    <p class="mensagem">@mensagem</p>
-                }
+                <p class="helper-text">Os blocos comecam bloqueados. Libere a edicao somente do que quiser alterar.</p>
 
                 <div class="card-perfil">
                     <p class="secao-titulo">
-                        <span class="material-symbols-outlined">Person</span> Dados
-                        Pessoais
+                        <span class="material-symbols-outlined">Person</span> Dados Pessoais
                     </p>
+
+                    @if (!string.IsNullOrWhiteSpace(mensagemUsuario))
+                    {
+                        <p class="mensagem">@mensagemUsuario</p>
+                    }
+
                     <div class="info-card">
                         <label>Nome Completo</label>
-                        <input type="text" @bind="usuario.Nome" />
+                        <input type="text" @bind="usuario.Nome" disabled="@CamposUsuarioBloqueados" />
+                        @if (ExibirErroNome)
+                        {
+                            <span class="validation-message">Informe o nome completo.</span>
+                        }
                     </div>
 
                     <div class="info-card">
-                        <label>CPF (Não Editável)</label>
+                        <label>CPF (Nao Editavel)</label>
                         <input type="text" value="@usuario.CPF" disabled />
                     </div>
 
                     <div class="info-card">
                         <label>E-mail</label>
-                        <input type="email" @bind="usuario.Email" />
+                        <input type="email" @bind="usuario.Email" disabled="@CamposUsuarioBloqueados" />
+                        @if (ExibirErroEmail)
+                        {
+                            <span class="validation-message">Informe um e-mail valido.</span>
+                        }
                     </div>
 
                     <div class="grid-2">
                         <div class="info-card">
                             <label>DDD</label>
-                            <input type="number" @bind="usuario.Ddd" min="11" max="99" />
+                            <input type="number" @bind="usuario.Ddd" min="11" max="99" disabled="@CamposUsuarioBloqueados" />
+                            @if (ExibirErroDdd)
+                            {
+                                <span class="validation-message">Informe um DDD valido.</span>
+                            }
                         </div>
                         <div class="info-card">
                             <label>Telefone</label>
-                            <input type="text" @bind="usuario.Telefone" />
+                            <input type="text" @bind="usuario.Telefone" disabled="@CamposUsuarioBloqueados" />
+                            @if (ExibirErroTelefone)
+                            {
+                                <span class="validation-message">Informe o telefone.</span>
+                            }
                         </div>
                     </div>
 
-                    <button type="button" class="btn-acao-editar">
-                        <span class="material-symbols-outlined">edit</span>Editar Dados
-                    </button>
-                    <button type="button" class="btn-acao-salvar" @onclick="SalvarDados" disabled="@isSaving">
-                        <span class="material-symbols-outlined">save</span>Salvar Dados
-                    </button>
+                    <div class="acoes-card">
+                        @if (CamposUsuarioBloqueados)
+                        {
+                            <button type="button" class="btn-acao-editar" @onclick="IniciarEdicaoUsuario">
+                                <span class="material-symbols-outlined">edit</span>Editar Dados
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn-acao-secundaria" @onclick="DescartarEdicaoUsuario">
+                                <span class="material-symbols-outlined">close</span>Desfazer
+                            </button>
+                        }
+
+                        <button type="button" class="btn-acao-salvar" @onclick="SalvarDadosUsuario" disabled="@(!PodeSalvarUsuario || salvandoUsuario)">
+                            <span class="material-symbols-outlined">save</span>Salvar Dados
+                        </button>
+                    </div>
                 </div>
 
                 <div class="card-perfil">
                     <p class="secao-titulo">
-                        <span class="material-symbols-outlined">home</span> Endereço
+                        <span class="material-symbols-outlined">home</span> Endereco
                     </p>
+
+                    @if (!string.IsNullOrWhiteSpace(mensagemEndereco))
+                    {
+                        <p class="mensagem">@mensagemEndereco</p>
+                    }
+
                     <div class="info-card">
                         <label>CEP</label>
-                        <input type="text" value="@usuario.Endereco?.CEP" disabled />
+                        <input type="text" @bind="usuario.Endereco!.CEP" @onblur="BuscarCepAoSair" disabled="@CamposEnderecoBloqueados" />
+                        @if (buscandoCep)
+                        {
+                            <span class="info-message">Buscando CEP...</span>
+                        }
+                        else if (ExibirErroCep)
+                        {
+                            <span class="validation-message">Informe um CEP valido no formato 99999-999.</span>
+                        }
                     </div>
 
                     <div class="info-card">
                         <label>Rua/Avenida</label>
-                        <input type="text" value="@usuario.Endereco?.Logradouro" disabled />
+                        <input type="text" @bind="usuario.Endereco!.Logradouro" disabled="@CamposEnderecoBloqueados" />
+                        @if (ExibirErroLogradouro)
+                        {
+                            <span class="validation-message">Informe o logradouro.</span>
+                        }
                     </div>
 
                     <div class="grid-2">
                         <div class="info-card">
                             <label>Bairro</label>
-                            <input type="text" value="@usuario.Endereco?.Bairro" disabled />
+                            <input type="text" @bind="usuario.Endereco!.Bairro" disabled="@CamposEnderecoBloqueados" />
+                            @if (ExibirErroBairro)
+                            {
+                                <span class="validation-message">Informe o bairro.</span>
+                            }
                         </div>
                         <div class="info-card">
                             <label>Cidade</label>
-                            <input type="text" value="@usuario.Endereco?.Cidade" disabled />
+                            <input type="text" @bind="usuario.Endereco!.Cidade" disabled="@CamposEnderecoBloqueados" />
+                            @if (ExibirErroCidade)
+                            {
+                                <span class="validation-message">Informe a cidade.</span>
+                            }
                         </div>
                     </div>
 
                     <div class="grid-2">
                         <div class="info-card">
                             <label>Estado (UF)</label>
-                            <input type="text" value="@usuario.Endereco?.Estado" disabled />
+                            <input type="text" @bind="usuario.Endereco!.Estado" maxlength="2" disabled="@CamposEnderecoBloqueados" />
+                            @if (ExibirErroEstado)
+                            {
+                                <span class="validation-message">Informe a UF com 2 letras.</span>
+                            }
                         </div>
                         <div class="info-card">
-                            <label>Número</label>
-                            <input type="text" value="@usuario.Endereco?.Numero" disabled />
+                            <label>Numero</label>
+                            <input type="number" @bind="usuario.Endereco!.Numero" min="1" disabled="@CamposEnderecoBloqueados" />
+                            @if (ExibirErroNumero)
+                            {
+                                <span class="validation-message">Informe o numero.</span>
+                            }
                         </div>
                     </div>
+
                     <div class="info-card">
                         <label>Complemento (Opcional)</label>
-                        <input type="text" value="@usuario.Endereco?.Complemento" disabled />
+                        <input type="text" @bind="usuario.Endereco!.Complemento" disabled="@CamposEnderecoBloqueados" />
                     </div>
 
-                    <button type="button" class="btn-acao-editar">
-                        <span class="material-symbols-outlined">edit</span>Editar Endereço
-                    </button>
-                    <button type="button" class="btn-acao-salvar">
-                        <span class="material-symbols-outlined">save</span>Salvar Endereço
-                    </button>
+                    <div class="acoes-card">
+                        @if (CamposEnderecoBloqueados)
+                        {
+                            <button type="button" class="btn-acao-editar" @onclick="IniciarEdicaoEndereco">
+                                <span class="material-symbols-outlined">edit</span>Editar Endereco
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn-acao-secundaria" @onclick="DescartarEdicaoEndereco">
+                                <span class="material-symbols-outlined">close</span>Desfazer
+                            </button>
+                        }
+
+                        <button type="button" class="btn-acao-salvar" @onclick="SalvarEndereco" disabled="@(!PodeSalvarEndereco || salvandoEndereco)">
+                            <span class="material-symbols-outlined">save</span>Salvar Endereco
+                        </button>
+                    </div>
                 </div>
 
                 <a class="voltar" @onclick="Voltar">Voltar</a>
@@ -123,14 +202,97 @@
 </main>
 
 @code {
+    private const string PerfilRoute = "/perfil";
+    private const string LoginRoute = "/login";
+
     [Parameter]
     public int? id { get; set; }
 
     private UsuarioOutputDTO? usuario;
-    private string mensagem = string.Empty;
-    private bool isSaving;
+    private UsuarioOutputDTO? usuarioSnapshot;
+    private EnderecoOutputDTO enderecoSnapshot = new();
+    private string mensagemUsuario = string.Empty;
+    private string mensagemEndereco = string.Empty;
+    private bool salvandoUsuario;
+    private bool salvandoEndereco;
+    private bool editandoUsuario;
+    private bool editandoEndereco;
+    private bool tentouSalvarUsuario;
+    private bool tentouSalvarEndereco;
+    private bool buscandoCep;
+
+    private bool CamposUsuarioBloqueados => !editandoUsuario || salvandoUsuario;
+    private bool CamposEnderecoBloqueados => !editandoEndereco || salvandoEndereco || buscandoCep;
+    private EnderecoOutputDTO? EnderecoAtual => usuario?.Endereco;
+
+    private bool PodeSalvarUsuario => editandoUsuario && DadosUsuarioValidos && UsuarioFoiAlterado;
+    private bool DadosUsuarioValidos => usuario is not null
+        && !string.IsNullOrWhiteSpace(usuario.Nome)
+        && !string.IsNullOrWhiteSpace(usuario.Email)
+        && usuario.Email.Contains("@")
+        && usuario.Ddd >= 11
+        && usuario.Ddd <= 99
+        && !string.IsNullOrWhiteSpace(usuario.Telefone);
+    private bool UsuarioFoiAlterado => usuario is not null
+        && usuarioSnapshot is not null
+        && (usuario.Nome != usuarioSnapshot.Nome
+            || usuario.Email != usuarioSnapshot.Email
+            || usuario.Ddd != usuarioSnapshot.Ddd
+            || usuario.Telefone != usuarioSnapshot.Telefone);
+
+    private bool PodeSalvarEndereco => editandoEndereco && DadosEnderecoValidos && EnderecoFoiAlterado;
+    private bool DadosEnderecoValidos => EnderecoAtual is not null
+        && CepValido(EnderecoAtual.CEP)
+        && !string.IsNullOrWhiteSpace(EnderecoAtual.Logradouro)
+        && !string.IsNullOrWhiteSpace(EnderecoAtual.Bairro)
+        && !string.IsNullOrWhiteSpace(EnderecoAtual.Cidade)
+        && !string.IsNullOrWhiteSpace(EnderecoAtual.Estado)
+        && EnderecoAtual.Estado.Trim().Length == 2
+        && EnderecoAtual.Numero > 0;
+    private bool EnderecoFoiAlterado => EnderecoAtual is not null
+        && (EnderecoAtual.CEP != enderecoSnapshot.CEP
+            || EnderecoAtual.Logradouro != enderecoSnapshot.Logradouro
+            || EnderecoAtual.Bairro != enderecoSnapshot.Bairro
+            || EnderecoAtual.Cidade != enderecoSnapshot.Cidade
+            || EnderecoAtual.Estado != enderecoSnapshot.Estado
+            || EnderecoAtual.Numero != enderecoSnapshot.Numero
+            || EnderecoAtual.Complemento != enderecoSnapshot.Complemento);
+
+    private bool ExibirErroNome => tentouSalvarUsuario && string.IsNullOrWhiteSpace(usuario?.Nome);
+    private bool ExibirErroEmail => tentouSalvarUsuario && (string.IsNullOrWhiteSpace(usuario?.Email) || !(usuario?.Email?.Contains("@") ?? false));
+    private bool ExibirErroDdd => tentouSalvarUsuario && (usuario?.Ddd < 11 || usuario?.Ddd > 99);
+    private bool ExibirErroTelefone => tentouSalvarUsuario && string.IsNullOrWhiteSpace(usuario?.Telefone);
+    private bool ExibirErroCep => tentouSalvarEndereco && !CepValido(EnderecoAtual?.CEP);
+    private bool ExibirErroLogradouro => tentouSalvarEndereco && string.IsNullOrWhiteSpace(EnderecoAtual?.Logradouro);
+    private bool ExibirErroBairro => tentouSalvarEndereco && string.IsNullOrWhiteSpace(EnderecoAtual?.Bairro);
+    private bool ExibirErroCidade => tentouSalvarEndereco && string.IsNullOrWhiteSpace(EnderecoAtual?.Cidade);
+    private bool ExibirErroEstado => tentouSalvarEndereco && (string.IsNullOrWhiteSpace(EnderecoAtual?.Estado) || EnderecoAtual!.Estado.Trim().Length != 2);
+    private bool ExibirErroNumero => tentouSalvarEndereco && (EnderecoAtual?.Numero ?? 0) <= 0;
 
     protected override async Task OnInitializedAsync()
+    {
+        var usuarioId = await ObterUsuarioIdAsync();
+
+        if (!usuarioId.HasValue)
+        {
+            Navigation.NavigateTo(LoginRoute);
+            return;
+        }
+
+        usuario = await UsuarioService.GetByIdAsync(usuarioId.Value);
+
+        if (usuario is null)
+        {
+            Navigation.NavigateTo(LoginRoute);
+            return;
+        }
+
+        usuario.Endereco ??= new EnderecoOutputDTO { UsuarioId = usuario.Id };
+        usuarioSnapshot = ClonarUsuario(usuario);
+        enderecoSnapshot = ClonarEndereco(usuario.Endereco);
+    }
+
+    private async Task<int?> ObterUsuarioIdAsync()
     {
         var userIdString = await JwtService.GetUserIdAsync();
 
@@ -139,55 +301,258 @@
             userIdString = id.Value.ToString();
         }
 
-        if (!int.TryParse(userIdString, out var userId))
+        return int.TryParse(userIdString, out var userId) ? userId : null;
+    }
+
+    private void IniciarEdicaoUsuario()
+    {
+        editandoUsuario = true;
+        LimparMensagensUsuario();
+    }
+
+    private void DescartarEdicaoUsuario()
+    {
+        if (usuario is null || usuarioSnapshot is null)
         {
-            Navigation.NavigateTo("/login");
             return;
         }
 
-        usuario = await UsuarioService.GetByIdAsync(userId);
-
-        if (usuario is null)
-        {
-            Navigation.NavigateTo("/login");
-        }
+        usuario.Nome = usuarioSnapshot.Nome;
+        usuario.Email = usuarioSnapshot.Email;
+        usuario.Ddd = usuarioSnapshot.Ddd;
+        usuario.Telefone = usuarioSnapshot.Telefone;
+        editandoUsuario = false;
+        LimparMensagensUsuario();
     }
 
-    private async Task SalvarDados()
+    private async Task SalvarDadosUsuario()
     {
         if (usuario is null)
         {
             return;
         }
 
-        isSaving = true;
-        mensagem = string.Empty;
+        tentouSalvarUsuario = true;
+        mensagemUsuario = string.Empty;
+
+        if (!PodeSalvarUsuario)
+        {
+            if (!DadosUsuarioValidos)
+            {
+                mensagemUsuario = "Preencha corretamente os campos obrigatorios do perfil.";
+            }
+
+            return;
+        }
+
+        salvandoUsuario = true;
 
         try
         {
-            var updated = await UsuarioService.UpdateAsync(usuario.Id, usuario);
+            var perfilAtualizado = await UsuarioService.UpdateAsync(usuario.Id, usuario);
 
-            if (updated)
+            if (!perfilAtualizado)
             {
-                Navigation.NavigateTo("/profile");
+                mensagemUsuario = "Falha ao atualizar o perfil.";
+                return;
             }
-            else
-            {
-                mensagem = "Falha ao atualizar o perfil.";
-            }
+
+            usuarioSnapshot = ClonarUsuario(usuario);
+            editandoUsuario = false;
+            LimparMensagensUsuario();
+            mensagemUsuario = "Dados do perfil atualizados com sucesso.";
         }
         catch
         {
-            mensagem = "Erro ao salvar dados do perfil.";
+            mensagemUsuario = "Erro ao salvar dados do perfil.";
         }
         finally
         {
-            isSaving = false;
+            salvandoUsuario = false;
         }
+    }
+
+    private void IniciarEdicaoEndereco()
+    {
+        editandoEndereco = true;
+        LimparMensagensEndereco();
+    }
+
+    private void DescartarEdicaoEndereco()
+    {
+        if (EnderecoAtual is null)
+        {
+            return;
+        }
+
+        usuario!.Endereco = ClonarEndereco(enderecoSnapshot);
+        editandoEndereco = false;
+        LimparMensagensEndereco();
+    }
+
+    private async Task BuscarCepAoSair(FocusEventArgs _)
+    {
+        if (!editandoEndereco || EnderecoAtual is null || !CepValido(EnderecoAtual.CEP))
+        {
+            return;
+        }
+
+        mensagemEndereco = string.Empty;
+        buscandoCep = true;
+
+        try
+        {
+            var cepEncontrado = await CepService.BuscarCepAsync(EnderecoAtual.CEP);
+
+            if (cepEncontrado is null || cepEncontrado.Erro)
+            {
+                mensagemEndereco = "Nao foi possivel localizar esse CEP.";
+                return;
+            }
+
+            EnderecoAtual.CEP = FormatarCep(cepEncontrado.Cep);
+            EnderecoAtual.Logradouro = cepEncontrado.Logradouro;
+            EnderecoAtual.Bairro = cepEncontrado.Bairro;
+            EnderecoAtual.Cidade = cepEncontrado.Localidade;
+            EnderecoAtual.Estado = (cepEncontrado.Uf ?? string.Empty).ToUpperInvariant();
+        }
+        catch
+        {
+            mensagemEndereco = "Erro ao buscar o CEP.";
+        }
+        finally
+        {
+            buscandoCep = false;
+        }
+    }
+
+    private async Task SalvarEndereco()
+    {
+        if (EnderecoAtual is null)
+        {
+            return;
+        }
+
+        tentouSalvarEndereco = true;
+        mensagemEndereco = string.Empty;
+
+        if (!PodeSalvarEndereco)
+        {
+            if (!DadosEnderecoValidos)
+            {
+                mensagemEndereco = "Preencha corretamente os campos obrigatorios do endereco.";
+            }
+
+            return;
+        }
+
+        salvandoEndereco = true;
+
+        try
+        {
+            EnderecoAtual.CEP = FormatarCep(EnderecoAtual.CEP);
+            EnderecoAtual.Estado = EnderecoAtual.Estado.Trim().ToUpperInvariant();
+
+            var enderecoAtualizado = await EnderecoService.UpdateAsync(EnderecoAtual.Id, EnderecoAtual);
+
+            if (!enderecoAtualizado)
+            {
+                mensagemEndereco = "Falha ao atualizar o endereco.";
+                return;
+            }
+
+            enderecoSnapshot = ClonarEndereco(EnderecoAtual);
+            editandoEndereco = false;
+            LimparMensagensEndereco();
+            mensagemEndereco = "Endereco atualizado com sucesso.";
+        }
+        catch
+        {
+            mensagemEndereco = "Erro ao salvar o endereco.";
+        }
+        finally
+        {
+            salvandoEndereco = false;
+        }
+    }
+
+    private async Task Sair()
+    {
+        await AuthService.Logout();
+        Navigation.NavigateTo(LoginRoute);
     }
 
     private void Voltar()
     {
-        Navigation.NavigateTo("/profile");
+        Navigation.NavigateTo(PerfilRoute);
+    }
+
+    private void LimparMensagensUsuario()
+    {
+        tentouSalvarUsuario = false;
+        mensagemUsuario = string.Empty;
+    }
+
+    private void LimparMensagensEndereco()
+    {
+        tentouSalvarEndereco = false;
+        mensagemEndereco = string.Empty;
+    }
+
+    private static bool CepValido(string? cep)
+    {
+        if (string.IsNullOrWhiteSpace(cep))
+        {
+            return false;
+        }
+
+        var cepLimpo = new string(cep.Where(char.IsDigit).ToArray());
+        return cepLimpo.Length == 8;
+    }
+
+    private static string FormatarCep(string? cep)
+    {
+        var cepLimpo = new string((cep ?? string.Empty).Where(char.IsDigit).ToArray());
+
+        if (cepLimpo.Length != 8)
+        {
+            return cep ?? string.Empty;
+        }
+
+        return $"{cepLimpo[..5]}-{cepLimpo[5..]}";
+    }
+
+    private static UsuarioOutputDTO ClonarUsuario(UsuarioOutputDTO origem)
+    {
+        return new UsuarioOutputDTO
+        {
+            Id = origem.Id,
+            Nome = origem.Nome,
+            CPF = origem.CPF,
+            Email = origem.Email,
+            Ddd = origem.Ddd,
+            Telefone = origem.Telefone,
+            TipoUsuarioId = origem.TipoUsuarioId,
+            TipoUsuarioNome = origem.TipoUsuarioNome,
+            DataCadastro = origem.DataCadastro,
+            Ativo = origem.Ativo,
+            Endereco = origem.Endereco is null ? null : ClonarEndereco(origem.Endereco)
+        };
+    }
+
+    private static EnderecoOutputDTO ClonarEndereco(EnderecoOutputDTO origem)
+    {
+        return new EnderecoOutputDTO
+        {
+            Id = origem.Id,
+            Logradouro = origem.Logradouro,
+            Numero = origem.Numero,
+            Bairro = origem.Bairro,
+            Cidade = origem.Cidade,
+            Estado = origem.Estado,
+            CEP = origem.CEP,
+            Complemento = origem.Complemento,
+            UsuarioId = origem.UsuarioId
+        };
     }
 }

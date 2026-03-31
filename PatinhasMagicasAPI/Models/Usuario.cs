@@ -49,5 +49,7 @@ namespace PatinhasMagicasAPI.Models
         public virtual ICollection<Pedido> Pedidos { get; set; } = new List<Pedido>();
 
         public virtual ICollection<Animal> Animais { get; set; } = new List<Animal>();
+
+        public virtual ICollection<PushSubscription> PushSubscriptions { get; set; } = new List<PushSubscription>();
     }
 }

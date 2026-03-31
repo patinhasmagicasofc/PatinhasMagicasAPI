@@ -14,6 +14,7 @@ namespace PatinhasMagicasAPI.Services
         private readonly IAnimalRepository _animalRepository;
         private readonly IAgendamentoServicoRepository _agendamentoServicoRepository;
         private readonly IPagamentoService _pagamentoService;
+        private readonly IPushNotificationService _pushNotificationService;
         private readonly IMapper _mapper;
 
         public AgendamentoService(
@@ -23,6 +24,7 @@ namespace PatinhasMagicasAPI.Services
             IAnimalRepository animalRepository,
             IAgendamentoServicoRepository agendamentoServicoRepository,
             IPagamentoService pagamentoService,
+            IPushNotificationService pushNotificationService,
             IMapper mapper)
         {
             _pedidoRepository = pedidoRepository;
@@ -31,6 +33,7 @@ namespace PatinhasMagicasAPI.Services
             _animalRepository = animalRepository;
             _agendamentoServicoRepository = agendamentoServicoRepository;
             _pagamentoService = pagamentoService;
+            _pushNotificationService = pushNotificationService;
             _mapper = mapper;
         }
 
@@ -127,6 +130,7 @@ namespace PatinhasMagicasAPI.Services
             //Criar Pagamento
 
             await _agendamentoServicoRepository.AddAsync(agendamentoServico);
+            await EnviarNotificacaoAgendamentoAsync(agendamentoCreateDTO, animal);
 
 
             // Retorno DTO
@@ -247,6 +251,21 @@ namespace PatinhasMagicasAPI.Services
         public async Task DeletarAsync(int id)
         {
             await _agendamentoRepository.DeleteAsync(id);
+        }
+
+        private async Task EnviarNotificacaoAgendamentoAsync(AgendamentoCreateDTO agendamentoCreateDTO, Animal animal)
+        {
+            if (!agendamentoCreateDTO.UsuarioId.HasValue)
+            {
+                return;
+            }
+
+            await _pushNotificationService.SendAsync(agendamentoCreateDTO.UsuarioId.Value, new PushNotificationRequestDTO
+            {
+                Title = "Agendamento confirmado",
+                Body = $"O agendamento de {animal.Nome} foi criado para {agendamentoCreateDTO.DataAgendamento:dd/MM/yyyy HH:mm}.",
+                Url = "/MeusAgendamentos"
+            });
         }
 
     }

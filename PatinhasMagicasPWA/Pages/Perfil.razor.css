@@ -1,9 +1,8 @@
-﻿main {
+main {
     min-height: 100vh;
     padding-top: 5em;
     padding-bottom: 4em;
     margin: 0 1em;
-
 
     .profile-header {
         background: linear-gradient(135deg, var(--clr-primary), var(--clr-primary-light));
@@ -13,8 +12,6 @@
         color: var(--clr-text-light);
 
         .avatar {
-
-
             img {
                 width: 80px;
                 height: 80px;
@@ -35,7 +32,6 @@
         gap: 1em;
 
         .menu-item {
-
             button {
                 width: 100%;
                 display: flex;

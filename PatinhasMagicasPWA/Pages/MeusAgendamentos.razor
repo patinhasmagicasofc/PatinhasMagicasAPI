@@ -5,7 +5,7 @@
 <main>
     <div class="btn-novo-agendamento">
         <p>Seu pet merece esse cuidado 🐾</p>
-        <button>Agendar agora</button>
+        <button @onclick="Agendar">Agendar agora</button>
     </div>
 
 
@@ -69,114 +69,6 @@
         }
 
     }
-    
-    @*   <div class="card-service">
-        <div class="icon-details">
-            <div class="icon-service">
-                <span class="material-symbols-outlined">bathtub</span>
-            </div>
-            <div class="details-service">
-                <div class="status-serviceType">
-                    <ul>
-                        <li>
-                            <p class="type-service-card">Banho Simples</p>
-                        </li>
-
-                        <li class="status-service">
-                            <p class="status--pending">Pendente</p>
-                        </li>
-                    </ul>
-                </div>
-                <div class="info-service">
-                    <ul>
-                        <li>
-                            <p>Animal: Rex</p>
-                            <p>
- 
-                                Data: 00/00/0000, 00:00
-                            </p>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="btn-service">
-            <button>Ver detalhes</button>
-        </div>
-    </div>
-
-    <div class="card-service">
-        <div class="icon-details">
-            <div class="icon-service">
-                <span class="material-symbols-outlined">neurology</span>
-            </div>
-            <div class="details-service">
-                <div class="status-serviceType">
-                    <ul>
-                        <li>
-                            <p class="type-service-card">Adestramento</p>
-                        </li>
-
-                        <li class="status-service">
-                            <p class="status--finished">Finalizado</p>
-                        </li>
-                    </ul>
-                </div>
-                <div class="info-service">
-                    <ul>
-                        <li>
-                            <p>Animal: Rex</p>
-                            <p>
- 
-                                Data: 00/00/0000, 00:00
-                            </p>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="btn-service">
-            <button>Ver detalhes</button>
-        </div>
-    </div>
-
-    <div class="card-service">
-        <div class="icon-details">
-            <div class="icon-service">
-                <span class="material-symbols-outlined">apartment</span>
-            </div>
-            <div class="details-service">
-                <div class="status-serviceType">
-                    <ul>
-                        <li>
-                            <p class="type-service-card">Creche para Pets</p>
-                        </li>
-
-                        <li class="status-service">
-                            <p class="status--canceled">Cancelado</p>
-                        </li>
-                    </ul>
-                </div>
-                <div class="info-service">
-                    <ul>
-                        <li>
-                            <p>Animal: Rex</p>
-                            <p>
- 
-                                Data: 00/00/0000, 00:00
-                            </p>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="btn-service">
-            <button>Ver detalhes</button>
-        </div>
-    </div> *@
 
     <MenuInferior />
 
@@ -193,6 +85,11 @@
     private void VerDetalhes(int id)
     {
         Navigation.NavigateTo($"/agendamento/{id}");
+    }
+
+    private void Agendar()
+    {
+        Navigation.NavigateTo($"/agendamentoServico/");
     }
 
 }
