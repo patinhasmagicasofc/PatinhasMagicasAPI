@@ -33,6 +33,11 @@
         <p class="section-title">Vibracao</p>
         <p class="section-text">Use vibracao curta em confirmacoes, aviso de erro ou feedback de acao no celular.</p>
 
+        @if (!string.IsNullOrWhiteSpace(deviceMessage))
+        {
+            <p class="feedback">@deviceMessage</p>
+        }
+
         <div class="button-group">
             <button class="primary" @onclick="TestarVibracaoSucessoAsync">
                 <span class="material-symbols-outlined">done_all</span>
@@ -56,6 +61,7 @@
 
 @code {
     private string pushMessage = string.Empty;
+    private string deviceMessage = string.Empty;
     private bool loading;
     private int? usuarioId;
 
@@ -75,17 +81,24 @@
         }
 
         loading = true;
-        var result = await PushNotificationService.SubscribeAsync(usuarioId.Value);
-        pushMessage = result.Message;
-        loading = false;
 
-        if (result.Success)
+        try
         {
-            await DeviceFeedbackService.VibrateSuccessAsync();
-            return;
-        }
+            var result = await PushNotificationService.SubscribeAsync(usuarioId.Value);
+            pushMessage = result.Message;
 
-        await DeviceFeedbackService.VibrateWarningAsync();
+            if (result.Success)
+            {
+                await DeviceFeedbackService.VibrateSuccessAsync();
+                return;
+            }
+
+            await DeviceFeedbackService.VibrateWarningAsync();
+        }
+        finally
+        {
+            loading = false;
+        }
     }
 
     private async Task EnviarTestePushAsync()
@@ -98,26 +111,49 @@
         }
 
         loading = true;
-        var result = await PushNotificationService.SendTestAsync(usuarioId.Value);
-        pushMessage = result.Message;
-        loading = false;
 
-        if (result.Success)
+        try
+        {
+            var result = await PushNotificationService.SendTestAsync(usuarioId.Value);
+            pushMessage = result.Message;
+
+            if (result.Success)
+            {
+                await DeviceFeedbackService.VibrateSuccessAsync();
+                return;
+            }
+
+            await DeviceFeedbackService.VibrateWarningAsync();
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+
+    private async Task TestarVibracaoSucessoAsync()
+    {
+        var supported = await DeviceFeedbackService.IsSupportedAsync();
+        deviceMessage = supported
+            ? "Feedback de sucesso disparado."
+            : "Seu dispositivo ou navegador nao oferece suporte a vibracao.";
+
+        if (supported)
         {
             await DeviceFeedbackService.VibrateSuccessAsync();
-            return;
         }
-
-        await DeviceFeedbackService.VibrateWarningAsync();
     }
 
-    private Task TestarVibracaoSucessoAsync()
+    private async Task TestarVibracaoAvisoAsync()
     {
-        return DeviceFeedbackService.VibrateSuccessAsync().AsTask();
-    }
+        var supported = await DeviceFeedbackService.IsSupportedAsync();
+        deviceMessage = supported
+            ? "Feedback de aviso disparado."
+            : "Seu dispositivo ou navegador nao oferece suporte a vibracao.";
 
-    private Task TestarVibracaoAvisoAsync()
-    {
-        return DeviceFeedbackService.VibrateWarningAsync().AsTask();
+        if (supported)
+        {
+            await DeviceFeedbackService.VibrateWarningAsync();
+        }
     }
 }

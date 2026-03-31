@@ -64,22 +64,13 @@ builder.Services.AddScoped<IPushNotificationService, PushNotificationService>();
 builder.Services.AddHttpClient<CepService>();
 builder.Services.Configure<PushNotificationOptions>(builder.Configuration.GetSection("PushNotifications"));
 
-// ✅ CORS — corrigido
-builder.Services.AddCors(options =>
+
+builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
 {
-    options.AddPolicy("MyPolicy", policy =>
-    {
-        policy.WithOrigins(
-            "https://magicaspatinhas.netlify.app",
-            "http://localhost:5176",
-            "https://localhost:7203",
-            "https://ghfjstnh-7072.brs.devtunnels.ms"
-        )
-        .AllowAnyMethod()
-        .AllowAnyHeader()
-        .AllowCredentials();
-    });
-});
+    builder.AllowAnyOrigin()
+           .AllowAnyMethod()
+           .AllowAnyHeader();
+}));
 
 // JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
