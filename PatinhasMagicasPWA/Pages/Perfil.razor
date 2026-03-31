@@ -27,7 +27,7 @@
             </div>
 
             <div class="menu-item">
-                <button @onclick="IrParaEditar">
+                <button @onclick="IrParaMeusAnimais">
                     <span class="material-symbols-outlined">pets</span>
                     Seus animais cadastrados
                 </button>
@@ -64,6 +64,8 @@
     }
 </main>
 
+<MenuInferior/>
+
 @code {
     private UsuarioOutputDTO? usuario;
 
@@ -88,5 +90,10 @@
     private void IrParaEditar()
     {
         Navigation.NavigateTo("/perfil/editar");
+    }
+
+    private void IrParaMeusAnimais()
+    {
+        Navigation.NavigateTo("/meusanimais");
     }
 }
