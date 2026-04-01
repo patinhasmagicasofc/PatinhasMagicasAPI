@@ -57,11 +57,26 @@ window.pushNotifications = {
 };
 
 window.deviceFeedback = {
-    vibrate(pattern) {
-        if (!('vibrate' in navigator)) {
-            return;
+    isSupported() {
+        try {
+            return 'vibrate' in navigator;
+        } catch (e) {
+            console.debug('deviceFeedback.isSupported error', e);
+            return false;
         }
+    },
 
-        navigator.vibrate(pattern);
+    vibrate(pattern) {
+        try {
+            if (!('vibrate' in navigator)) {
+                console.debug('Vibrate not supported by navigator');
+                return;
+            }
+
+            console.debug('Calling navigator.vibrate with pattern', pattern);
+            navigator.vibrate(pattern);
+        } catch (e) {
+            console.debug('deviceFeedback.vibrate error', e);
+        }
     }
 };
