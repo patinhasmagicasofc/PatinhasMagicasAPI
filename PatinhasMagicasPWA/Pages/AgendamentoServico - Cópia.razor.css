@@ -121,33 +121,3 @@
         }
     }
 }
-
-.input {
-    border: 1px solid #ccc;
-    padding: 8px;
-    border-radius: 6px;
-}
-
-    .input.valid {
-        border-color: #4caf50;
-    }
-
-    .input.invalid {
-        border-color: #e53935;
-    }
-
-.validation-message {
-    color: #e53935;
-    font-size: 12px;
-    margin-top: 4px;
-}
-
-.toast {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: #323232;
-    color: white;
-    padding: 10px 14px;
-    border-radius: 6px;
-}

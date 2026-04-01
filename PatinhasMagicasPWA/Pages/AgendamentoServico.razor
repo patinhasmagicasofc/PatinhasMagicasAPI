@@ -1,209 +1,187 @@
 ﻿@page "/agendamentoServico"
+@using System.ComponentModel.DataAnnotations
+@using System.Linq.Expressions
 @inject NavigationManager Navigation
 @inject AnimalService AnimalService
 @inject ServicoService ServicoService
-@inject AgendamentoService AgendamentoService
 
 <main>
-
-    <!-- seta para voltar exemplo -->
     <div class="header-page">
-        <ul>
-            <li>
-                <p>
-                    <span class="material-symbols-outlined" @onclick="() => Voltar()">arrow_back</span>
-                </p>
-            </li>
-        </ul>
+        <span class="material-symbols-outlined" @onclick="Voltar">arrow_back</span>
     </div>
 
     <div class="card-form">
-        <ul>
-            <li>
-                <p class="title">Agendamento de Serviços</p>
-            </li>
-        </ul>
+        <p class="title">Agendamento de Serviços</p>
 
-        <div class="field">
-            <ul>
-                <li>
-                    <InputSelect class="input-select" @bind-Value="selectedAnimalId">
-                        <option value="">Selecione um animal</option>
-                        @if (animals.Count == 0)
-                        {
-                            <option disabled>Não há animais cadastrados</option>
-                        }
-                        else
-                        {
-                            @foreach (var animal in animals)
-                            {
-                                <option value="@animal.Id">
-                                    @animal.Nome (@animal.NomeEspecie - @animal.NomeTamanhoAnimal)
-                                </option>
-                            }
-                        }
-                    </InputSelect>
-                </li>
-            </ul>
-        </div>
+        <EditForm EditContext="editContext" OnValidSubmit="Pagamento">
+            <DataAnnotationsValidator />
 
-        <div class="field">
-            <ul>
-                <li>
-                    <InputSelect class="input-select" @bind-Value="selectedServicoId" disabled="@(selectedAnimalId <= 0)">
-                        <option value="">Selecione o Serviço</option>
-                        @if (selectedAnimalId <= 0)
-                        {
-                            <option disabled>Selecione o animal primeiro</option>
-                        }
-                        else if (servicos.Count == 0)
-                        {
-                            <option disabled>Não há serviços disponíveis para este animal</option>
-                        }
-                        else
-                        {
-                            @foreach (var servico in servicos)
-                            {
-                                <option value="@(servico.Id ?? 0)">
-                                    @servico.Nome - R$ @String.Format("{0:0.00}", servico.Preco)
-                                </option>
-                            }
-                        }
-                    </InputSelect>
-                </li>
-            </ul>
-        </div>
+            <!-- ANIMAL -->
+            <div class="field">
+                <InputSelect class="@GetClass(() => model.AnimalId)"
+                             @bind-Value="model.AnimalId">
+                    <option value="">Selecione um animal</option>
 
-        <div class="field">
-            <ul>
-                <li>
-                    <p class="label">Data e Hora</p>
-                          <input type="datetime-local"
-                              id="dataAgendamento"
-                              class="input-real"
-                              @bind="dataAgendamentoStr"
-                              required />
-                </li>
-            </ul>
-        </div>
+                    @foreach (var animal in animals)
+                    {
+                        <option value="@animal.Id">
+                            @animal.Nome (@animal.NomeEspecie - @animal.NomeTamanhoAnimal)
+                        </option>
+                    }
+                </InputSelect>
 
-        <div class="field">
-            <ul>
-                <li>
-                    <p class="field-info">Clique abaixo para cadastrar um animal</p>
-                    <button class="btn-secondary" @onclick="CadastrarAnimal">Cadastrar Animal</button>
-                </li>
-            </ul>
-        </div>
+                <ValidationMessage For="@(() => model.AnimalId)" />
+            </div>
 
-        <div class="actions">
-            <button class="btn-primary" @onclick="Pagamento">Avançar</button>
-        </div>
-    </div>
-</main>
-
-@code {
-    List<AnimalDTO> animals = new();
-    List<ServicoOutputDTO> servicos = new();
-
-    private int _selectedAnimalId;
-    private int _selectedServicoId;
-
-    int selectedAnimalId
-    {
-        get => _selectedAnimalId;
-        set
-        {
-            if (_selectedAnimalId != value)
-            {
-                _selectedAnimalId = value;
-                _ = OnAnimalChangedAsync();
-            }
-        }
-    }
-
-    int selectedServicoId
-    {
-        get => _selectedServicoId;
-        set
-        {
-            _selectedServicoId = value;
-        }
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        animals = await AnimalService.GetAllAnimalsAsync();
-        // inicializa sem animal selecionado para forçar a escolha do usuário
-        selectedAnimalId = 0;
-        selectedServicoId = 0;
-        servicos.Clear();
-
-        if (animals == null || animals.Count == 0)
-        {
-            // sem animais, não há serviços a mostrar
-            servicos = new();
-        }
-    }
-
-    private async Task OnAnimalChangedAsync()
-    {
-        // tenta obter os serviços já com o preço de acordo com o porte/id do animal
-        if (selectedAnimalId > 0)
-        {
-            var porAnimal = await ServicoService.GetServicosPorAnimalAsync(selectedAnimalId);
-            if (porAnimal != null)
-            {
-                servicos = porAnimal;
-                // pré-seleciona o primeiro serviço retornado, ou limpa se não houver
-                if (servicos.Count > 0)
+            <!-- SERVIÇO -->
+            <div class="field">
+                @if (isLoading)
                 {
-                    selectedServicoId = servicos[0].Id ?? 0;
+                    <p>Carregando...</p>
                 }
                 else
                 {
-                    selectedServicoId = 0;
+                    <InputSelect class="@GetClass(() => model.ServicoId)"
+                                 @bind-Value="model.ServicoId"
+                                 disabled="@(model.AnimalId == null)">
+                        <option value="">Selecione o serviço</option>
+
+                        @foreach (var servico in servicos)
+                        {
+                            <option value="@servico.Id">
+                                @servico.Nome - R$ @servico.Preco.
+                            </option>
+                        }
+                    </InputSelect>
                 }
 
-                await InvokeAsync(StateHasChanged);
-            }
-            else
-            {
-                servicos.Clear();
-                selectedServicoId = 0;
-                await InvokeAsync(StateHasChanged);
-            }
-        }
-        else
+                <ValidationMessage For="@(() => model.ServicoId)" />
+            </div>
+
+            <!-- DATA -->
+            <div class="field">
+                <InputDate class="@GetClass(() => model.DataAgendamento)"
+                           @bind-Value="model.DataAgendamento"
+                           type="InputDateType.DateTimeLocal" />
+
+                <ValidationMessage For="@(() => model.DataAgendamento)" />
+            </div>
+
+            <!-- BOTÕES -->
+            <div class="actions">
+                <button type="submit" class="btn-primary">Avançar</button>
+            </div>
+        </EditForm>
+    </div>
+
+    <!-- TOAST -->
+    @if (!string.IsNullOrEmpty(toast))
+    {
+        <div class="toast">@toast</div>
+    }
+</main>
+
+@code {
+    private List<AnimalDTO> animals = new();
+    private List<ServicoOutputDTO> servicos = new();
+
+    private bool isLoading;
+    private string? toast;
+
+    private AgendamentoModel model = new();
+    private EditContext editContext;
+
+    protected override async Task OnInitializedAsync()
+    {
+        animals = await AnimalService.GetAllAnimalsAsync() ?? new();
+
+        editContext = new EditContext(model);
+
+        editContext.OnFieldChanged += async (sender, e) =>
         {
-            servicos.Clear();
-            selectedServicoId = 0;
+            if (e.FieldIdentifier.FieldName == nameof(model.AnimalId))
+            {
+                await CarregarServicos();
+            }
+        };
+    }
+
+    private async Task CarregarServicos()
+    {
+        servicos.Clear();
+        model.ServicoId = null;
+
+        if (model.AnimalId == null)
+            return;
+
+        isLoading = true;
+
+        try
+        {
+            servicos = await ServicoService.GetServicosPorAnimalAsync(model.AnimalId.Value) ?? new();
+        }
+        catch
+        {
+            await ShowToast("Erro ao carregar serviços");
+        }
+        finally
+        {
+            isLoading = false;
             await InvokeAsync(StateHasChanged);
         }
     }
 
-    private void Voltar()
+
+    private async Task ShowToast(string msg)
     {
-        Navigation.NavigateTo("/home");
+        toast = msg;
+        await InvokeAsync(StateHasChanged);
+
+        await Task.Delay(3000);
+
+        toast = null;
+        await InvokeAsync(StateHasChanged);
     }
 
-    private void CadastrarAnimal()
+    private string GetClass(Expression<Func<object>> field)
     {
-        Navigation.NavigateTo("/CadastroAnimal");
+        var fieldIdentifier = FieldIdentifier.Create(field);
+
+        var isInvalid = editContext.GetValidationMessages(fieldIdentifier).Any();
+        var isTouched = editContext.IsModified(fieldIdentifier);
+
+        if (!isTouched)
+            return "input";
+
+        return isInvalid ? "input invalid" : "input valid";
     }
 
-    private void AgendarServico()
+    private void Voltar() => Navigation.NavigateTo("/home");
+
+    public class AgendamentoModel
     {
-        Navigation.NavigateTo("/ServicoConfirmacao");
+        [Required(ErrorMessage = "Selecione um animal")]
+        public int? AnimalId { get; set; }
+
+        [Required(ErrorMessage = "Selecione um serviço")]
+        public int? ServicoId { get; set; }
+
+        [Required(ErrorMessage = "Selecione a data")]
+        public DateTime? DataAgendamento { get; set; }
     }
 
-    private void Pagamento()
+    private async Task Pagamento()
     {
-        // navega para a tela de pagamento carregando os dados selecionados
-        var dataEncoded = dataAgendamentoStr.HasValue ? Uri.EscapeDataString(dataAgendamentoStr.Value.ToString("s")) : string.Empty;
-        Navigation.NavigateTo($"/pagamento?animalId={selectedAnimalId}&servicoId={selectedServicoId}&data={dataEncoded}");
+        var isValid = editContext.Validate();
+
+        if (!isValid)
+        {
+            await ShowToast("Preencha todos os campos");
+            return;
+        }
+
+        var dataEncoded = Uri.EscapeDataString(model.DataAgendamento!.Value.ToString("s"));
+
+        Navigation.NavigateTo($"/pagamento?animalId={model.AnimalId}&servicoId={model.ServicoId}&data={dataEncoded}");
     }
-
-    private DateTime? dataAgendamentoStr;
-
 }
