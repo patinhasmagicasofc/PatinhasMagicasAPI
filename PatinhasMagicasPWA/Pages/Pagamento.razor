@@ -1,66 +1,81 @@
 ﻿@page "/pagamento"
+@inject NavigationManager Navigation
+@inject AgendamentoService AgendamentoService
+@inject HttpClient Http
+@inject ServicoService ServicoService
+@inject AnimalService AnimalService
+@inject TipoPagamentoService TipoPagamentoService
+@using PatinhasMagicasPWA.Extensions
 
 <main>
-    <p>
-        Forma de pagamento
-    </p>
-    <InputSelect class="input-select" id="payment" @bind-Value="selectedPaymentMethod">
+    @if (selectedAnimal != null || selectedServico != null || selectedDate != null)
+    {
+        <section class="resumo-agendamento">
+            <h4>Resumo do agendamento</h4>
+            <p><strong>Animal:</strong> @selectedAnimal?.Nome</p>
+            <p><strong>Serviço:</strong> @selectedServico?.Nome @if (selectedServico?.Preco != null) { <span>- <strong>Valor:</strong> @selectedServico.Preco.Value.ToString("C")</span> }</p>
+            <p><strong>Data:</strong> @(selectedDate?.ToString("g") ?? "—")</p>
+        </section>
+    }
+
+    <p>Forma de pagamento</p>
+    <InputSelect class="input-select" id="payment" @bind-Value="selectedTipoPagamentoId">
         <option value="">Selecione</option>
-        <option value="credito">Cartão de Crédito</option>
-        <option value="debito">Cartão de Débito</option>
-        <option value="pix">Pix</option>
-        <option value="dinheiro">Dinheiro</option>
+        @if (tipoPagamentos != null)
+        {
+            @foreach (var tp in tipoPagamentos)
+            {
+                <option value="@tp.Id">@tp.Nome</option>
+            }
+        }
     </InputSelect>
 
-    @if (selectedPaymentMethod == "credito")
+    @if (GetSelectedPaymentName()?.Contains("credito") == true)
     {
         <div class="payment-box" id="card-box">
             <form>
-                <p>
-                    Cartão de crédito/
-                </p>
+                <p>Cartão de crédito</p>
                 <input type="text" placeholder="Número do cartão" />
                 <input type="text" placeholder="Nome no cartão" />
                 <div class="bass-line">
                     <input type="text" placeholder="Validade (MM/AA)" />
                     <input type="text" placeholder="CVV" />
                 </div>
-                <button id="pay-button" class="pay-btn">Pagar agora</button>
+                <button id="pay-button" class="pay-btn" @onclick="Confirmacao">Pagar agora</button>
             </form>
         </div>
     }
-    else if (selectedPaymentMethod == "debito")
+    else if (GetSelectedPaymentName()?.Contains("debito") == true)
     {
         <div class="payment-box" id="card-box">
             <form>
-                <p>
-                    Cartão de débito
-                </p>
+                <p>Cartão de débito</p>
                 <input type="text" placeholder="Número do cartão" />
                 <input type="text" placeholder="Nome no cartão" />
                 <div class="bass-line">
                     <input type="text" placeholder="Validade (MM/AA)" />
                     <input type="text" placeholder="CVV" />
                 </div>
-                <button id="pay-button" class="pay-btn">Pagar agora</button>
+                <button id="pay-button" class="pay-btn" @onclick="Confirmacao">Pagar agora</button>
             </form>
         </div>
     }
-    else if (selectedPaymentMethod == "pix")
+    else if (GetSelectedPaymentName()?.Contains("pix") == true)
     {
-
         <div class="payment-box" id="pix-box">
             <p>Escaneie o QR Code ou copie o código Pix</p>
             <p>
                 00020126580014BR.GOV.BCB.PIX0136pix-patinhasmagicas@email.com520400005303986540590.005802BR5920PatinhasMagicas6009Sao Paulo62070503***6304A1B2
             </p>
             <img src="./img/qr-code.png" alt="" />
+            <button id="pay-button" class="pay-btn" @onclick="Confirmacao">Concluir pagamento</button>
         </div>
     }
-    else if (selectedPaymentMethod == "dinheiro")
+    else if (GetSelectedPaymentName()?.Contains("dinheiro") == true)
     {
         <div class="payment-box" id="money-box">
             <p>Instruções para pagamento via Dinheiro serão enviadas por e-mail.</p>
+            <button id="pay-button" class="pay-btn" @onclick="Confirmacao">Confirmar</button>
         </div>
     }
 
@@ -69,8 +84,99 @@
 @code {
     private string selectedPaymentMethod = string.Empty;
 
-    private void OnPaymentMethodChanged(ChangeEventArgs e)
+    // dados recebidos via query string
+    private int selectedAnimalId;
+    private int selectedServicoId;
+    private DateTime? selectedDate;
+
+    private AnimalDTO selectedAnimal;
+    private ServicoOutputDTO selectedServico;
+    private List<TipoPagamentoDTO> tipoPagamentos = new();
+    private int? selectedTipoPagamentoId;
+
+    protected override async Task OnInitializedAsync()
     {
-        selectedPaymentMethod = e.Value?.ToString() ?? string.Empty;
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        var qs = uri.Query ?? string.Empty;
+        if (!string.IsNullOrEmpty(qs))
+        {
+            // parser simples de querystring (sem depender de assemblies extras)
+            var q = qs.TrimStart('?').Split('&', StringSplitOptions.RemoveEmptyEntries);
+            foreach (var part in q)
+            {
+                var kv = part.Split('=', 2);
+                if (kv.Length == 2)
+                {
+                    var key = Uri.UnescapeDataString(kv[0]);
+                    var val = Uri.UnescapeDataString(kv[1]);
+                    if (key == "animalId") int.TryParse(val, out selectedAnimalId);
+                    if (key == "servicoId") int.TryParse(val, out selectedServicoId);
+                    if (key == "data")
+                    {
+                        if (DateTime.TryParse(val, out var dt)) selectedDate = dt;
+                    }
+                }
+            }
+        }
+
+        await LoadResumoAsync();
+        // carregar tipos de pagamento do backend
+        try
+        {
+            tipoPagamentos = await TipoPagamentoService.GetAllAsync();
+        }
+        catch
+        {
+            tipoPagamentos = new List<TipoPagamentoDTO>();
+        }
+    }
+
+    private async Task LoadResumoAsync()
+    {
+        try
+        {
+            if (selectedAnimalId > 0)
+            {
+                selectedAnimal = await AnimalService.GetById(selectedAnimalId);
+            }
+
+            if (selectedAnimalId > 0 && selectedServicoId > 0)
+            {
+                var servicos = await ServicoService.GetServicosPorAnimalAsync(selectedAnimalId);
+                selectedServico = servicos?.FirstOrDefault(s => s.Id == selectedServicoId);
+            }
+        }
+        catch
+        {
+            // ignore for now; UX improvements can show errors
+        }
+    }
+
+    private async Task Confirmacao()
+    {
+        // Monta DTO e chama API para criar agendamento
+        var createDto = new AgendamentoCreateDTO
+        {
+            AnimalId = selectedAnimalId,
+            ServicoId = selectedServicoId,
+            DataAgendamento = selectedDate,
+            TipoPagamentoId = selectedTipoPagamentoId
+        };
+
+        var agendamento = await AgendamentoService.CreateAsync(createDto);
+        if (agendamento != null)
+        {
+            Navigation.NavigateTo($"/Confirmacao/{agendamento.Id}");
+        }
+        else
+        {
+            // fallback: navegar para confirmacao sem id
+            Navigation.NavigateTo("/Confirmacao");
+        }
+    }
+    private string GetSelectedPaymentName()
+    {
+        var nome = tipoPagamentos?.FirstOrDefault(t => t.Id == selectedTipoPagamentoId)?.Nome;
+        return nome?.SemAcento().ToLower() ?? string.Empty;
     }
 }

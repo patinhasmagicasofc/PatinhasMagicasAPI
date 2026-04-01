@@ -66,6 +66,13 @@ namespace PatinhasMagicasAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] AgendamentoCreateDTO agendamentoInputDTO)
         {
+            // associa o usuário autenticado ao agendamento, quando disponível
+            var usuarioId = GetUsuarioIdLogado();
+            if (usuarioId.HasValue)
+            {
+                agendamentoInputDTO.UsuarioId = usuarioId.Value;
+            }
+
             var agendamento = await _agendamentoService.CriarAgendamentoAsync(agendamentoInputDTO);
 
             if (agendamento == null) return Ok(new { success = false, message = "Erro ao tentar agendar!" });

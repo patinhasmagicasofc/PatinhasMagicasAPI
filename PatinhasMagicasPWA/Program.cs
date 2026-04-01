@@ -18,8 +18,9 @@ builder.Services.AddScoped(sp =>
 
     return new HttpClient(handler)
     {
+        BaseAddress = new Uri ("https://zwk6xtsh-5026.brs.devtunnels.ms")
         //BaseAddress = new Uri("http://localhost:5026")
-        BaseAddress = new Uri("https://patinhasmagicasapi.onrender.com")
+        ////BaseAddress = new Uri("https://patinhasmagicasapi.onrender.com")
     };
 });
 
@@ -35,6 +36,7 @@ builder.Services.AddScoped<EnderecoService>();
 builder.Services.AddScoped<CepService>();
 builder.Services.AddScoped<PushNotificationService>();
 builder.Services.AddScoped<DeviceFeedbackService>();
+builder.Services.AddScoped<TipoPagamentoService>();
 
 
 await builder.Build().RunAsync();

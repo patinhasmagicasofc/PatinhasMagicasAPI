@@ -50,11 +50,15 @@
         <div class="field">
             <ul>
                 <li>
-                    <InputSelect class="input-select" @bind-Value="selectedServicoId">
+                    <InputSelect class="input-select" @bind-Value="selectedServicoId" disabled="@(selectedAnimalId <= 0)">
                         <option value="">Selecione o Serviço</option>
-                        @if (servicos.Count == 0)
+                        @if (selectedAnimalId <= 0)
                         {
-                            <option disabled>Não há serviços disponíveis</option>
+                            <option disabled>Selecione o animal primeiro</option>
+                        }
+                        else if (servicos.Count == 0)
+                        {
+                            <option disabled>Não há serviços disponíveis para este animal</option>
                         }
                         else
                         {
@@ -74,10 +78,11 @@
             <ul>
                 <li>
                     <p class="label">Data e Hora</p>
-                    <input type="datetime-local"
-                           id="dataAgendamento"
-                           class="input-real"
-                           required />
+                          <input type="datetime-local"
+                              id="dataAgendamento"
+                              class="input-real"
+                              @bind="dataAgendamentoStr"
+                              required />
                 </li>
             </ul>
         </div>
@@ -100,10 +105,11 @@
 @code {
     List<AnimalDTO> animals = new();
     List<ServicoOutputDTO> servicos = new();
-    private int selectedAnimalId;
 
     private int _selectedAnimalId;
-    int selectedServicoId
+    private int _selectedServicoId;
+
+    int selectedAnimalId
     {
         get => _selectedAnimalId;
         set
@@ -116,25 +122,27 @@
         }
     }
 
+    int selectedServicoId
+    {
+        get => _selectedServicoId;
+        set
+        {
+            _selectedServicoId = value;
+        }
+    }
+
     protected override async Task OnInitializedAsync()
     {
         animals = await AnimalService.GetAllAnimalsAsync();
+        // inicializa sem animal selecionado para forçar a escolha do usuário
+        selectedAnimalId = 0;
+        selectedServicoId = 0;
+        servicos.Clear();
 
-        if (animals != null && animals.Count > 0)
+        if (animals == null || animals.Count == 0)
         {
-            // já existe um animal selecionado por padrão — use ele para carregar os serviços
-            _selectedAnimalId = animals[0].Id;
-            await OnAnimalChangedAsync();
-
-            // preseleciona o primeiro serviço retornado, se houver
-            if (servicos != null && servicos.Count > 0)
-            {
-                selectedServicoId = servicos[0].Id ?? 0;
-            }
-        }
-        else
-        {
-            servicos = await ServicoService.GetAllServicosAsync();
+            // sem animais, não há serviços a mostrar
+            servicos = new();
         }
     }
 
@@ -159,6 +167,18 @@
 
                 await InvokeAsync(StateHasChanged);
             }
+            else
+            {
+                servicos.Clear();
+                selectedServicoId = 0;
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+        else
+        {
+            servicos.Clear();
+            selectedServicoId = 0;
+            await InvokeAsync(StateHasChanged);
         }
     }
 
@@ -179,7 +199,11 @@
 
     private void Pagamento()
     {
-        Navigation.NavigateTo("/Pagamento");
+        // navega para a tela de pagamento carregando os dados selecionados
+        var dataEncoded = dataAgendamentoStr.HasValue ? Uri.EscapeDataString(dataAgendamentoStr.Value.ToString("s")) : string.Empty;
+        Navigation.NavigateTo($"/pagamento?animalId={selectedAnimalId}&servicoId={selectedServicoId}&data={dataEncoded}");
     }
+
+    private DateTime? dataAgendamentoStr;
 
 }

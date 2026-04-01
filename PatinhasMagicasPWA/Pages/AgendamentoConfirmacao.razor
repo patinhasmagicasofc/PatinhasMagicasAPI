@@ -1,4 +1,5 @@
-﻿@page "/AgendamentoConfirmacao"
+﻿@page "/Confirmacao/{Id:int}"
+@inject HttpClient Http
 
 <main>
         <div class="background-confirmacao">
@@ -21,24 +22,19 @@
             <div class="detalhes-agendamento">
                 <ul>
                     <li>
-                        <p>
-                            Serviço
-                        </p>
-                        <p>
-                            Animal: Rex
-                        </p>
-                        <p>
-                            Data e hora: 11/02/2026, 22:22:00
-                        </p>
-                        <p>
-                            Forma de pagamento: PIX
-                        </p>
-                        <p>
-                            Status: Pendente
-                        </p>
-                        <p>
-                            Cadastrado em: 26/03/2026, 23:26:02
-                        </p>
+                        @if (agendamento == null)
+                        {
+                            <p>Carregando...</p>
+                        }
+                        else
+                        {
+                            <p>Serviço: @agendamento.Servicos?.FirstOrDefault()?.Nome</p>
+                            <p>Animal: @agendamento.Animal?.Nome</p>
+                            <p>Data e hora: @agendamento.DataAgendamento.ToString("dd/MM/yyyy, HH:mm")</p>
+                            <p>Forma de pagamento: @agendamento.TipoPagamento</p>
+                            <p>Status: @agendamento.Status</p>
+                            <p>Cadastrado em: @agendamento.DataConfirmacao.ToString("dd/MM/yyyy, HH:mm")</p>
+                        }
                     </li>
                     <li class="valor">
                         <p>
@@ -77,5 +73,13 @@
     </main>
 
 @code {
+    [Parameter]
+    public int Id { get; set; }
 
+    private AgendamentoDTO? agendamento;
+
+    protected override async Task OnInitializedAsync()
+    {
+        agendamento = await Http.GetFromJsonAsync<AgendamentoDTO>($"api/agendamento/{Id}");
+    }
 }
