@@ -3,6 +3,7 @@
 @using System.ComponentModel.DataAnnotations
 @inject NavigationManager Navigation
 @inject UsuarioService UsuarioService
+@inject AuthService AuthService
 @inject IJSRuntime JS
 
 <main class="login-page">
@@ -57,13 +58,13 @@
 
                 <li>
                     <p>Senha</p>
-                    <InputText @bind-Value="usuario.Senha" type="password" placeholder="Digite sua senha" />
+                    <InputText @bind-Value="usuario.Senha" type="password" placeholder="Digite sua senha" autocomplete="new-password" />
                     <ValidationMessage class="text-danger" For="@(() => usuario.Senha)" />
                 </li>
 
                 <li>
                     <p>Confirme sua senha</p>
-                    <InputText @bind-Value="usuario.ConfirmarSenha" type="password" placeholder="Digite novamente" />
+                    <InputText @bind-Value="usuario.ConfirmarSenha" type="password" placeholder="Digite novamente" autocomplete="new-password" />
                     <ValidationMessage class="text-danger" For="@(() => usuario.ConfirmarSenha)" />
                 </li>
             </ul>
@@ -104,24 +105,14 @@
         carregando = true;
         mensagemGeral = null;
 
-        var usuarioDto = new UsuarioDTO
-        {
-            Nome = usuario.Nome!,
-            CPF = usuario.CPF!,
-            Email = usuario.Email!,
-            Senha = usuario.Senha!,
-            Ddd = usuario.Ddd!.Value,
-            Telefone = usuario.Telefone!,
-            TipoUsuarioId = null
-        };
-
-        var result = await UsuarioService.Cadastrar(usuarioDto);
+        var result = await UsuarioService.Cadastrar(usuario);
 
         carregando = false;
 
         if (result)
         {
-            Navigation.NavigateTo("/Login");
+            await AuthService.Login(usuario.Email!, usuario.Senha!);
+            Navigation.NavigateTo("/home");
             return;
         }
 

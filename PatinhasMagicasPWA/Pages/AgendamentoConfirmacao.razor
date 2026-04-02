@@ -1,4 +1,5 @@
 ﻿@page "/Confirmacao/{Id:int}"
+@inject NavigationManager NavigationManager
 @inject HttpClient Http
 
 <main>
@@ -62,10 +63,10 @@
 
 
             <div class="btn-agendamento">
-                <Button class="btn-agendar">
+                <Button class="btn-agendar" @onclick="AgendarNovoServico">
                     Agendar novo serviço
                 </Button>
-                <Button class="btn-voltar">
+                <Button class="btn-voltar" @onclick="TelaInicial">
                     Voltar ao Início
                 </Button>
             </div>
@@ -81,5 +82,15 @@
     protected override async Task OnInitializedAsync()
     {
         agendamento = await Http.GetFromJsonAsync<AgendamentoDTO>($"api/agendamento/{Id}");
+    }
+
+    public void AgendarNovoServico()
+    {
+        NavigationManager.NavigateTo("/Agendamento");
+    }
+
+    public void TelaInicial()
+    {
+        NavigationManager.NavigateTo("/Home");
     }
 }

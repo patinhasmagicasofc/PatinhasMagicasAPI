@@ -15,8 +15,19 @@ namespace PatinhasMagicasPWA.Services
             _tokenStorageService = tokenStorageService;
         }
 
-        public async Task<LoginResultDTO> Login(LoginDTO login)
+        private async Task<LoginDTO> MapUsuarioToLogin(string email, string senha)
         {
+            return new LoginDTO
+            {
+                Email = email,
+                Senha = senha
+            };
+        }
+
+        public async Task<LoginResultDTO> Login(string email, string senha)
+        {
+            var login = await MapUsuarioToLogin(email, senha);
+
             try
             {
                 var response = await _http.PostAsJsonAsync("api/login", login);
@@ -26,9 +37,7 @@ namespace PatinhasMagicasPWA.Services
                     return new LoginResultDTO
                     {
                         Sucesso = false,
-                        Mensagem = response.StatusCode == System.Net.HttpStatusCode.Unauthorized
-                            ? "Email ou senha invalidos."
-                            : "Nao foi possivel fazer login agora. Tente novamente."
+                        Mensagem = "'a'"
                     };
                 }
 

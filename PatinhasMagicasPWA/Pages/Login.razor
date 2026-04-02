@@ -8,7 +8,7 @@
     {
         <div class="loading-overlay">
             <div class="loading-card">
-                <img src="./img/logo.png" alt="Patinhas Magicas" />
+                <img src="~/img/bg-auth-logo.png" alt="Patinhas Magicas" />
                 <div class="loading-spinner"></div>
                 <p>Preparando sua experiencia...</p>
             </div>
@@ -87,7 +87,7 @@
         mensagemErro = null;
         carregando = true;
 
-        var resultado = await AuthService.Login(login);
+        var resultado = await AuthService.Login(login.Email, login.Senha);
 
         if (resultado.Sucesso)
         {

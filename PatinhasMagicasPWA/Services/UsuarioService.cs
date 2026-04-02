@@ -15,8 +15,25 @@ namespace PatinhasMagicasPWA.Services
             _tokenStorageService = tokenStorageService;
         }
 
-        public async Task<bool> Cadastrar(UsuarioDTO usuario)
+        private async Task<UsuarioDTO> MapCadastroUsuarioToUsuario(CadastroUsuarioDTO cadastroUsuario)
         {
+            return new UsuarioDTO
+            {
+                Nome = cadastroUsuario.Nome!,
+                CPF = cadastroUsuario.CPF!,
+                Email = cadastroUsuario.Email!,
+                Senha = cadastroUsuario.Senha!,
+                Ddd = cadastroUsuario.Ddd!.Value,
+                Telefone = cadastroUsuario.Telefone!,
+                Ativo = true,
+                TipoUsuarioId = null
+            };
+        }
+
+        public async Task<bool> Cadastrar(CadastroUsuarioDTO cadastroUsuario)
+        {
+            var usuario = await MapCadastroUsuarioToUsuario(cadastroUsuario);
+
             var response = await _http.PostAsJsonAsync("api/usuario", usuario);
 
             if (!response.IsSuccessStatusCode)
@@ -25,54 +42,10 @@ namespace PatinhasMagicasPWA.Services
             }
 
             var content = await response.Content.ReadAsStringAsync();
-            var token = ExtractToken(content);
-
-            if (!string.IsNullOrWhiteSpace(token))
-            {
-                await _tokenStorageService.SetToken(token);
-            }
 
             return true;
         }
 
-        private static string? ExtractToken(string content)
-        {
-            if (string.IsNullOrWhiteSpace(content))
-            {
-                return null;
-            }
-
-            try
-            {
-                var loginResponse = JsonSerializer.Deserialize<LoginResponseDTO>(content, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
-
-                if (!string.IsNullOrWhiteSpace(loginResponse?.Data?.Token))
-                {
-                    return loginResponse.Data.Token.Trim();
-                }
-            }
-            catch (JsonException)
-            {
-            }
-
-            try
-            {
-                var rawToken = JsonSerializer.Deserialize<string>(content);
-
-                if (!string.IsNullOrWhiteSpace(rawToken))
-                {
-                    return rawToken.Trim();
-                }
-            }
-            catch (JsonException)
-            {
-            }
-
-            return content.Trim().Trim('"');
-        }
 
         public async Task<UsuarioOutputDTO?> GetByIdAsync(int id)
         {
