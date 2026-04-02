@@ -2,6 +2,41 @@
     min-height: 100vh;
     background-color: var(--clr-primary-soft-one);
 
+    .welcome-banner {
+        width: 100%;
+        max-width: 720px;
+        margin: 0 auto 1.5em;
+        padding: 1.25em 1.5em;
+        border-radius: 1.25em;
+        background-color: var(--clr-white);
+        box-shadow: var(--shadow-soft);
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 0.3em;
+
+        p {
+            margin: 0;
+        }
+
+        p:first-child {
+            color: var(--clr-primary-dark);
+            font-size: var(--fs-title);
+            font-weight: var(--fw-title);
+        }
+
+        p:last-child {
+            color: var(--clr-gray);
+            font-size: var(--fs-normal);
+        }
+
+        &.is-loading {
+            p:first-child {
+                font-size: var(--fs-sub-title);
+            }
+        }
+    }
+
     #hero-section {
         display: flex;
         flex-direction: column;

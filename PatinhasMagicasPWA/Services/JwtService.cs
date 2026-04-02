@@ -15,7 +15,6 @@ namespace PatinhasMagicasPWA.Services
         public async Task<string?> GetUserIdAsync()
         {
             var token = await _tokenStorageService.GetToken();
-            token = SanitizeToken(token);
 
             if (string.IsNullOrWhiteSpace(token))
             {
@@ -67,14 +66,5 @@ namespace PatinhasMagicasPWA.Services
             return Convert.FromBase64String(base64);
         }
 
-        private static string? SanitizeToken(string? token)
-        {
-            if (string.IsNullOrWhiteSpace(token))
-            {
-                return null;
-            }
-
-            return token.Trim().Trim('"');
-        }
     }
 }

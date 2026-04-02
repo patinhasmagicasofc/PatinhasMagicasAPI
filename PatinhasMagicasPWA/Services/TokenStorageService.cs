@@ -14,17 +14,37 @@ namespace PatinhasMagicasPWA.Services
 
         public async Task SetToken(string token)
         {
-            await _jsRuntime.InvokeVoidAsync("localStorage.setItem", TokenKey, token);
+            var normalizedToken = NormalizeToken(token);
+
+            if (string.IsNullOrEmpty(normalizedToken))
+            {
+                await RemoveToken();
+                return;
+            }
+
+            await _jsRuntime.InvokeVoidAsync("localStorage.setItem", TokenKey, normalizedToken);
         }
 
         public async Task<string?> GetToken()
         {
-            return await _jsRuntime.InvokeAsync<string?>("localStorage.getItem", TokenKey);
+            var token = await _jsRuntime.InvokeAsync<string?>("localStorage.getItem", TokenKey);
+            var normalized = NormalizeToken(token);
+            return string.IsNullOrEmpty(normalized) ? null : normalized;
         }
 
         public async Task RemoveToken()
         {
             await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", TokenKey);
+        }
+
+        private static string NormalizeToken(string? token)
+        {
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                return string.Empty;
+            }
+
+            return token.Trim().Trim('"');
         }
     }
 }

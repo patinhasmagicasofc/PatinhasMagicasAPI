@@ -1,11 +1,28 @@
 ﻿@page "/home"
 
+@inject JwtService JwtService
+@inject UsuarioService UsuarioService
+
 <PageTitle>Home</PageTitle>
 
 @* <button @onclick="FazerLogin">Login</button>
 <button @onclick="Cadastrar">Cadastresse</button> *@
 
 <main>
+    @if (currentUser != null)
+    {
+        <div class="welcome-banner">
+            <p>Olá, @currentUser.Nome!</p>
+            <p>Seu pet já sente o carinho da Patinhas Mágicas.</p>
+        </div>
+    }
+    else if (isCheckingSession)
+    {
+        <div class="welcome-banner is-loading">
+            <p>Restaurando sua sessão...</p>
+        </div>
+    }
+
     <section id="hero-section">
         <div class="img-hero">
             <img src="./img/hero-pets.jpg" alt="Pets" />
@@ -394,6 +411,33 @@
 <MenuInferior></MenuInferior>
 
 @code {
+    private UsuarioOutputDTO? currentUser;
+    private bool isCheckingSession = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCurrentUserAsync();
+    }
+
+    private async Task LoadCurrentUserAsync()
+    {
+        try
+        {
+            var userIdString = await JwtService.GetUserIdAsync();
+
+            if (int.TryParse(userIdString, out var userId))
+            {
+                currentUser = await UsuarioService.GetByIdAsync(userId);
+            }
+        }
+        catch
+        {
+        }
+        finally
+        {
+            isCheckingSession = false;
+        }
+    }
 
     async Task FazerLogin()
     {

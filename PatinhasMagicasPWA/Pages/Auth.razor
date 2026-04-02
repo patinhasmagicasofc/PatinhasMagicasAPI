@@ -2,6 +2,7 @@
 @page "/auth"
 @layout NoMenuLayout
 @inject NavigationManager Navigation
+@inject TokenStorageService TokenStorageService
 
 <main class="login-page">
     <div id="container-initial">
@@ -35,6 +36,15 @@
 </main>
 
 @code {
+    protected override async Task OnInitializedAsync()
+    {
+        var token = await TokenStorageService.GetToken();
+        if (!string.IsNullOrWhiteSpace(token))
+        {
+            Navigation.NavigateTo("/home");
+        }
+    }
+
     private void IrParaLogin()
     {
         Navigation.NavigateTo("/Login");

@@ -19,8 +19,9 @@ builder.Services.AddScoped(sp =>
     return new HttpClient(handler)
     {
         //BaseAddress = new Uri ("https://zwk6xtsh-5026.brs.devtunnels.ms")
-        BaseAddress = new Uri("http://localhost:5026")
-        ////BaseAddress = new Uri("https://patinhasmagicasapi.onrender.com")
+        //BaseAddress = new Uri("http://localhost:5026")
+        BaseAddress = new Uri("https://p996dt85-5026.brs.devtunnels.ms")
+        //BaseAddress = new Uri("https://patinhasmagicasapi.onrender.com")
     };
 });
 

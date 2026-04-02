@@ -8,15 +8,6 @@
         <button @onclick="Agendar">Agendar agora</button>
     </div>
 
-
-    <div class="info-bg-service">
-        <ul>
-            <li>
-                <p>Seus agendamentos e serviços ativos:</p>
-            </li>
-        </ul>
-    </div>
-
     @if (agendamentos.Count == 0)
     {
         <div class="info-bg-service">
@@ -29,6 +20,14 @@
     }
     else
     {
+        <div class="info-bg-service">
+            <ul>
+                <li>
+                    <p>Seus agendamentos e serviços ativos:</p>
+                </li>
+            </ul>
+        </div>
+
         @foreach (var agendamento in agendamentos)
         {
             <div class="card-service">
@@ -44,7 +43,8 @@
                                 </li>
 
                                 <li class="status-service">
-                                    <p class="status--@agendamento.Status.SemAcento().ToLower()">@agendamento.Status
+                                    <p class="status--@agendamento.Status.SemAcento().ToLower()">
+                                        @agendamento.Status
                                     </p>
                                 </li>
                             </ul>

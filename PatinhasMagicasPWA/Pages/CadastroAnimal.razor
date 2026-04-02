@@ -4,7 +4,7 @@
 @inject EspecieService EspecieService
 @inject TamanhoAnimalService TamanhoAnimalService
 
-<main>
+<main class="cadastro-animal-page">
 
     <!-- seta para voltar exemplo -->
     <div class="header-page">
@@ -29,8 +29,8 @@
             <ul>
                 <li>
                     <p class="label">Nome *</p>
-                    <input type="text"
-                           class="input-real"
+                    <InputText @bind-Value="animal.Nome"
+                           class="input-real" 
                            placeholder="Digite o nome do animal"
                            required />
                     <ValidationMessage class="text-danger" For="@(() => animal.Nome)" />
@@ -43,7 +43,8 @@
             <ul>
                 <li>
                     <p class="label">Espécie *</p>
-                    <select class="input-select" required>
+                    <InputSelect @bind-Value="animal.EspecieId" class="input-select" required>
+                        <option value="">Selecione uma espécie</option>
                         @if (especies.Count == 0)
                         {
                             <option disabled>Não há opções de espécies disponíveis</option>
@@ -55,7 +56,8 @@
                                 <option value="@especie.Id">@especie.Nome</option>
                             }
                         }
-                    </select>
+                    </InputSelect>
+                    <ValidationMessage class="text-danger" For="@(() => animal.EspecieId)" />
                 </li>
             </ul>
         </div>
@@ -65,7 +67,7 @@
             <ul>
                 <li>
                     <p class="label">Raça</p>
-                    <input type="text"
+                    <InputText @bind-Value="animal.Raca"
                            class="input-real"
                            placeholder="Ex: Poodle, Siamês..." />
                     <ValidationMessage class="text-danger" For="@(() => animal.Raca)" />
@@ -78,7 +80,7 @@
             <ul>
                 <li>
                     <p class="label">Idade</p>
-                    <input type="number" class="input-real" placeholder="0" min="0" />
+                    <InputNumber @bind-Value="animal.Idade" class="input-real" placeholder="0" min="0" />
                     <ValidationMessage class="text-danger" For="@(() => animal.Idade)" />
                 </li>
             </ul>
@@ -89,7 +91,8 @@
             <ul>
                 <li>
                     <p class="label">Tamanho *</p>
-                    <select class="input-select" required>
+                    <InputSelect @bind-Value="animal.TamanhoAnimalId" class="input-select" required>
+                        <option value="">Selecione um tamanho</option>
                         @if (tamanhoAnimals.Count == 0)
                         {
                             <option disabled>Não há opções de tamanho disponíveis</option>
@@ -101,7 +104,8 @@
                                 <option value="@tamanho.Id">@tamanho.Nome</option>
                             }
                         }
-                    </select>
+                    </InputSelect>
+                    <ValidationMessage class="text-danger" For="@(() => animal.TamanhoAnimalId)" />
                 </li>
             </ul>
         </div>
@@ -113,6 +117,7 @@
             <button type="submit" class="btn-primary">Cadastrar Animal</button>
         </div>
     </EditForm>
+
 </main>
 
 
@@ -139,11 +144,7 @@
         var result = await AnimalService.Cadastrar(animal);
         if (result)
         {
-            Navigation.NavigateTo("/home");
-        }
-        else
-        {
-
+            Navigation.NavigateTo("/MeusAnimais");
         }
     }
 }

@@ -31,25 +31,30 @@ namespace PatinhasMagicasPWA.Services
             try
             {
                 var response = await _http.PostAsJsonAsync("api/login", login);
+                var content = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
                 {
                     return new LoginResultDTO
                     {
                         Sucesso = false,
-                        Mensagem = "'a'"
+                        Mensagem = ExtractErrorMessage(content)
                     };
                 }
 
-                var content = await response.Content.ReadAsStringAsync();
-                var token = ExtractToken(content);
+                var loginResponse = JsonSerializer.Deserialize<LoginResponseDTO>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                var token = loginResponse?.Data?.Token;
 
                 if (string.IsNullOrWhiteSpace(token))
                 {
                     return new LoginResultDTO
                     {
                         Sucesso = false,
-                        Mensagem = "A API respondeu ao login, mas nao retornou um token valido."
+                        Mensagem = loginResponse?.Message ?? "A API respondeu ao login, mas nao retornou um token valido."
                     };
                 }
 
@@ -75,43 +80,35 @@ namespace PatinhasMagicasPWA.Services
             await _tokenStorageService.RemoveToken();
         }
 
-        private static string? ExtractToken(string content)
+        private static string ExtractErrorMessage(string content)
         {
             if (string.IsNullOrWhiteSpace(content))
             {
-                return null;
+                return "Não foi possível autenticar.";
             }
 
             try
             {
-                var loginResponse = JsonSerializer.Deserialize<LoginResponseDTO>(content, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
+                var jsonElement = JsonSerializer.Deserialize<JsonElement>(content);
 
-                if (!string.IsNullOrWhiteSpace(loginResponse?.Data?.Token))
+                if (jsonElement.ValueKind == JsonValueKind.Object)
                 {
-                    return loginResponse.Data.Token.Trim();
+                    if (jsonElement.TryGetProperty("message", out var messageProperty) ||
+                        jsonElement.TryGetProperty("Message", out messageProperty))
+                    {
+                        var message = messageProperty.GetString();
+                        if (!string.IsNullOrWhiteSpace(message))
+                        {
+                            return message;
+                        }
+                    }
                 }
             }
             catch (JsonException)
             {
             }
 
-            try
-            {
-                var rawToken = JsonSerializer.Deserialize<string>(content);
-
-                if (!string.IsNullOrWhiteSpace(rawToken))
-                {
-                    return rawToken.Trim();
-                }
-            }
-            catch (JsonException)
-            {
-            }
-
-            return content.Trim().Trim('"');
+            return content.Trim().Trim('\"');
         }
     }
 }

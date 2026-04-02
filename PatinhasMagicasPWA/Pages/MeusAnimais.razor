@@ -5,7 +5,7 @@
 <main>
     <div class="btn-novo-animal">
         <p>Cadastre um novo animal</p>
-        <button>Cadastrar animal</button>
+        <button @onclick="CadastrarAnimal">Cadastrar animal</button>
     </div>
 
     @if (animals.Count == 0)
@@ -46,8 +46,13 @@
         animals = await AnimalService.GetAllAnimalsAsync();
     }
 
-    private void VerDetalhes(int id)
+    private async Task VerDetalhes(int id)
     {
         Navigation.NavigateTo($"/animal/{id}");
+    }
+
+    private async Task CadastrarAnimal()
+    {
+        Navigation.NavigateTo("/CadastroAnimal");
     }
 }
