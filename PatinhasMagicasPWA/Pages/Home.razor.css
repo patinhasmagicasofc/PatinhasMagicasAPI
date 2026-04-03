@@ -4,31 +4,33 @@
 
     .welcome-banner {
         width: 100%;
-        max-width: 720px;
-        margin: 0 auto 1.5em;
-        padding: 1.25em 1.5em;
-        border-radius: 1.25em;
+        padding-bottom: 2em;
+        padding-top: 5em;
+        margin: 0 1em 2em;
+        border-radius: 1em;
         background-color: var(--clr-white);
         box-shadow: var(--shadow-soft);
         text-align: center;
         display: flex;
         flex-direction: column;
         gap: 0.3em;
+        max-width: 380px !important;
 
         p {
             margin: 0;
+            overflow-wrap: break-word;
         }
 
-        p:first-child {
-            color: var(--clr-primary-dark);
-            font-size: var(--fs-title);
-            font-weight: var(--fw-title);
-        }
+            p:first-child {
+                color: var(--clr-primary-dark);
+                font-size: var(--fs-sub-title);
+                font-weight: var(--fw-title);
+            }
 
-        p:last-child {
-            color: var(--clr-gray);
-            font-size: var(--fs-normal);
-        }
+            p:last-child {
+                color: var(--clr-gray);
+                font-size: var(--fs-normal);
+            }
 
         &.is-loading {
             p:first-child {
@@ -42,7 +44,7 @@
         flex-direction: column;
         align-items: center;
         padding-bottom: 4em;
-         padding-top: 5em; 
+        padding-top: 1em;
         gap: 2em;
         margin: 0 1em;
 

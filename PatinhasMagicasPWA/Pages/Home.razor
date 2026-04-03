@@ -11,16 +11,16 @@
 <main>
     @if (currentUser != null)
     {
-        <div class="welcome-banner">
+        <section class="welcome-banner">
             <p>Olá, @currentUser.Nome!</p>
             <p>Seu pet já sente o carinho da Patinhas Mágicas.</p>
-        </div>
+        </section>
     }
     else if (isCheckingSession)
     {
-        <div class="welcome-banner is-loading">
+        <section class="welcome-banner is-loading">
             <p>Restaurando sua sessão...</p>
-        </div>
+        </section>
     }
 
     <section id="hero-section">
