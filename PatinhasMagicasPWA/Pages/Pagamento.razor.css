@@ -93,8 +93,6 @@
         align-items: center;
         padding-bottom: 2em;
 
-        p {
-        }
 
             p:nth-child(2) {
                 color: var(--clr-primary-dark);
