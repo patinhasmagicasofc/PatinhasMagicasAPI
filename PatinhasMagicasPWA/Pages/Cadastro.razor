@@ -13,7 +13,7 @@
                 <p>Cadastro</p>
             </li>
         </ul>
-        <img src="./img/logo.png" alt="Patinhas Magicas" />
+        <img src="./img/logo-orange.png" alt="Patinhas Magicas" />
     </div>
 
     <div id="cont-form">
@@ -70,10 +70,11 @@
             </ul>
 
             <div class="btn-cadastrar">
+             <button class="cancel" type="button" @onclick="VoltarParaAuth" disabled="@carregando">Cancelar</button>
                 <button type="submit" disabled="@carregando">
                     @(carregando ? "Cadastrando..." : "Cadastrar")
                 </button>
-                <button type="button" @onclick="VoltarParaAuth" disabled="@carregando">Cancelar</button>
+               
             </div>
         </EditForm>
     </div>
