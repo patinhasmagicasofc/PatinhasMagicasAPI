@@ -504,15 +504,15 @@
                             }
 
                             input {
-                                padding: 0.5em;
-                                border-radius: .8em;
+                                padding: 0.8em;
+                                border-radius: 2em;
                                 border: 1px solid var(--clr-beige);
                                 background-color: var(--clr-primary-soft-one);
                             }
 
                             textarea {
-                                padding: 0.5em;
-                                border-radius: .8em;
+                                padding: 0.8em;
+                                border-radius: 1em;
                                 border: 1px solid var(--clr-beige);
                                 background-color: var(--clr-primary-soft-one);
                             }
