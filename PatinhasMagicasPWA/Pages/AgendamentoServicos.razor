@@ -4,18 +4,8 @@
 @inject ServicoService ServicoService
 @inject AgendamentoService AgendamentoService
 
-<main>
+<main id="agendamento-servico">
 
-    <!-- seta para voltar exemplo -->
-    <div class="header-page">
-        <ul>
-            <li>
-                <p>
-                    <span class="material-symbols-outlined" @onclick="() => Voltar()">arrow_back</span>
-                </p>
-            </li>
-        </ul>
-    </div>
 
     <div class="card-form">
         <ul>
@@ -77,7 +67,7 @@
         <div class="field">
             <ul>
                 <li>
-                    <p class="label">Data e Hora</p>
+                   <label>Data e Hora</label>
                           <input type="datetime-local"
                               id="dataAgendamento"
                               class="input-real"

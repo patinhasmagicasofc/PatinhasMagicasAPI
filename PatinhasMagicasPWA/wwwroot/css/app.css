@@ -138,6 +138,48 @@ body {
     }
 }
 
+#agendamento-servico {
+    .input-real {
+        width: 100%;
+        background: var(--clr-primary-soft-one);
+        border: 1px solid var(--clr-primary-light);
+        padding: 0.9em;
+        border-radius: 2em;
+        color: var(--clr-text-main);
+        outline: none;
+
+        &:focus {
+            border: 1px solid var(--clr-primary);
+            box-shadow: 0 0 0 2px var(--clr-primary-transparent);
+        }
+
+        &::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            filter: invert(40%) sepia(90%) saturate(500%) hue-rotate(350deg);
+        }
+    }
+
+    .input-select {
+        width: 100%;
+        background: var(--clr-primary-soft-one);
+        border: 1px solid var(--clr-primary-light);
+        padding: 0.9em;
+        border-radius: 2em;
+        color: var(--clr-text-main);
+        outline: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml;utf8,<svg fill='%23ff7a00' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+        background-repeat: no-repeat;
+        background-position: right 0.5em center;
+        background-size: 1.2em;
+
+        &:focus {
+            border: 1px solid var(--clr-primary);
+            box-shadow: 0 0 0 2px var(--clr-primary-transparent);
+        }
+    }
+}
+
 /* Pendente */
 .status--pending {
     background-color: #fff8e3;
