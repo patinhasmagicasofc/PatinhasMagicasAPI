@@ -11,14 +11,14 @@
 }
 
 
-    /* --- Reset global para ignorar o Bootstrap --- */
-    *,
-    *::before,
-    *::after {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+/* --- Reset global para ignorar o Bootstrap --- */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 a {
     text-decoration: none;
@@ -93,30 +93,49 @@ body {
     --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
 }
 
-.cadastro-animal-page form.card-form input.input-real,
-.cadastro-animal-page form.card-form select.input-select {
-    width: 100%;
-    background: var(--clr-primary-soft-one);
-    border: 1px solid var(--clr-primary-light);
-    padding: 0.9em;
-    border-radius: 2em;
-    outline: none;
-    color: var(--clr-text-main);
-    transition: 0.2s;
-}
+#cadastro-animal {
+    form {
 
-    .cadastro-animal-page form.card-form input.input-real:focus,
-    .cadastro-animal-page form.card-form select.input-select:focus {
-        border: 1px solid var(--clr-primary);
-        box-shadow: 0 0 0 2px var(--clr-primary-transparent);
+        .input-real,
+        .input-select {
+            width: 100%;
+            background: var(--clr-primary-soft-one);
+            border: 1px solid var(--clr-primary-light);
+            padding: 0.9em;
+            border-radius: 2em;
+            outline: none;
+            color: var(--clr-text-main);
+            transition: 0.2s;
+
+            &:focus {
+                border: 1px solid var(--clr-primary);
+                box-shadow: 0 0 0 2px var(--clr-primary-transparent);
+            }
+        }
+
+
+        .input-select {
+            width: 100%;
+            background: var(--clr-primary-soft-one);
+            border: 1px solid var(--clr-primary-light);
+            padding: 0.9em;
+            border-radius: 2em;
+            color: var(--clr-text-main);
+            outline: none;
+            appearance: none;
+
+            background-image: url("data:image/svg+xml;utf8,<svg fill='%23ff7a00' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 0.5em center;
+            background-size: 1.2em;
+
+            &:focus {
+                border: 1px solid var(--clr-primary);
+                box-shadow: 0 0 0 2px var(--clr-primary-transparent);
+            }
+        }
+
     }
-
-.cadastro-animal-page form.card-form select.input-select {
-    appearance: none;
-    background-image: url("data:image/svg+xml;utf8,<svg fill='%23ff7a00' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 0.5em center;
-    background-size: 1.2em;
 }
 
 /* Pendente */
@@ -151,20 +170,20 @@ body {
     margin: 20vh auto 1rem auto;
 }
 
-    .loading-progress circle {
-        fill: none;
-        stroke: #e9ecef;
-        stroke-width: 0.6rem;
-        transform-origin: 50% 50%;
-        transform: rotate(-90deg);
-    }
+.loading-progress circle {
+    fill: none;
+    stroke: #e9ecef;
+    stroke-width: 0.6rem;
+    transform-origin: 50% 50%;
+    transform: rotate(-90deg);
+}
 
-        .loading-progress circle:last-child {
-            stroke: var(--clr-primary, #ff7a00);
-            stroke-dasharray: calc(3.1416 * 40%);
-            stroke-dashoffset: calc(3.1416 * 40% * 0.75);
-            animation: loading-progress-spinner 1.2s linear infinite;
-        }
+.loading-progress circle:last-child {
+    stroke: var(--clr-primary, #ff7a00);
+    stroke-dasharray: calc(3.1416 * 40%);
+    stroke-dashoffset: calc(3.1416 * 40% * 0.75);
+    animation: loading-progress-spinner 1.2s linear infinite;
+}
 
 .loading-progress-text {
     text-align: center;
@@ -172,9 +191,9 @@ body {
     color: #6c757d;
 }
 
-    .loading-progress-text:after {
-        content: "Carregando...";
-    }
+.loading-progress-text:after {
+    content: "Carregando...";
+}
 
 @keyframes loading-progress-spinner {
     0% {
@@ -198,12 +217,13 @@ body {
     z-index: 1000;
 }
 
-    #blazor-error-ui .dismiss {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
-    }
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}
+
 /*input.input-real,
 select.input-select {
     width: 100%;
