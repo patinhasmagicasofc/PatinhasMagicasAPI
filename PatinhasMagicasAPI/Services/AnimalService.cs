@@ -60,7 +60,6 @@ namespace PatinhasMagicasAPI.Services
             entity.FotoDataUrl = dto.FotoDataUrl;
             entity.EspecieId = dto.EspecieId;
             entity.TamanhoAnimalId = dto.TamanhoAnimalId;
-            entity.UsuarioId = dto.UsuarioId;
 
             var updated = await _repository.UpdateAsync(entity);
             return await MapToOutputDTO(updated);

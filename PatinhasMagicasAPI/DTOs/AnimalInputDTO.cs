@@ -1,14 +1,15 @@
-Ôªøusing System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace PatinhasMagicasAPI.DTOs
 {
     public class AnimalInputDTO
     {
-        [Required(ErrorMessage = "O nome √© obrigat√≥rio.")]
-        [StringLength(100, ErrorMessage = "O nome n√£o pode exceder 100 caracteres.")]
+        [Required(ErrorMessage = "O nome È obrigatÛrio.")]
+        [StringLength(100, ErrorMessage = "O nome n„o pode exceder 100 caracteres.")]
         public string Nome { get; set; } = string.Empty;
 
-        [StringLength(100, ErrorMessage = "A ra√ßa n√£o pode exceder 100 caracteres.")]
+        [StringLength(100, ErrorMessage = "A raÁa n„o pode exceder 100 caracteres.")]
         public string? Raca { get; set; }
 
         [Range(0, 100, ErrorMessage = "A idade deve ser entre 0 e 100 anos.")]
@@ -16,16 +17,15 @@ namespace PatinhasMagicasAPI.DTOs
 
         public string? FotoDataUrl { get; set; }
 
-        [Required(ErrorMessage = "A esp√©cie √© obrigat√≥ria.")]
-        [Range(1, int.MaxValue, ErrorMessage = "EspecieId deve ser um valor v√°lido.")]
+        [Required(ErrorMessage = "A espÈcie È obrigatÛria.")]
+        [Range(1, int.MaxValue, ErrorMessage = "EspecieId deve ser um valor v·lido.")]
         public int EspecieId { get; set; }
 
-        [Required(ErrorMessage = "O tamanho do animal √© obrigat√≥rio.")]
-        [Range(1, int.MaxValue, ErrorMessage = "TamanhoAnimalId deve ser um valor v√°lido.")]
+        [Required(ErrorMessage = "O tamanho do animal È obrigatÛrio.")]
+        [Range(1, int.MaxValue, ErrorMessage = "TamanhoAnimalId deve ser um valor v·lido.")]
         public int TamanhoAnimalId { get; set; }
 
-        [Required(ErrorMessage = "O usu√°rio √© obrigat√≥rio.")]
-        [Range(1, int.MaxValue, ErrorMessage = "UsuarioId deve ser um valor v√°lido.")]
+        [JsonIgnore]
         public int UsuarioId { get; set; }
     }
 }

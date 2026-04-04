@@ -1,4 +1,7 @@
 ﻿@page "/produto"
+@inject NavigationManager Navigation
+@inject ProdutoService ProdutoService
+
 <main>
     <section id="product-section">
         <div class="title-product">
@@ -9,9 +12,6 @@
                 </li>
             </ul>
         </div>
-
-
-
 
         <div class="card-product-bg">
             <button class="card-product">
@@ -48,81 +48,71 @@
         <img src="./img/banner-promocao-pet.jpg" alt="">
     </section>
 
-    <section id="carousel-product">
-        <div id="carouselExample" class="carousel slide">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="./img/product-food.jpg" class="d-block w-100" alt="...">
+    @if (produtos.Count == 0)
+    {
+        <p>Não há produtos disponíveis no momento.</p>
+    }
+    else
+    {
+        <section id="carousel-product">
+            <div id="carouselExample" class="carousel slide">
+                <div class="carousel-inner">
+                    @foreach (var produto in produtos)
+                    {
+                        <div class="carousel-item @(produto == produtos.First() ? "active" : "")">
+                            <img src="@produto.UrlImagem" class="d-block w-100" alt="@produto.Nome" />
+                        </div>
+                    }
                 </div>
-                <div class="carousel-item">
-                    <img src="./img/product-toys.jpg" class="d-block w-100" alt="...">
-                </div>
-                <div class="carousel-item">
-                    <img src="./img/product-hygiene.jpg" class="d-block w-100" alt="...">
-                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample"
+                        data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample"
+                        data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample"
-                    data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample"
-                    data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
-    </section>
+        </section>
+    }
 
-    <section id="card-product">
-        <button class="card" style="width: 18rem;">
-            <img src="./img/grooming-dog.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <p class="card-title">Toalha</p>
-                <div class="info-card">
-                    <p class="card-text">Em estoque</p>
-                    <p class="card-text">R$20,00</p>
-                </div>
-            </div>
-        </button>
+  
+    @if (produtos.Count == 0)
+    {
+        <p>Não há produtos disponíveis no momento.</p>
+    }
+    else
+    {
+        <section id="card-product">
 
-        <button class="card" style="width: 18rem;">
-            <img src="./img/product-toys.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <p class="card-title">Toalha</p>
-                <div class="info-card">
-                    <p class="card-text">Em estoque</p>
-                    <p class="card-text">R$20,00</p>
-                </div>
-            </div>
-        </button>
+            @foreach (var produto in produtos)
+            {
+                <button class="card" style="width: 18rem;">
+                    <img src="@produto.UrlImagem" class="card-img-top" alt="@produto.Nome">
+                    <div class="card-body">
+                        <p class="card-title">@produto.Nome</p>
+                        <div class="info-card">
+                            <p class="card-text">Em estoque</p>
+                            <p class="card-text">R$@produto.Preco</p>
+                        </div>
+                    </div>
+                </button>
+            }
 
-        <button class="card" style="width: 18rem;">
-            <img src="./img/product-toys.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <p class="card-title">Toalha</p>
-                <div class="info-card">
-                    <p class="card-text">Em estoque</p>
-                    <p class="card-text">R$20,00</p>
-                </div>
-            </div>
-        </button>
+        </section>
+    }
 
-        <button class="card" style="width: 18rem;">
-            <img src="./img/grooming-dog.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <p class="card-title">Toalha</p>
-                <div class="info-card">
-                    <p class="card-text">Em estoque</p>
-                    <p class="card-text">R$20,00</p>
-                </div>
-
-            </div>
-        </button>
-
-    </section>
+    
 </main>
 
 @code {
+    List<ProdutoDTO> produtos = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        produtos = await ProdutoService.GetAllProdutosAsync();
+    }
 
 }
