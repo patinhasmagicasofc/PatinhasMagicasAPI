@@ -82,14 +82,20 @@ namespace PatinhasMagicasAPI.Services
 
         public async Task<AgendamentoOutputDTO> CriarAgendamentoAsync(AgendamentoCreateDTO agendamentoCreateDTO)
         {
+            if (!agendamentoCreateDTO.AnimalId.HasValue)
+                throw new ArgumentException("O animal informado é inválido.", nameof(agendamentoCreateDTO.AnimalId));
+            if (!agendamentoCreateDTO.ServicoId.HasValue)
+                throw new ArgumentException("O serviço informado é inválido.", nameof(agendamentoCreateDTO.ServicoId));
+            if (!agendamentoCreateDTO.TipoPagamentoId.HasValue)
+                throw new ArgumentException("A forma de pagamento informada é inválida.", nameof(agendamentoCreateDTO.TipoPagamentoId));
 
-            var animal = await _animalRepository.GetByIdAsync(agendamentoCreateDTO.AnimalId);
+            var animal = await _animalRepository.GetByIdAsync(agendamentoCreateDTO.AnimalId.Value);
             if (animal == null) throw new Exception("Animal não encontrado.");
 
             var servicoTamanho = await _servicoTamanhoRepository
-                .GetByServicoAndTamanhoAsync(agendamentoCreateDTO.ServicoId, animal.TamanhoAnimalId);
+                .GetByServicoAndTamanhoAsync(agendamentoCreateDTO.ServicoId.Value, animal.TamanhoAnimalId);
             if (servicoTamanho == null)
-                throw new Exception($"Serviço {agendamentoCreateDTO.ServicoId} não disponível para este animal.");
+                throw new Exception($"Serviço {agendamentoCreateDTO.ServicoId.Value} não disponível para este animal.");
 
             // Criar Pedido
             var pedido = await _pedidoRepository.Add(new Pedido
@@ -102,7 +108,7 @@ namespace PatinhasMagicasAPI.Services
             // Criar Agendamento
             var agendamento = await _agendamentoRepository.Add(new Agendamento
             {
-                AnimalId = agendamentoCreateDTO.AnimalId,
+                AnimalId = agendamentoCreateDTO.AnimalId.Value,
                 PedidoId = pedido.Id,
                 StatusAgendamentoId = 1,
                 DataAgendamento = agendamentoCreateDTO.DataAgendamento ?? DateTime.Now,
@@ -113,7 +119,7 @@ namespace PatinhasMagicasAPI.Services
             var pagamento = new Pagamento
             {
                 Valor = servicoTamanho.Preco,
-                TipoPagamentoId = agendamentoCreateDTO.TipoPagamentoId ?? 0,
+                TipoPagamentoId = agendamentoCreateDTO.TipoPagamentoId.Value,
                 PedidoId  = pedido.Id,
             };
 
@@ -123,7 +129,7 @@ namespace PatinhasMagicasAPI.Services
             var agendamentoServico = new AgendamentoServico
             {
                 AgendamentoId = agendamento.Id,
-                ServicoId = agendamentoCreateDTO.ServicoId,
+                ServicoId = agendamentoCreateDTO.ServicoId.Value,
                 Preco = servicoTamanho.Preco
             };
 
@@ -140,14 +146,14 @@ namespace PatinhasMagicasAPI.Services
                 PedidoId = pedido.Id,
                 DataAgendamento = agendamento.DataAgendamento,
                 ValorTotal = servicoTamanho.Preco,
-                AgendamentoServicos = new List<AgendamentoServicoDTO>
+            AgendamentoServicos = new List<AgendamentoServicoDTO>
+        {
+            new AgendamentoServicoDTO
             {
-                new AgendamentoServicoDTO
-                {
-                    Id = agendamentoCreateDTO.ServicoId,
-                    Preco = servicoTamanho.Preco
-                }
-            },
+                Id = agendamentoCreateDTO.ServicoId.Value,
+                Preco = servicoTamanho.Preco
+            }
+        },
                 Status = "Agendado"
             };
         }
@@ -260,10 +266,12 @@ namespace PatinhasMagicasAPI.Services
                 return;
             }
 
+            var dataAgendamento = agendamentoCreateDTO.DataAgendamento ?? DateTime.Now;
+
             await _pushNotificationService.SendAsync(agendamentoCreateDTO.UsuarioId.Value, new PushNotificationRequestDTO
             {
                 Title = "Agendamento confirmado",
-                Body = $"O agendamento de {animal.Nome} foi criado para {agendamentoCreateDTO.DataAgendamento:dd/MM/yyyy HH:mm}.",
+                Body = $"O agendamento de {animal.Nome} foi criado para {dataAgendamento:dd/MM/yyyy HH:mm}.",
                 Url = "/MeusAgendamentos"
             });
         }
