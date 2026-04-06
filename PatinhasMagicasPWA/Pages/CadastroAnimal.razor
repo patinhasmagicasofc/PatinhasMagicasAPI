@@ -4,10 +4,9 @@
 @inject EspecieService EspecieService
 @inject TamanhoAnimalService TamanhoAnimalService
 <main class="cadastro-animal-page" id="cadastro-animal">
-    <EditForm
-        class="card-form"
-        Model="@animal"
-        OnValidSubmit="Cadastrar">
+    <EditForm class="card-form"
+              Model="@animal"
+              OnValidSubmit="Cadastrar">
         <DataAnnotationsValidator />
         <ul>
             <li>
@@ -16,19 +15,17 @@
         </ul>
         <div class="photo-card">
             <p class="label">Foto do animal</p>
-            <img
-                class="animal-photo-preview"
-                src="caminho-da-imagem.jpg"
-                alt="Foto do animal" />
+            <img class="animal-photo-preview"
+                 src="caminho-da-imagem.jpg"
+                 alt="Foto do animal" />
             <div class="animal-photo-placeholder">
                 <span class="material-symbols-outlined">pets</span>
                 <p>Nenhuma foto cadastrada.</p>
             </div>
             <p class="photo-note">A foto é opcional. Se quiser, você pode cadastrar ou trocar depois.</p>
-            <input
-                type="file"
-                accept="image/*"
-                class="photo-input" />
+            <input type="file"
+                   accept="image/*"
+                   class="photo-input" />
             <button type="button" class="photo-remove">
                 Remover foto
             </button>
@@ -37,11 +34,10 @@
             <ul>
                 <li>
                     <p class="label">Nome *</p>
-                    <InputText
-                        @bind-Value="animal.Nome"
-                        class="input-real"
-                        placeholder="Digite o nome do animal"
-                        required />
+                    <InputText @bind-Value="animal.Nome"
+                               class="input-real"
+                               placeholder="Digite o nome do animal"
+                               required />
                     <ValidationMessage class="text-danger" For="@(() => animal.Nome)" />
                 </li>
             </ul>
@@ -50,10 +46,9 @@
             <ul>
                 <li>
                     <p class="label">Espécie *</p>
-                    <InputSelect
-                        @bind-Value="animal.EspecieId"
-                        class="input-select"
-                        required>
+                    <InputSelect @bind-Value="animal.EspecieId"
+                                 class="input-select"
+                                 required>
                         <option value="">Selecione uma espécie</option>
                         @if (especies.Count == 0)
                         {
@@ -64,7 +59,7 @@
                             @foreach (var especie in especies)
                             {
                                 <option value="@especie.Id">
-                                @especie.Nome
+                                    @especie.Nome
                                 </option>
                             }
                         }
@@ -77,10 +72,9 @@
             <ul>
                 <li>
                     <p class="label">Raça</p>
-                    <InputText
-                        @bind-Value="animal.Raca"
-                        class="input-real"
-                        placeholder="Ex: Poodle, Siam?s..." />
+                    <InputText @bind-Value="animal.Raca"
+                               class="input-real"
+                               placeholder="Ex: Poodle, Siam?s..." />
                     <ValidationMessage class="text-danger" For="@(() => animal.Raca)" />
                 </li>
             </ul>
@@ -89,11 +83,10 @@
             <ul>
                 <li>
                     <p class="label">Idade</p>
-                    <InputNumber
-                        @bind-Value="animal.Idade"
-                        class="input-real"
-                        placeholder="0"
-                        min="0" />
+                    <InputNumber @bind-Value="animal.Idade"
+                                 class="input-real"
+                                 placeholder="0"
+                                 min="0" />
                     <ValidationMessage class="text-danger" For="@(() => animal.Idade)" />
                 </li>
             </ul>
@@ -102,10 +95,9 @@
             <ul>
                 <li>
                     <p class="label">Tamanho *</p>
-                    <InputSelect
-                        @bind-Value="animal.TamanhoAnimalId"
-                        class="input-select"
-                        required>
+                    <InputSelect @bind-Value="animal.TamanhoAnimalId"
+                                 class="input-select"
+                                 required>
                         <option value="">Selecione um tamanho</option>
                         @if (tamanhoAnimals.Count == 0)
                         {
@@ -116,7 +108,7 @@
                             @foreach (var tamanho in tamanhoAnimals)
                             {
                                 <option value="@tamanho.Id">
-                                @tamanho.Nome
+                                    @tamanho.Nome
                                 </option>
                             }
                         }

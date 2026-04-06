@@ -7,7 +7,10 @@
 <main id="agendamento-servico">
 
 
-    <div class="card-form">
+    <EditForm class="card-form"
+              Model="@agendamento"
+              OnValidSubmit="Pagamento">
+        <DataAnnotationsValidator />
         <ul>
             <li>
                 <p class="title">Agendamento de Serviços</p>
@@ -17,7 +20,9 @@
         <div class="field">
             <ul>
                 <li>
-                    <InputSelect class="input-select" @bind-Value="selectedAnimalId">
+                    <InputSelect @bind-Value="selectedAnimalId"
+                                 class="input-select"
+                                 required>
                         <option value="">Selecione um animal</option>
                         @if (animals.Count == 0)
                         {
@@ -33,6 +38,7 @@
                             }
                         }
                     </InputSelect>
+                    <ValidationMessage class="text-danger" For="@(() => agendamento.AnimalId)" />
                 </li>
             </ul>
         </div>
@@ -40,9 +46,11 @@
         <div class="field">
             <ul>
                 <li>
-                    <InputSelect class="input-select" @bind-Value="selectedServicoId" disabled="@(selectedAnimalId <= 0)">
+                    <InputSelect class="input-select"
+                                 @bind-Value="selectedServicoId"
+                                 disabled="@(!(selectedAnimalId > 0))">
                         <option value="">Selecione o Serviço</option>
-                        @if (selectedAnimalId <= 0)
+                        @if (!(selectedAnimalId > 0))
                         {
                             <option disabled>Selecione o animal primeiro</option>
                         }
@@ -60,6 +68,7 @@
                             }
                         }
                     </InputSelect>
+                    <ValidationMessage class="text-danger" For="@(() => agendamento.ServicoId)" />
                 </li>
             </ul>
         </div>
@@ -67,12 +76,12 @@
         <div class="field">
             <ul>
                 <li>
-                   <label>Data e Hora</label>
-                          <input type="datetime-local"
-                              id="dataAgendamento"
-                              class="input-real"
-                              @bind="dataAgendamentoStr"
-                              required />
+                    <label>Data e Hora</label>
+                    <input type="datetime-local"
+                           id="dataAgendamento"
+                           class="input-real"
+                           @bind="dataAgendamentoStr"
+                           required />
                 </li>
             </ul>
         </div>
@@ -87,19 +96,20 @@
         </div>
 
         <div class="actions">
-            <button class="btn-primary" @onclick="Pagamento">Avançar</button>
+            <button class="btn-primary" type="submit">Avançar</button>
         </div>
-    </div>
+    </EditForm>
 </main>
 
 @code {
+    AgendamentoServicoDTO agendamento = new();
     List<AnimalDTO> animals = new();
     List<ServicoOutputDTO> servicos = new();
 
-    private int _selectedAnimalId;
-    private int _selectedServicoId;
+    private int? _selectedAnimalId;
+    private int? _selectedServicoId;
 
-    int selectedAnimalId
+    int? selectedAnimalId
     {
         get => _selectedAnimalId;
         set
@@ -107,17 +117,19 @@
             if (_selectedAnimalId != value)
             {
                 _selectedAnimalId = value;
+                agendamento.AnimalId = value;
                 _ = OnAnimalChangedAsync();
             }
         }
     }
 
-    int selectedServicoId
+    int? selectedServicoId
     {
         get => _selectedServicoId;
         set
         {
             _selectedServicoId = value;
+            agendamento.ServicoId = value;
         }
     }
 
@@ -125,8 +137,8 @@
     {
         animals = await AnimalService.GetAllAnimalsAsync();
         // inicializa sem animal selecionado para forçar a escolha do usuário
-        selectedAnimalId = 0;
-        selectedServicoId = 0;
+        selectedAnimalId = null;
+        selectedServicoId = null;
         servicos.Clear();
 
         if (animals == null || animals.Count == 0)
@@ -141,18 +153,18 @@
         // tenta obter os serviços já com o preço de acordo com o porte/id do animal
         if (selectedAnimalId > 0)
         {
-            var porAnimal = await ServicoService.GetServicosPorAnimalAsync(selectedAnimalId);
+            var porAnimal = await ServicoService.GetServicosPorAnimalAsync(selectedAnimalId.Value);
             if (porAnimal != null)
             {
                 servicos = porAnimal;
                 // pré-seleciona o primeiro serviço retornado, ou limpa se não houver
                 if (servicos.Count > 0)
                 {
-                    selectedServicoId = servicos[0].Id ?? 0;
+                    selectedServicoId = servicos[0].Id;
                 }
                 else
                 {
-                    selectedServicoId = 0;
+                    selectedServicoId = null;
                 }
 
                 await InvokeAsync(StateHasChanged);
@@ -160,14 +172,14 @@
             else
             {
                 servicos.Clear();
-                selectedServicoId = 0;
+                selectedServicoId = null;
                 await InvokeAsync(StateHasChanged);
             }
         }
         else
         {
             servicos.Clear();
-            selectedServicoId = 0;
+            selectedServicoId = null;
             await InvokeAsync(StateHasChanged);
         }
     }
@@ -191,7 +203,7 @@
     {
         // navega para a tela de pagamento carregando os dados selecionados
         var dataEncoded = dataAgendamentoStr.HasValue ? Uri.EscapeDataString(dataAgendamentoStr.Value.ToString("s")) : string.Empty;
-        Navigation.NavigateTo($"/pagamento?animalId={selectedAnimalId}&servicoId={selectedServicoId}&data={dataEncoded}");
+        Navigation.NavigateTo($"/pagamento?animalId={selectedAnimalId ?? 0}&servicoId={selectedServicoId ?? 0}&data={dataEncoded}");
     }
 
     private DateTime? dataAgendamentoStr;
