@@ -42,35 +42,36 @@
                 </ul>
             </div>
 
-            <div class="field">
-                <ul>
-                    <li>
-                        <InputSelect class="input-select"
-                                     @bind-Value="selectedServicoId"
-                                     disabled="@(!(selectedAnimalId > 0))">
-                            <option value="">Selecione o Serviço</option>
-                            @if (!(selectedAnimalId > 0))
+        <div class="field">
+            <ul>
+                <li>
+                    <InputSelect class="input-select"
+                                 @bind-Value="selectedServicoId"
+                                 disabled="@(!(selectedAnimalId > 0))"
+                                 required>
+                        <option value="">Selecione o Serviço</option>
+                        @if (!(selectedAnimalId > 0))
+                        {
+                            <option disabled>Selecione o animal primeiro</option>
+                        }
+                        else if (servicos.Count == 0)
+                        {
+                            <option disabled>Não há serviços disponíveis para este animal</option>
+                        }
+                        else
+                        {
+                            @foreach (var servico in servicos)
                             {
-                                <option disabled>Selecione o animal primeiro</option>
+                                <option value="@(servico.Id ?? 0)">
+                                    @servico.Nome - R$ @String.Format("{0:0.00}", servico.Preco)
+                                </option>
                             }
-                            else if (servicos.Count == 0)
-                            {
-                                <option disabled>Não há serviços disponíveis para este animal</option>
-                            }
-                            else
-                            {
-                                @foreach (var servico in servicos)
-                                {
-                                    <option value="@(servico.Id ?? 0)">
-                                        @servico.Nome - R$ @String.Format("{0:0.00}", servico.Preco)
-                                    </option>
-                                }
-                            }
-                        </InputSelect>
-                        <ValidationMessage class="text-danger" For="@(() => agendamento.ServicoId)" />
-                    </li>
-                </ul>
-            </div>
+                        }
+                    </InputSelect>
+                    <ValidationMessage class="text-danger" For="@(() => agendamento.ServicoId)" />
+                </li>
+            </ul>
+        </div>
 
             <div class="field">
                 <ul>
@@ -158,15 +159,8 @@
             if (porAnimal != null)
             {
                 servicos = porAnimal;
-                // pré-seleciona o primeiro serviço retornado, ou limpa se não houver
-                if (servicos.Count > 0)
-                {
-                    selectedServicoId = servicos[0].Id;
-                }
-                else
-                {
-                    selectedServicoId = null;
-                }
+                // mantém o placeholder selecionado até o usuário escolher um serviço
+                selectedServicoId = null;
 
                 await InvokeAsync(StateHasChanged);
             }
