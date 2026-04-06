@@ -6,8 +6,8 @@
     padding-top: 5em;
     padding-bottom: 4em;
     margin: 0 1em;
-
-    form.card-form {
+    #card-form{
+form {
         background: var(--clr-white);
         border-radius: 1.5em;
         padding: 1.5em 1.2em;
@@ -201,4 +201,6 @@
             }
         }
     }
+    }
+    
 }

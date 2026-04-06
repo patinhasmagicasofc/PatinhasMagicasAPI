@@ -5,145 +5,147 @@
 @inject NavigationManager Navigation
 @inject DeviceFeedbackService DeviceFeedbackService
 
-<main>
-    <EditForm class="card-form" Model="@animal" OnSubmit="SalvarAlteracoes">
-        <ul>
-            <li>
-                <p class="title">Editar Animal</p>
-            </li>
-        </ul>
-
-        <p class="helper-text">Os dados do animal carregam bloqueados. Clique em editar para liberar os campos com * obrigatorios.</p>
-
-        <div class="photo-card">
-            <p class="label">Foto do animal</p>
-
-            @if (!string.IsNullOrWhiteSpace(animal.FotoDataUrl))
-            {
-                <img class="animal-photo-preview" src="@animal.FotoDataUrl" alt="Foto do animal" />
-            }
-            else
-            {
-                <div class="animal-photo-placeholder">
-                    <span class="material-symbols-outlined">pets</span>
-                    <p>Nenhuma foto cadastrada.</p>
-                </div>
-            }
-
-            <p class="photo-note">A foto e opcional. Se quiser, voce pode cadastrar ou trocar depois.</p>
-
-            <InputFile OnChange="SelecionarFotoAsync"
-                       accept="image/*"
-                       class="photo-input"
-                       disabled="@FormularioBloqueado" />
-
-            @if (!string.IsNullOrWhiteSpace(animal.FotoDataUrl))
-            {
-                <button type="button" class="photo-remove" @onclick="RemoverFotoAsync" disabled="@FormularioBloqueado">Remover foto</button>
-            }
-        </div>
-
-        <div class="field">
+<main id="editar-animal">
+    <div id="card-form">
+        <EditForm class="card-form" Model="@animal" OnSubmit="SalvarAlteracoes">
             <ul>
                 <li>
-                    <p class="label">Nome *</p>
-                    <InputText type="text"
-                               class="input-real"
-                               placeholder="Digite o nome do animal"
-                               @bind-Value="animal.Nome"
-                               disabled="@FormularioBloqueado" />
-                    @if (ExibirErroNome)
-                    {
-                        <span class="validation-message">Informe o nome do animal.</span>
-                    }
+                    <p class="title">Editar Animal</p>
                 </li>
             </ul>
-        </div>
 
-        <div class="field">
-            <ul>
-                <li>
-                    <p class="label">Especie *</p>
-                    <InputSelect class="input-select" @bind-Value="animal.EspecieId" disabled="@FormularioBloqueado">
-                        <option value="0">Selecione</option>
-                        @foreach (var especie in especies)
+            <div class="photo-card">
+                <p class="label">Foto do animal</p>
+
+                @if (!string.IsNullOrWhiteSpace(animal.FotoDataUrl))
+                {
+                    <img class="animal-photo-preview" src="@animal.FotoDataUrl" alt="Foto do animal" />
+                }
+                else
+                {
+                    <div class="animal-photo-placeholder">
+                        <span class="material-symbols-outlined">pets</span>
+                        <p>Nenhuma foto cadastrada.</p>
+                    </div>
+                }
+
+                <p class="photo-note">A foto e opcional. Se quiser, voce pode cadastrar ou trocar depois.</p>
+
+                <InputFile OnChange="SelecionarFotoAsync"
+                           accept="image/*"
+                           class="photo-input"
+                           disabled="@FormularioBloqueado" />
+
+                @if (!string.IsNullOrWhiteSpace(animal.FotoDataUrl))
+                {
+                    <button type="button" class="photo-remove" @onclick="RemoverFotoAsync" disabled="@FormularioBloqueado">Remover foto</button>
+                }
+            </div>
+
+            <div class="field">
+                <ul>
+                    <li>
+                        <p class="label">Nome *</p>
+                        <InputText type="text"
+                                   class="input-real"
+                                   placeholder="Digite o nome do animal"
+                                   @bind-Value="animal.Nome"
+                                   disabled="@FormularioBloqueado" />
+                        @if (ExibirErroNome)
                         {
-                            <option value="@especie.Id">@especie.Nome</option>
+                            <span class="validation-message">Informe o nome do animal.</span>
                         }
-                    </InputSelect>
-                    @if (ExibirErroEspecie)
-                    {
-                        <span class="validation-message">Selecione uma especie.</span>
-                    }
-                </li>
-            </ul>
-        </div>
+                    </li>
+                </ul>
+            </div>
 
-        <div class="field">
-            <ul>
-                <li>
-                    <p class="label">Raca</p>
-                    <InputText type="text"
-                               class="input-real"
-                               placeholder="Ex: Poodle, Siames..."
-                               @bind-Value="animal.Raca"
-                               disabled="@FormularioBloqueado" />
-                </li>
-            </ul>
-        </div>
-
-        <div class="field">
-            <ul>
-                <li>
-                    <p class="label">Idade</p>
-                    <InputNumber class="input-real"
-                                 placeholder="0"
-                                 min="0"
-                                 @bind-Value="animal.Idade"
-                                 disabled="@FormularioBloqueado" />
-                </li>
-            </ul>
-        </div>
-
-        <div class="field">
-            <ul>
-                <li>
-                    <p class="label">Tamanho *</p>
-                    <InputSelect class="input-select" @bind-Value="animal.TamanhoAnimalId" disabled="@FormularioBloqueado">
-                        <option value="0">Selecione</option>
-                        @foreach (var tamanho in tamanhos)
+            <div class="field">
+                <ul>
+                    <li>
+                        <p class="label">Especie *</p>
+                        <InputSelect class="input-select" @bind-Value="animal.EspecieId" disabled="@FormularioBloqueado">
+                            <option value="0">Selecione</option>
+                            @foreach (var especie in especies)
+                            {
+                                <option value="@especie.Id">@especie.Nome</option>
+                            }
+                        </InputSelect>
+                        @if (ExibirErroEspecie)
                         {
-                            <option value="@tamanho.Id">@tamanho.Nome</option>
+                            <span class="validation-message">Selecione uma especie.</span>
                         }
-                    </InputSelect>
-                    @if (ExibirErroTamanho)
-                    {
-                        <span class="validation-message">Selecione o tamanho do animal.</span>
-                    }
-                </li>
-            </ul>
-        </div>
+                    </li>
+                </ul>
+            </div>
 
-        @if (!string.IsNullOrWhiteSpace(mensagemErro))
-        {
-            <p class="validation-message form-message">@mensagemErro</p>
-        }
+            <div class="field">
+                <ul>
+                    <li>
+                        <p class="label">Raca</p>
+                        <InputText type="text"
+                                   class="input-real"
+                                   placeholder="Ex: Poodle, Siames..."
+                                   @bind-Value="animal.Raca"
+                                   disabled="@FormularioBloqueado" />
+                    </li>
+                </ul>
+            </div>
 
-        <div class="actions">
-            <button type="button" class="cancel" @onclick="Cancelar">Cancelar</button>
+            <div class="field">
+                <ul>
+                    <li>
+                        <p class="label">Idade</p>
+                        <InputNumber class="input-real"
+                                     placeholder="0"
+                                     min="0"
+                                     @bind-Value="animal.Idade"
+                                     disabled="@FormularioBloqueado" />
+                    </li>
+                </ul>
+            </div>
 
-            @if (FormularioBloqueado)
+            <div class="field">
+                <ul>
+                    <li>
+                        <p class="label">Tamanho *</p>
+                        <InputSelect class="input-select" @bind-Value="animal.TamanhoAnimalId" disabled="@FormularioBloqueado">
+                            <option value="0">Selecione</option>
+                            @foreach (var tamanho in tamanhos)
+                            {
+                                <option value="@tamanho.Id">@tamanho.Nome</option>
+                            }
+                        </InputSelect>
+                        @if (ExibirErroTamanho)
+                        {
+                            <span class="validation-message">Selecione o tamanho do animal.</span>
+                        }
+                    </li>
+                </ul>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(mensagemErro))
             {
-                <button type="button" class="confirm" @onclick="IniciarEdicao">Habilitar edicao</button>
-            }
-            else
-            {
-                <button type="button" class="confirm" @onclick="DescartarEdicao">Desfazer</button>
+                <p class="validation-message form-message">@mensagemErro</p>
             }
 
-            <button type="submit" class="btn-primary" disabled="@(!PodeSalvar || salvando)">Salvar alteracoes</button>
-        </div>
-    </EditForm>
+            <div class="actions">
+
+                @if (FormularioBloqueado)
+                {
+                    <button type="button" class="confirm" @onclick="IniciarEdicao">Editar</button>
+                }
+                else
+                {
+                    <button type="button" class="confirm" @onclick="DescartarEdicao">Desfazer</button>
+                }
+
+                <button type="submit" class="btn-primary" disabled="@(!PodeSalvar || salvando)">Salvar</button>
+            </div>
+        </EditForm>
+    </div>
+    
+    
+    
 </main>
 
 @code {
