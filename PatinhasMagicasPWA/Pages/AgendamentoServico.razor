@@ -77,11 +77,12 @@
                 <ul>
                     <li>
                         <label>Data e Hora</label>
-                        <input type="datetime-local"
-                               id="dataAgendamento"
-                               class="input-real"
-                               @bind="dataAgendamentoStr"
-                               required />
+                        <InputDate @bind-Value="agendamento.DataAgendamento"
+                                   Type="InputDateType.DateTimeLocal"
+                                   id="dataAgendamento"
+                                   class="input-real" 
+                                   required />
+                        <ValidationMessage class="text-danger" For="@(() => agendamento.DataAgendamento)" />
                     </li>
                 </ul>
             </div>
@@ -90,7 +91,7 @@
                 <ul>
                     <li>
                         <p class="field-info">Clique abaixo para cadastrar um animal</p>
-                        <button class="btn-secondary" @onclick="CadastrarAnimal">Cadastrar Animal</button>
+                        <button type="button" class="btn-secondary" @onclick="CadastrarAnimal">Cadastrar Animal</button>
                     </li>
                 </ul>
             </div>
@@ -104,7 +105,7 @@
 </main>
 
 @code {
-    AgendamentoServicoDTO agendamento = new();
+    AgendamentoFluxoDTO agendamento = new();
     List<AnimalDTO> animals = new();
     List<ServicoOutputDTO> servicos = new();
 
@@ -119,7 +120,7 @@
             if (_selectedAnimalId != value)
             {
                 _selectedAnimalId = value;
-                agendamento.AnimalId = value;
+                agendamento.AnimalId = value ?? 0;
                 _ = OnAnimalChangedAsync();
             }
         }
@@ -131,7 +132,7 @@
         set
         {
             _selectedServicoId = value;
-            agendamento.ServicoId = value;
+            agendamento.ServicoId = value ?? 0;
         }
     }
 
@@ -197,10 +198,8 @@
     private void Pagamento()
     {
         // navega para a tela de pagamento carregando os dados selecionados
-        var dataEncoded = dataAgendamentoStr.HasValue ? Uri.EscapeDataString(dataAgendamentoStr.Value.ToString("s")) : string.Empty;
+        var dataEncoded = agendamento.DataAgendamento.HasValue ? Uri.EscapeDataString(agendamento.DataAgendamento.Value.ToString("s")) : string.Empty;
         Navigation.NavigateTo($"/pagamento?animalId={selectedAnimalId ?? 0}&servicoId={selectedServicoId ?? 0}&data={dataEncoded}");
     }
-
-    private DateTime? dataAgendamentoStr;
 
 }
