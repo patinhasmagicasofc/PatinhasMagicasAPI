@@ -48,7 +48,8 @@
                 <li>
                     <InputSelect class="input-select"
                                  @bind-Value="selectedServicoId"
-                                 disabled="@(!(selectedAnimalId > 0))">
+                                 disabled="@(!(selectedAnimalId > 0))"
+                                 required>
                         <option value="">Selecione o Serviço</option>
                         @if (!(selectedAnimalId > 0))
                         {
@@ -157,15 +158,8 @@
             if (porAnimal != null)
             {
                 servicos = porAnimal;
-                // pré-seleciona o primeiro serviço retornado, ou limpa se não houver
-                if (servicos.Count > 0)
-                {
-                    selectedServicoId = servicos[0].Id;
-                }
-                else
-                {
-                    selectedServicoId = null;
-                }
+                // mantém o placeholder selecionado até o usuário escolher um serviço
+                selectedServicoId = null;
 
                 await InvokeAsync(StateHasChanged);
             }
