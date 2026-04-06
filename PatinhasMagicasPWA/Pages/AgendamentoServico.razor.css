@@ -8,23 +8,9 @@
     padding-bottom: 4em;
     margin: 0 1em;
     /* seta para voltar */
-    .header-page {
-        p {
-            display: flex;
-            align-items: center;
-            gap: 0.5em;
-            color: var(--clr-black-gray);
 
-            span {
-                background: var(--clr-white);
-                padding: 0.4em;
-                border-radius: 50%;
-                box-shadow: var(--shadow-soft);
-            }
-        }
-    }
-
-    .card-form {
+    #card-form {
+form {
         background: var(--clr-white);
         border-radius: 1.5em;
         padding: 1.2em;
@@ -50,7 +36,7 @@
                         color: var(--clr-text-muted);
                     }
 
-                    
+
 
                     .field-info {
                         margin-top: 1em !important;
@@ -82,4 +68,8 @@
             }
         }
     }
+    }
+        
+    
+ 
 }
