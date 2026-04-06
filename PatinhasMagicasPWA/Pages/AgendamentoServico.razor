@@ -6,99 +6,100 @@
 
 <main id="agendamento-servico">
 
-
-    <EditForm class="card-form"
-              Model="@agendamento"
-              OnValidSubmit="Pagamento">
-        <DataAnnotationsValidator />
-        <ul>
-            <li>
-                <p class="title">Agendamento de Serviços</p>
-            </li>
-        </ul>
-
-        <div class="field">
+<div id="card-form">
+        <EditForm Model="@agendamento"
+                  OnValidSubmit="Pagamento">
+            <DataAnnotationsValidator />
             <ul>
                 <li>
-                    <InputSelect @bind-Value="selectedAnimalId"
-                                 class="input-select"
-                                 required>
-                        <option value="">Selecione um animal</option>
-                        @if (animals.Count == 0)
-                        {
-                            <option disabled>Não há animais cadastrados</option>
-                        }
-                        else
-                        {
-                            @foreach (var animal in animals)
+                    <p class="title">Agendamento de Serviços</p>
+                </li>
+            </ul>
+
+            <div class="field">
+                <ul>
+                    <li>
+                        <InputSelect @bind-Value="selectedAnimalId"
+                                     class="input-select"
+                                     required>
+                            <option value="">Selecione um animal</option>
+                            @if (animals.Count == 0)
                             {
-                                <option value="@animal.Id">
-                                    @animal.Nome (@animal.NomeEspecie - @animal.NomeTamanhoAnimal)
-                                </option>
+                                <option disabled>Não há animais cadastrados</option>
                             }
-                        }
-                    </InputSelect>
-                    <ValidationMessage class="text-danger" For="@(() => agendamento.AnimalId)" />
-                </li>
-            </ul>
-        </div>
-
-        <div class="field">
-            <ul>
-                <li>
-                    <InputSelect class="input-select"
-                                 @bind-Value="selectedServicoId"
-                                 disabled="@(!(selectedAnimalId > 0))">
-                        <option value="">Selecione o Serviço</option>
-                        @if (!(selectedAnimalId > 0))
-                        {
-                            <option disabled>Selecione o animal primeiro</option>
-                        }
-                        else if (servicos.Count == 0)
-                        {
-                            <option disabled>Não há serviços disponíveis para este animal</option>
-                        }
-                        else
-                        {
-                            @foreach (var servico in servicos)
+                            else
                             {
-                                <option value="@(servico.Id ?? 0)">
-                                    @servico.Nome - R$ @String.Format("{0:0.00}", servico.Preco)
-                                </option>
+                                @foreach (var animal in animals)
+                                {
+                                    <option value="@animal.Id">
+                                        @animal.Nome (@animal.NomeEspecie - @animal.NomeTamanhoAnimal)
+                                    </option>
+                                }
                             }
-                        }
-                    </InputSelect>
-                    <ValidationMessage class="text-danger" For="@(() => agendamento.ServicoId)" />
-                </li>
-            </ul>
-        </div>
+                        </InputSelect>
+                        <ValidationMessage class="text-danger" For="@(() => agendamento.AnimalId)" />
+                    </li>
+                </ul>
+            </div>
 
-        <div class="field">
-            <ul>
-                <li>
-                    <label>Data e Hora</label>
-                    <input type="datetime-local"
-                           id="dataAgendamento"
-                           class="input-real"
-                           @bind="dataAgendamentoStr"
-                           required />
-                </li>
-            </ul>
-        </div>
+            <div class="field">
+                <ul>
+                    <li>
+                        <InputSelect class="input-select"
+                                     @bind-Value="selectedServicoId"
+                                     disabled="@(!(selectedAnimalId > 0))">
+                            <option value="">Selecione o Serviço</option>
+                            @if (!(selectedAnimalId > 0))
+                            {
+                                <option disabled>Selecione o animal primeiro</option>
+                            }
+                            else if (servicos.Count == 0)
+                            {
+                                <option disabled>Não há serviços disponíveis para este animal</option>
+                            }
+                            else
+                            {
+                                @foreach (var servico in servicos)
+                                {
+                                    <option value="@(servico.Id ?? 0)">
+                                        @servico.Nome - R$ @String.Format("{0:0.00}", servico.Preco)
+                                    </option>
+                                }
+                            }
+                        </InputSelect>
+                        <ValidationMessage class="text-danger" For="@(() => agendamento.ServicoId)" />
+                    </li>
+                </ul>
+            </div>
 
-        <div class="field">
-            <ul>
-                <li>
-                    <p class="field-info">Clique abaixo para cadastrar um animal</p>
-                    <button class="btn-secondary" @onclick="CadastrarAnimal">Cadastrar Animal</button>
-                </li>
-            </ul>
-        </div>
+            <div class="field">
+                <ul>
+                    <li>
+                        <label>Data e Hora</label>
+                        <input type="datetime-local"
+                               id="dataAgendamento"
+                               class="input-real"
+                               @bind="dataAgendamentoStr"
+                               required />
+                    </li>
+                </ul>
+            </div>
 
-        <div class="actions">
-            <button class="btn-primary" type="submit">Avançar</button>
-        </div>
-    </EditForm>
+            <div class="field">
+                <ul>
+                    <li>
+                        <p class="field-info">Clique abaixo para cadastrar um animal</p>
+                        <button class="btn-secondary" @onclick="CadastrarAnimal">Cadastrar Animal</button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="actions">
+                <button class="btn-primary" type="submit">Avançar</button>
+            </div>
+        </EditForm>
+</div>
+    
 </main>
 
 @code {
