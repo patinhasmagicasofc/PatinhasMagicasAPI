@@ -6,9 +6,11 @@
 
     .btn-novo-animal {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         margin-bottom: 3em;
-        align-items: center;
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5em;
 
         p {
             color: var(--clr-text-main);
