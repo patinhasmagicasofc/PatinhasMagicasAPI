@@ -1,19 +1,55 @@
-﻿<div class="navbar-menu-superior"> 
-    <div class="container-menu"> 
+@implements IDisposable
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+<div class="navbar-menu-superior">
+    <div class="container-menu">
         <div class="header-page">
-            <ul>
-                <li>
-                    <p>
-                        <span class="material-symbols-outlined">arrow_back</span>
-                    </p>
-                </li>
-            </ul>
+            @if (ShouldShowBackButton)
+            {
+                <button type="button"
+                        class="back-button"
+                        @onclick="NavigateBack"
+                        aria-label="Voltar para a tela anterior">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+            }
         </div>
-        <img src="./img/bg-auth-logo.png" alt="Patinhas Mágicas" class="logo" /> 
-    </div> 
+        <img src="./img/bg-auth-logo.png" alt="Patinhas Mágicas" class="logo" />
+    </div>
 </div>
 
-
 @code {
+    private bool ShouldShowBackButton => !IsHomePage();
 
+    protected override void OnInitialized()
+    {
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private async Task NavigateBack()
+    {
+        await JSRuntime.InvokeVoidAsync("navigationHelper.goBackOrHome", "/home");
+    }
+
+    private bool IsHomePage()
+    {
+        var relativePath = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        var routeOnly = relativePath.Split('?', '#')[0].Trim('/');
+        var currentPath = string.IsNullOrWhiteSpace(routeOnly)
+            ? "/"
+            : $"/{routeOnly}";
+
+        return string.Equals(currentPath, "/home", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
 }

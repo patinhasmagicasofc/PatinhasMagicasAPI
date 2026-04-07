@@ -9,6 +9,8 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped<TokenStorageService>();
 builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<JwtTokenParserService>();
+builder.Services.AddScoped<AuthNavigationService>();
 builder.Services.AddScoped<AuthTokenHandler>();
 
 builder.Services.AddScoped(sp =>

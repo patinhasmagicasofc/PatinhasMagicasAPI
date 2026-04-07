@@ -1,15 +1,16 @@
 using System.Security.Claims;
-using System.Text.Json;
 
 namespace PatinhasMagicasPWA.Services
 {
     public class JwtService
     {
         private readonly TokenStorageService _tokenStorageService;
+        private readonly JwtTokenParserService _jwtTokenParserService;
 
-        public JwtService(TokenStorageService tokenStorageService)
+        public JwtService(TokenStorageService tokenStorageService, JwtTokenParserService jwtTokenParserService)
         {
             _tokenStorageService = tokenStorageService;
+            _jwtTokenParserService = jwtTokenParserService;
         }
 
         public async Task<string?> GetUserIdAsync()
@@ -31,39 +32,7 @@ namespace PatinhasMagicasPWA.Services
 
         public IEnumerable<Claim> ParseClaims(string jwt)
         {
-            var parts = jwt.Split('.');
-
-            if (parts.Length < 2)
-            {
-                return Enumerable.Empty<Claim>();
-            }
-
-            var jsonBytes = ParseBase64WithoutPadding(parts[1]);
-            var claimsDictionary = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(jsonBytes);
-
-            if (claimsDictionary is null)
-            {
-                return Enumerable.Empty<Claim>();
-            }
-
-            return claimsDictionary.Select(claim => new Claim(claim.Key, claim.Value.ToString()));
-        }
-
-        private static byte[] ParseBase64WithoutPadding(string base64)
-        {
-            base64 = base64.Replace('-', '+').Replace('_', '/');
-
-            switch (base64.Length % 4)
-            {
-                case 2:
-                    base64 += "==";
-                    break;
-                case 3:
-                    base64 += "=";
-                    break;
-            }
-
-            return Convert.FromBase64String(base64);
+            return _jwtTokenParserService.ParseClaims(jwt);
         }
 
     }

@@ -202,7 +202,7 @@
 
 @code {
     private const string PerfilRoute = "/perfil";
-    private const string LoginRoute = "/login";
+    private const string LoginRoute = "/Login";
 
     [Parameter]
     public int? id { get; set; }
@@ -274,7 +274,7 @@
 
         if (!usuarioId.HasValue)
         {
-            Navigation.NavigateTo(LoginRoute);
+            Navigation.NavigateTo(LoginRoute, replace: true);
             return;
         }
 
@@ -282,7 +282,7 @@
 
         if (usuario is null)
         {
-            Navigation.NavigateTo(LoginRoute);
+            Navigation.NavigateTo(LoginRoute, replace: true);
             return;
         }
 
@@ -478,7 +478,7 @@
     private async Task Sair()
     {
         await AuthService.Logout();
-        Navigation.NavigateTo(LoginRoute);
+        Navigation.NavigateTo(LoginRoute, replace: true);
     }
 
     private void Voltar()

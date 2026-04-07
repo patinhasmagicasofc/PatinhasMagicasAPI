@@ -81,6 +81,17 @@ window.deviceFeedback = {
     }
 };
 
+window.navigationHelper = {
+    goBackOrHome(fallbackUrl) {
+        if (window.history.length > 1) {
+            window.history.back();
+            return;
+        }
+
+        window.location.assign(fallbackUrl || '/home');
+    }
+};
+
 window.passkeys = {
     isSupported() {
         return !!(window.PublicKeyCredential && navigator.credentials);

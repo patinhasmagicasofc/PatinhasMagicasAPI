@@ -124,6 +124,6 @@
     private async Task SairAsync()
     {
         await AuthService.Logout();
-        Navigation.NavigateTo("/login");
+        Navigation.NavigateTo("/Login", replace: true);
     }
 }

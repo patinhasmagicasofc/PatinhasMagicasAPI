@@ -16,6 +16,24 @@
         justify-content: space-between;
 
         .header-page {
+            .back-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0;
+                border: 0;
+                background: transparent;
+                cursor: pointer;
+            }
+
+            .back-button span {
+                background: var(--clr-white);
+                padding: 0.4em;
+                border-radius: 50%;
+                box-shadow: var(--shadow-soft);
+                color: var(--clr-primary-dark);
+            }
+
             p {
                 display: flex;
                 align-items: center;

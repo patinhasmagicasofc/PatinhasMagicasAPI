@@ -80,7 +80,7 @@
 
         if (!int.TryParse(userIdString, out var userId))
         {
-            Navigation.NavigateTo("/login");
+            Navigation.NavigateTo("/Login", replace: true);
             return;
         }
 
@@ -88,7 +88,7 @@
 
         if (usuario is null)
         {
-            Navigation.NavigateTo("/login");
+            Navigation.NavigateTo("/Login", replace: true);
         }
     }
 
