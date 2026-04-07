@@ -1,6 +1,8 @@
 @page "/perfil/biometria"
 @inject PasskeyAuthService PasskeyAuthService
 @inject DeviceFeedbackService DeviceFeedbackService
+@inject AuthService AuthService
+@inject NavigationManager Navigation
 
 <main>
     <section class="notification-hero">
@@ -20,6 +22,11 @@
         <button class="primary" @onclick="CadastrarBiometriaAsync" disabled="@(!suportado || carregando)">
             <span class="material-symbols-outlined">fingerprint</span>
             @(carregando ? "Abrindo biometria..." : "Cadastrar neste dispositivo")
+        </button>
+
+        <button class="logout" @onclick="SairAsync" disabled="@carregando">
+            <span class="material-symbols-outlined">logout</span>
+            Sair
         </button>
     </section>
 
@@ -112,5 +119,11 @@
     private async Task CarregarCredenciaisAsync()
     {
         credenciais = await PasskeyAuthService.GetMyCredentialsAsync();
+    }
+
+    private async Task SairAsync()
+    {
+        await AuthService.Logout();
+        Navigation.NavigateTo("/login");
     }
 }
