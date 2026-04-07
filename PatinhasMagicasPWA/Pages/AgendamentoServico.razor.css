@@ -48,11 +48,11 @@ form {
 
         .btn-secondary {
             width: 100%;
-            background: var(--clr-primary-transparent);
+            background: transparent;
             color: var(--clr-primary-dark);
             border: none;
-            padding: 0.9em;
-            border-radius: 2em;
+            padding: 0;
+
         }
 
         .actions {
