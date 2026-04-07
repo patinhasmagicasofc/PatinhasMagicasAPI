@@ -80,7 +80,7 @@ namespace PatinhasMagicasPWA.Services
             await _tokenStorageService.RemoveToken();
         }
 
-        private static string ExtractErrorMessage(string content)
+        public static string ExtractErrorMessage(string content)
         {
             if (string.IsNullOrWhiteSpace(content))
             {

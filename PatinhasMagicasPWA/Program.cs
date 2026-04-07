@@ -38,6 +38,7 @@ builder.Services.AddScoped<CepService>();
 builder.Services.AddScoped<PushNotificationService>();
 builder.Services.AddScoped<DeviceFeedbackService>();
 builder.Services.AddScoped<TipoPagamentoService>();
+builder.Services.AddScoped<PasskeyAuthService>();
 
 
 await builder.Build().RunAsync();

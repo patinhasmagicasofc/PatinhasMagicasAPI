@@ -145,6 +145,12 @@ main {
                     border-radius: 2em;
                 }
 
+                .secondary {
+                    background-color: var(--clr-white);
+                    border: 1px solid var(--clr-primary-light);
+                    color: var(--clr-primary-dark);
+                }
+
                 button:disabled {
                     opacity: 0.7;
                 }

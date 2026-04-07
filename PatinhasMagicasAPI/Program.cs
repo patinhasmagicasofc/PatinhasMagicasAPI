@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Fido2NetLib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -6,6 +7,7 @@ using PatinhasMagicasAPI.Data;
 using PatinhasMagicasAPI.Interfaces;
 using PatinhasMagicasAPI.Mapping;
 using PatinhasMagicasAPI.Middleware;
+using PatinhasMagicasAPI.Models;
 using PatinhasMagicasAPI.Repositories;
 using PatinhasMagicasAPI.Services;
 using PatinhasMagicasAPI.Services.Interfaces;
@@ -20,6 +22,18 @@ var secretKey = configuration["Jwt:Key"] ?? throw new ArgumentNullException("JWT
 // Add services to the container
 builder.Services.AddDbContext<PatinhasMagicasDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddMemoryCache();
+
+var passkeySettings = builder.Configuration.GetSection("Passkeys").Get<PasskeySettings>() ?? new PasskeySettings();
+builder.Services.Configure<PasskeySettings>(builder.Configuration.GetSection("Passkeys"));
+builder.Services.AddSingleton<IFido2>(_ => new Fido2(new Fido2Configuration
+{
+    ServerDomain = passkeySettings.RpId,
+    ServerName = passkeySettings.RpName,
+    Origins = passkeySettings.Origins
+        .Where(origin => !string.IsNullOrWhiteSpace(origin))
+        .ToHashSet(StringComparer.OrdinalIgnoreCase)
+}));
 
 // AutoMapper
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<ApplicationProfile>());
@@ -46,6 +60,7 @@ builder.Services.AddScoped<IEspecieRepository, EspecieRepository>();
 builder.Services.AddScoped<IStatusPagamentoRepository, StatusPagamentoRepository>();
 builder.Services.AddScoped<IStatusPedidoRepository, StatusPedidoRepository>();
 builder.Services.AddScoped<IPushSubscriptionRepository, PushSubscriptionRepository>();
+builder.Services.AddScoped<IPasskeyCredentialRepository, PasskeyCredentialRepository>();
 
 // Services
 builder.Services.AddScoped<IStatusPagamentoService, StatusPagamentoService>();
@@ -61,6 +76,7 @@ builder.Services.AddScoped<ITamanhoAnimalService, TamanhoAnimalService>();
 builder.Services.AddScoped<IAnimalService, AnimalService>();
 builder.Services.AddScoped<IAgendamentoService, AgendamentoService>();
 builder.Services.AddScoped<IPushNotificationService, PushNotificationService>();
+builder.Services.AddScoped<IPasskeyService, PasskeyService>();
 builder.Services.AddHttpClient<CepService>();
 builder.Services.Configure<PushNotificationOptions>(builder.Configuration.GetSection("PushNotifications"));
 

@@ -58,6 +58,13 @@
                     Configuracoes
                 </button>
             </div>
+
+            <div class="menu-item">
+                <button @onclick="IrParaBiometria">
+                    <span class="material-symbols-outlined">fingerprint</span>
+                    Biometria e passkeys
+                </button>
+            </div>
         </section>
     }
 </main>
@@ -93,5 +100,10 @@
     private void IrParaMeusAnimais()
     {
         Navigation.NavigateTo("/meusanimais");
+    }
+
+    private void IrParaBiometria()
+    {
+        Navigation.NavigateTo("/perfil/biometria");
     }
 }

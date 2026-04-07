@@ -28,6 +28,7 @@ namespace PatinhasMagicasAPI.Data
         public DbSet<AgendamentoServico> AgendamentoServico { get; set; }
         public DbSet<Especie> Especies { get; set; }
         public DbSet<PushSubscription> PushSubscriptions { get; set; }
+        public DbSet<PasskeyCredential> PasskeyCredentials { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -229,6 +230,16 @@ namespace PatinhasMagicasAPI.Data
 
             modelBuilder.Entity<PushSubscription>()
                 .HasIndex(subscription => subscription.Endpoint)
+                .IsUnique();
+
+            modelBuilder.Entity<PasskeyCredential>()
+                .HasOne(credential => credential.Usuario)
+                .WithMany(usuario => usuario.PasskeyCredentials)
+                .HasForeignKey(credential => credential.UsuarioId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<PasskeyCredential>()
+                .HasIndex(credential => credential.CredentialId)
                 .IsUnique();
 
         }

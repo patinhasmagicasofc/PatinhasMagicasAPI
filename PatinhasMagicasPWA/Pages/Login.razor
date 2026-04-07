@@ -2,6 +2,7 @@
 @layout NoMenuLayout
 @inject NavigationManager Navigation
 @inject AuthService AuthService
+@inject PasskeyAuthService PasskeyAuthService
 
 <main class="@(navegando ? "saindo" : string.Empty)">
     @if (navegando)
@@ -67,6 +68,14 @@
                 <button type="submit" disabled="@carregando">
                     @(carregando ? "Entrando..." : "Entrar")
                 </button>
+
+                @if (biometriaSuportada)
+                {
+                    <button type="button" class="secondary" @onclick="EntrarComBiometria" disabled="@carregandoBiometria">
+                        @(carregandoBiometria ? "Abrindo biometria..." : "Entrar com biometria")
+                    </button>
+                }
+
                 <a href="#">Recuperar senha</a>
             </div>
         </form>
@@ -77,11 +86,18 @@
     private LoginDTO login = new();
     private string? mensagemErro;
     private bool carregando;
+    private bool carregandoBiometria;
     private bool navegando;
+    private bool biometriaSuportada;
+
+    protected override async Task OnInitializedAsync()
+    {
+        biometriaSuportada = await PasskeyAuthService.IsSupportedAsync();
+    }
 
     private async Task FazerLogin()
     {
-        if (carregando)
+        if (carregando || carregandoBiometria)
             return;
 
         mensagemErro = null;
@@ -98,6 +114,28 @@
         }
 
         carregando = false;
+        mensagemErro = resultado.Mensagem;
+    }
+
+    private async Task EntrarComBiometria()
+    {
+        if (carregando || carregandoBiometria)
+            return;
+
+        mensagemErro = null;
+        carregandoBiometria = true;
+
+        var resultado = await PasskeyAuthService.LoginWithPasskeyAsync();
+
+        if (resultado.Sucesso)
+        {
+            navegando = true;
+            await Task.Delay(450);
+            Navigation.NavigateTo("/home");
+            return;
+        }
+
+        carregandoBiometria = false;
         mensagemErro = resultado.Mensagem;
     }
 }
