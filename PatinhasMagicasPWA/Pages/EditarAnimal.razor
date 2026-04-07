@@ -129,17 +129,15 @@
             }
 
             <div class="actions">
-
                 @if (FormularioBloqueado)
                 {
                     <button type="button" class="confirm" @onclick="IniciarEdicao">Editar</button>
                 }
                 else
                 {
-                    <button type="button" class="confirm" @onclick="DescartarEdicao">Desfazer</button>
+                    <button type="button" class="cancel" @onclick="DescartarEdicao">Desfazer</button>
+                    <button type="submit" class="btn-primary" disabled="@(!PodeSalvar || salvando)">Salvar</button>
                 }
-
-                <button type="submit" class="btn-primary" disabled="@(!PodeSalvar || salvando)">Salvar</button>
             </div>
         </EditForm>
     </div>
