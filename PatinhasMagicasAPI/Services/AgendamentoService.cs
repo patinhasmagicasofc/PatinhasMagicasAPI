@@ -13,6 +13,7 @@ namespace PatinhasMagicasAPI.Services
         private readonly IServicoTamanhoRepository _servicoTamanhoRepository;
         private readonly IAnimalRepository _animalRepository;
         private readonly IAgendamentoServicoRepository _agendamentoServicoRepository;
+        private readonly IStatusAgendamentoRepository _statusAgendamentoRepository;
         private readonly IPagamentoService _pagamentoService;
         private readonly IPushNotificationService _pushNotificationService;
         private readonly IMapper _mapper;
@@ -23,6 +24,7 @@ namespace PatinhasMagicasAPI.Services
             IServicoTamanhoRepository servicoTamanhoRepository,
             IAnimalRepository animalRepository,
             IAgendamentoServicoRepository agendamentoServicoRepository,
+            IStatusAgendamentoRepository statusAgendamentoRepository,
             IPagamentoService pagamentoService,
             IPushNotificationService pushNotificationService,
             IMapper mapper)
@@ -32,6 +34,7 @@ namespace PatinhasMagicasAPI.Services
             _servicoTamanhoRepository = servicoTamanhoRepository;
             _animalRepository = animalRepository;
             _agendamentoServicoRepository = agendamentoServicoRepository;
+            _statusAgendamentoRepository = statusAgendamentoRepository;
             _pagamentoService = pagamentoService;
             _pushNotificationService = pushNotificationService;
             _mapper = mapper;
@@ -240,6 +243,8 @@ namespace PatinhasMagicasAPI.Services
             if (agendamento == null)
                 throw new KeyNotFoundException("Agendamento não encontrado.");
 
+            var statusAnteriorId = agendamento.StatusAgendamentoId;
+
             // Validações de regra de negócio
             if (agendamentoInputDTO.DataAgendamento < DateTime.Now)
                 throw new ArgumentException("A data do agendamento deve ser futura.");
@@ -251,6 +256,12 @@ namespace PatinhasMagicasAPI.Services
             _mapper.Map(agendamentoInputDTO, agendamento);
 
             await _agendamentoRepository.UpdateAsync(agendamento);
+
+            if (agendamentoInputDTO.StatusAgendamentoId.HasValue &&
+                agendamentoInputDTO.StatusAgendamentoId.Value != statusAnteriorId)
+            {
+                await EnviarNotificacaoStatusAgendamentoAsync(agendamento, agendamentoInputDTO.StatusAgendamentoId.Value);
+            }
         }
 
 
@@ -272,6 +283,26 @@ namespace PatinhasMagicasAPI.Services
             {
                 Title = "Agendamento confirmado",
                 Body = $"O agendamento de {animal.Nome} foi criado para {dataAgendamento:dd/MM/yyyy HH:mm}.",
+                Url = "/MeusAgendamentos"
+            });
+        }
+
+        private async Task EnviarNotificacaoStatusAgendamentoAsync(Agendamento agendamento, int novoStatusAgendamentoId)
+        {
+            var usuarioId = agendamento.Animal?.UsuarioId;
+            if (!usuarioId.HasValue)
+            {
+                return;
+            }
+
+            var statusAgendamento = await _statusAgendamentoRepository.GetByIdAsync(novoStatusAgendamentoId);
+            var nomeStatus = statusAgendamento?.Nome ?? "atualizado";
+            var nomeAnimal = agendamento.Animal?.Nome ?? "seu pet";
+
+            await _pushNotificationService.SendAsync(usuarioId.Value, new PushNotificationRequestDTO
+            {
+                Title = "Status do agendamento atualizado",
+                Body = $"O agendamento de {nomeAnimal} agora está como {nomeStatus}.",
                 Url = "/MeusAgendamentos"
             });
         }
