@@ -1,0 +1,26 @@
+<Project>
+  <Target
+    Name="FilterServiceWorkerManifestAssets"
+    BeforeTargets="GenerateBuildServiceWorkerStaticWebAssets;GeneratePublishServiceWorkerStaticWebAssets;_GenerateServiceWorkerFileForPublish"
+    Condition="'$(ServiceWorkerAssetsManifest)' != ''">
+    <ItemGroup>
+      <_ServiceWorkerManifestAssetToExclude Include="@(_BuildAssetsForManifestCandidate)"
+        Condition="
+          $([System.String]::Copy('%(_BuildAssetsForManifestCandidate.RelativePath)').Replace('\','/')) == '_redirects' or
+          $([System.String]::Copy('%(_BuildAssetsForManifestCandidate.RelativePath)').Replace('\','/')) == 'appsettings.Development.json'" />
+
+      <_ServiceWorkerManifestAssetToExclude Include="@(_PublishAssetsForManifestCandidate)"
+        Condition="
+          $([System.String]::Copy('%(_PublishAssetsForManifestCandidate.RelativePath)').Replace('\','/')) == '_redirects' or
+          $([System.String]::Copy('%(_PublishAssetsForManifestCandidate.RelativePath)').Replace('\','/')) == 'appsettings.Development.json'" />
+
+      <_BuildAssetsForManifestCandidate Remove="@(_ServiceWorkerManifestAssetToExclude)" />
+      <_PublishAssetsForManifestCandidate Remove="@(_ServiceWorkerManifestAssetToExclude)" />
+
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)"
+        Condition="
+          $([System.String]::Copy('%(ResolvedFileToPublish.RelativePath)').Replace('\','/')) == 'wwwroot/_redirects' or
+          $([System.String]::Copy('%(ResolvedFileToPublish.RelativePath)').Replace('\','/')) == 'wwwroot/appsettings.Development.json'" />
+    </ItemGroup>
+  </Target>
+</Project>
