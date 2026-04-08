@@ -52,6 +52,8 @@ namespace PatinhasMagicasAPI.Repositories
         {
             return await _context.Agendamentos
                                   .Include(a => a.Animal)
+                                      .ThenInclude(an => an.Usuario)
+                                  .Include(a => a.Animal)
                                       .ThenInclude(an => an.TamanhoAnimal)
                                   .Include(a => a.Animal)
                                       .ThenInclude(an => an.Especie)
