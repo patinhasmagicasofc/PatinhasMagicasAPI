@@ -244,6 +244,8 @@ namespace PatinhasMagicasAPI.Services
                 throw new KeyNotFoundException("Agendamento não encontrado.");
 
             var statusAnteriorId = agendamento.StatusAgendamentoId;
+            var dataAnterior = agendamento.DataAgendamento;
+            var pedidoAnteriorId = agendamento.PedidoId;
 
             // Validações de regra de negócio
             if (agendamentoInputDTO.DataAgendamento < DateTime.Now)
@@ -252,15 +254,27 @@ namespace PatinhasMagicasAPI.Services
             if (!await _pedidoRepository.ExistsAsync(agendamentoInputDTO.PedidoId))
                 throw new ArgumentException("Pedido informado não existe.");
 
+            var statusFoiAlterado = agendamentoInputDTO.StatusAgendamentoId.HasValue &&
+                agendamentoInputDTO.StatusAgendamentoId.Value != statusAnteriorId;
+
+            var dataFoiAlterada = agendamentoInputDTO.DataAgendamento.HasValue &&
+                agendamentoInputDTO.DataAgendamento.Value != dataAnterior;
+
+            var pedidoFoiAlterado = agendamentoInputDTO.PedidoId.HasValue &&
+                agendamentoInputDTO.PedidoId.Value != pedidoAnteriorId;
+
             // Mapeia as propriedades atualizadas
             _mapper.Map(agendamentoInputDTO, agendamento);
 
             await _agendamentoRepository.UpdateAsync(agendamento);
 
-            if (agendamentoInputDTO.StatusAgendamentoId.HasValue &&
-                agendamentoInputDTO.StatusAgendamentoId.Value != statusAnteriorId)
+            if (statusFoiAlterado)
             {
                 await EnviarNotificacaoStatusAgendamentoAsync(agendamento, agendamentoInputDTO.StatusAgendamentoId.Value);
+            }
+            else if (dataFoiAlterada || pedidoFoiAlterado)
+            {
+                await EnviarNotificacaoAlteracaoAgendamentoAsync(agendamento);
             }
         }
 
@@ -303,6 +317,24 @@ namespace PatinhasMagicasAPI.Services
             {
                 Title = "Status do agendamento atualizado",
                 Body = $"O agendamento de {nomeAnimal} agora está como {nomeStatus}.",
+                Url = "/MeusAgendamentos"
+            });
+        }
+
+        private async Task EnviarNotificacaoAlteracaoAgendamentoAsync(Agendamento agendamento)
+        {
+            var usuarioId = agendamento.Animal?.UsuarioId;
+            if (!usuarioId.HasValue)
+            {
+                return;
+            }
+
+            var nomeAnimal = agendamento.Animal?.Nome ?? "seu pet";
+
+            await _pushNotificationService.SendAsync(usuarioId.Value, new PushNotificationRequestDTO
+            {
+                Title = "Agendamento atualizado",
+                Body = $"O agendamento de {nomeAnimal} foi alterado para {agendamento.DataAgendamento:dd/MM/yyyy HH:mm}.",
                 Url = "/MeusAgendamentos"
             });
         }

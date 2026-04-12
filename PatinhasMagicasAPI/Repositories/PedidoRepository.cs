@@ -38,11 +38,14 @@ namespace PatinhasMagicasAPI.Repositories
 
         public async Task<List<Pedido>> GetAllAsync()
         {
-            return await _context.Pedidos.Include(p => p.Usuario).ThenInclude(c => c.Endereco)
-                                         .Include(p => p.ItensPedido).ThenInclude(i => i.Produto)
-                                         .Include(p => p.Pagamentos).ThenInclude(pg => pg.StatusPagamento)
-                                         .Include(p => p.Pagamentos).ThenInclude(pg => pg.TipoPagamento)
-                                         .Include(p => p.StatusPedido).ToListAsync();
+            return await _context.Pedidos
+                                 .Include(p => p.Usuario).ThenInclude(c => c.Endereco)
+                                 .Include(p => p.ItensPedido).ThenInclude(i => i.Produto)
+                                 .Include(p => p.Pagamentos).ThenInclude(pg => pg.StatusPagamento)
+                                 .Include(p => p.Pagamentos).ThenInclude(pg => pg.TipoPagamento)
+                                 .Include(p => p.StatusPedido)
+                                 .Where(p => p.ItensPedido.Any())
+                                 .ToListAsync();
         }
 
         public IQueryable<Pedido> GetAllPedidos()
@@ -53,6 +56,7 @@ namespace PatinhasMagicasAPI.Repositories
                            .Include(p => p.Pagamentos).ThenInclude(pg => pg.StatusPagamento)
                            .Include(p => p.Pagamentos).ThenInclude(pg => pg.TipoPagamento)
                            .Include(p => p.StatusPedido)
+                           .Where(p => p.ItensPedido.Any())
                            .AsQueryable();
         }
 
@@ -66,18 +70,20 @@ namespace PatinhasMagicasAPI.Repositories
                     .Include(p => p.StatusPedido)
                     .Include(p => p.Pagamentos).ThenInclude(p => p.StatusPagamento)
                     .Include(p => p.Pagamentos).ThenInclude(pg => pg.TipoPagamento)
-                    .Where(p => p.UsuarioId == id)
+                    .Where(p => p.UsuarioId == id && p.ItensPedido.Any())
                     .ToListAsync();
         }
 
 
         public async Task<Pedido> GetByIdAsync(int id)
         {
-            return await _context.Pedidos.Include(p => p.Usuario).ThenInclude(p => p.Endereco)
-                                         .Include(p => p.ItensPedido).ThenInclude(p => p.Produto)
-                                         .Include(p => p.Pagamentos).ThenInclude(p => p.StatusPagamento)
-                                         .Include(p => p.Pagamentos).ThenInclude(pg => pg.TipoPagamento)
-                                         .Include(p => p.StatusPedido).FirstOrDefaultAsync(p => p.Id == id);
+            return await _context.Pedidos
+                                 .Include(p => p.Usuario).ThenInclude(p => p.Endereco)
+                                 .Include(p => p.ItensPedido).ThenInclude(p => p.Produto)
+                                 .Include(p => p.Pagamentos).ThenInclude(p => p.StatusPagamento)
+                                 .Include(p => p.Pagamentos).ThenInclude(pg => pg.TipoPagamento)
+                                 .Include(p => p.StatusPedido)
+                                 .FirstOrDefaultAsync(p => p.Id == id && p.ItensPedido.Any());
         }
 
         public async Task UpdateAsync(Pedido pedido)
